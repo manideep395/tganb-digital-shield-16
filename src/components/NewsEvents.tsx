@@ -2,8 +2,40 @@
 import { Button } from '@/components/ui/button';
 import { newsData } from '../data/newsData';
 import { announcementData } from '../data/announcementData';
+import { useNavigate } from 'react-router-dom';
 
 const NewsEvents = () => {
+  const navigate = useNavigate();
+
+  const getNewsTypeColor = (newsType: string) => {
+    switch (newsType) {
+      case 'Breaking News':
+        return 'bg-red-100 text-red-600';
+      case 'Shocking News':
+        return 'bg-orange-100 text-orange-600';
+      case 'Important Update':
+        return 'bg-blue-100 text-blue-600';
+      case 'Achievement':
+        return 'bg-green-100 text-green-600';
+      case 'Alert':
+        return 'bg-yellow-100 text-yellow-600';
+      default:
+        return 'bg-blue-100 text-blue-600';
+    }
+  };
+
+  const handleReadMore = (newsItem: any) => {
+    if (newsItem.link) {
+      navigate(newsItem.link);
+    } else {
+      navigate('/news');
+    }
+  };
+
+  const handleLearnMore = () => {
+    navigate('/news');
+  };
+
   return (
     <section className="py-8 bg-gradient-to-br from-slate-50 to-gray-100 font-poppins">
       <div className="container mx-auto px-4">
@@ -34,8 +66,8 @@ const NewsEvents = () => {
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                           {news.date}
                         </span>
-                        <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600">
-                          Breaking News
+                        <span className={`text-xs px-2 py-1 rounded-full ${getNewsTypeColor(news.newsType)}`}>
+                          {news.newsType}
                         </span>
                       </div>
                       <h4 className="text-sm font-bold text-gray-800 mb-2 hover:text-blue-600 cursor-pointer transition-colors line-clamp-2">
@@ -49,6 +81,7 @@ const NewsEvents = () => {
                           variant="ghost" 
                           size="sm"
                           className="text-blue-600 hover:text-blue-700 p-0 text-xs"
+                          onClick={() => handleReadMore(news)}
                         >
                           Read Full Article →
                         </Button>
@@ -84,6 +117,7 @@ const NewsEvents = () => {
                       <Button 
                         size="sm"
                         className="bg-yellow-600 hover:bg-yellow-700 rounded-full text-xs"
+                        onClick={handleLearnMore}
                       >
                         Learn More
                       </Button>

@@ -5,8 +5,38 @@ import Footer from '../components/Footer';
 import { newsData } from '../data/newsData';
 import { announcementData } from '../data/announcementData';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const News = () => {
+  const navigate = useNavigate();
+
+  const getNewsTypeColor = (newsType: string) => {
+    switch (newsType) {
+      case 'Breaking News':
+        return 'bg-red-100 text-red-800';
+      case 'Shocking News':
+        return 'bg-orange-100 text-orange-800';
+      case 'Important Update':
+        return 'bg-blue-100 text-blue-800';
+      case 'Achievement':
+        return 'bg-green-100 text-green-800';
+      case 'Alert':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-blue-100 text-blue-800';
+    }
+  };
+
+  const handleReadMore = (newsItem: any) => {
+    // For now, just show an alert or navigate to a detail page
+    alert(`Reading: ${newsItem.title}`);
+    // You can implement actual news detail pages later
+  };
+
+  const handleLearnMore = () => {
+    alert('Learn More functionality - can be connected to detailed announcement pages');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Header />
@@ -50,8 +80,8 @@ const News = () => {
                     
                     <div className="p-6">
                       <div className="flex items-center mb-3">
-                        <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                          Breaking News
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getNewsTypeColor(news.newsType)}`}>
+                          {news.newsType}
                         </span>
                       </div>
                       
@@ -61,7 +91,11 @@ const News = () => {
                         <h4 className="text-lg font-semibold text-blue-600 mb-3">{news.subtitle}</h4>
                       )}
                       
-                      <Button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold group" variant="ghost">
+                      <Button 
+                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold group" 
+                        variant="ghost"
+                        onClick={() => handleReadMore(news)}
+                      >
                         <span>Read Full Article</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
@@ -92,7 +126,10 @@ const News = () => {
                     </h3>
                     
                     <div className="flex gap-3">
-                      <Button className="bg-yellow-600 hover:bg-yellow-700 text-white">
+                      <Button 
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                        onClick={handleLearnMore}
+                      >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         Learn More
                       </Button>

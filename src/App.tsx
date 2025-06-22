@@ -28,6 +28,7 @@ import DrugTypes from "./pages/DrugTypes";
 import Achievements from "./pages/Achievements";
 import News from "./pages/News";
 import Contact from "./pages/Contact";
+import Statistics from "./pages/Statistics";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
           <Route path="/testing-kits" element={<TestingKits />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/trainings" element={<LearningResources />} />
+          <Route path="/statistics" element={<Statistics />} />
           <Route path="/rehabilitation" element={<Rehabilitation />} />
           <Route path="/drug-types" element={<DrugTypes />} />
           <Route path="/achievements" element={<Achievements />} />
