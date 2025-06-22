@@ -1,5 +1,5 @@
 
-import { Shield, Crown, Building, Wreath, Eagle, Award } from 'lucide-react';
+import { Shield, Crown, Building, Flower2, Bird, Award } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -24,13 +24,13 @@ const AboutLogo = () => {
       color: "from-gray-600 to-gray-700"
     },
     {
-      icon: Wreath,
+      icon: Flower2,
       title: "The Wreath",
       description: "A wreath is a circular arrangement of flowers, leaves, or branches, often used as a decorative element. It is a representation of faith.",
       color: "from-green-500 to-green-600"
     },
     {
-      icon: Eagle,
+      icon: Bird,
       title: "The Eagle",
       description: "The eagle is a powerful and iconic symbol. The eagle is often seen as wise and inspirational. An icon of this majestic creature shown soaring in flight indicates that bureau is always pushing higher and striving to achieve.",
       color: "from-blue-500 to-blue-600"
