@@ -34,8 +34,10 @@ import Statistics from "./pages/Statistics";
 import Education from "./pages/Education";
 import TganbGo27 from "./pages/TganbGo27";
 import TganbStructure from "./pages/TganbStructure";
+import MythsFacts from "./pages/MythsFacts";
 import AntiDrugSoldierForm from "./components/AntiDrugSoldierForm";
 import CertificateVerification from "./components/CertificateVerification";
+import NewsDetail from "./components/NewsDetail";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +69,7 @@ const App = () => (
             <Route path="/events-campaigns" element={<EventsCampaigns />} />
             <Route path="/testing-kits" element={<TestingKits />} />
             <Route path="/education" element={<Education />} />
+            <Route path="/myths-facts" element={<MythsFacts />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/anti-drug-soldier-enrollment" element={<AntiDrugSoldierForm />} />
             <Route path="/certificate-verification" element={<CertificateVerification />} />
@@ -76,6 +79,7 @@ const App = () => (
             <Route path="/drug-types" element={<DrugTypes />} />
             <Route path="/achievements" element={<Achievements />} />
             <Route path="/news" element={<News />} />
+            <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/contact" element={<Contact />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

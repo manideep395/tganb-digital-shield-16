@@ -14,73 +14,69 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, 210, 297, 'F');
   
-  // Add outer border with 3D effect
+  // Add outer border with TGANB dark green color (#006400)
   pdf.setDrawColor(0, 100, 0);
-  pdf.setLineWidth(4);
+  pdf.setLineWidth(3);
   pdf.rect(10, 10, 190, 277);
   
-  // Inner border
-  pdf.setLineWidth(2);
+  // Inner border with lighter green
+  pdf.setLineWidth(1);
   pdf.setDrawColor(34, 139, 34);
   pdf.rect(15, 15, 180, 267);
   
-  // Add decorative corner elements
-  pdf.setFillColor(34, 139, 34);
-  pdf.circle(25, 25, 8, 'F');
-  pdf.circle(185, 25, 8, 'F');
-  pdf.circle(25, 272, 8, 'F');
-  pdf.circle(185, 272, 8, 'F');
-  
-  // Three logos at top
+  // Three logos at top - properly positioned
   try {
     // Telangana Government Logo (left)
     const telanganaGovImg = '/lovable-uploads/dc5b1429-5d0c-4d96-a676-6979624c1570.png';
-    pdf.addImage(telanganaGovImg, 'PNG', 40, 30, 25, 25);
+    pdf.addImage(telanganaGovImg, 'PNG', 40, 25, 20, 20);
     
     // TGANB Logo (center) 
     const tganbImg = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
-    pdf.addImage(tganbImg, 'PNG', 92.5, 30, 25, 25);
+    pdf.addImage(tganbImg, 'PNG', 95, 25, 20, 20);
     
     // Telangana Police Logo (right)
     const policeImg = '/lovable-uploads/686dd008-b6ba-4b5c-8342-6bd71c98b2a8.png';
-    pdf.addImage(policeImg, 'PNG', 145, 30, 25, 25);
+    pdf.addImage(policeImg, 'PNG', 150, 25, 20, 20);
   } catch (error) {
     console.log('Error adding logos:', error);
   }
   
-  // Header text - TELANGANA ANTI NARCOTICS BUREAU in green
+  // Set font to use available system font (closest to Poppins)
   pdf.setFont('helvetica', 'bold');
-  pdf.setFontSize(18);
-  pdf.setTextColor(34, 139, 34);
-  pdf.text('TELANGANA ANTI NARCOTICS BUREAU', 105, 70, { align: 'center' });
   
-  // Certificate title with underline
-  pdf.setFontSize(24);
+  // Header text - TELANGANA ANTI NARCOTICS BUREAU in TGANB dark green
+  pdf.setFontSize(16);
+  pdf.setTextColor(0, 100, 0);
+  pdf.text('TELANGANA ANTI NARCOTICS BUREAU', 105, 55, { align: 'center' });
+  
+  // Certificate title with proper spacing
+  pdf.setFontSize(20);
   pdf.setTextColor(0, 0, 0);
-  pdf.text('Certificate of Enrollment', 105, 85, { align: 'center' });
+  pdf.text('Certificate of Enrollment', 105, 70, { align: 'center' });
+  
   // Add underline
   pdf.setLineWidth(0.5);
-  pdf.setDrawColor(0, 0, 0);
-  pdf.line(55, 87, 155, 87);
+  pdf.setDrawColor(0, 100, 0);
+  pdf.line(65, 72, 145, 72);
   
-  // Add student photo if provided
+  // Add student photo if provided with proper positioning
   if (photoUrl) {
     try {
-      pdf.addImage(photoUrl, 'JPEG', 85, 100, 40, 50);
+      pdf.addImage(photoUrl, 'JPEG', 85, 80, 40, 50);
     } catch (error) {
       console.log('Error adding student photo:', error);
       // Fallback placeholder
       pdf.setDrawColor(128, 128, 128);
-      pdf.rect(85, 100, 40, 50);
-      pdf.setFontSize(10);
+      pdf.rect(85, 80, 40, 50);
+      pdf.setFontSize(8);
       pdf.setTextColor(128, 128, 128);
-      pdf.text('Student Photo', 105, 127, { align: 'center' });
+      pdf.text('Student Photo', 105, 107, { align: 'center' });
     }
   }
   
-  // Certificate content with updated text
+  // Certificate content with proper spacing and formatting
   pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(12);
+  pdf.setFontSize(11);
   pdf.setTextColor(0, 0, 0);
   
   const content = [
@@ -105,38 +101,51 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     'awareness, strength, and integrity.'
   ];
   
-  let yPosition = 165;
+  let yPosition = 140;
+  const lineHeight = 5;
+  const maxWidth = 160;
+  
   content.forEach((line) => {
+    if (line === '') {
+      yPosition += lineHeight / 2;
+      return;
+    }
+    
     if (line.includes(formData.name)) {
-      // Student name in green color
+      // Handle student name highlighting
       const parts = line.split(formData.name);
+      const fullLineWidth = pdf.getTextWidth(line);
+      const startX = 105 - (fullLineWidth / 2);
+      
       pdf.setTextColor(0, 0, 0);
-      pdf.text(parts[0], 105, yPosition, { align: 'center' });
-      pdf.setTextColor(34, 139, 34);
+      pdf.text(parts[0], startX, yPosition);
+      
+      const nameStartX = startX + pdf.getTextWidth(parts[0]);
+      pdf.setTextColor(0, 100, 0);
       pdf.setFont('helvetica', 'bold');
-      const nameWidth = pdf.getTextWidth(formData.name);
-      const startX = 105 - (pdf.getTextWidth(line) / 2) + pdf.getTextWidth(parts[0]);
-      pdf.text(formData.name, startX, yPosition);
+      pdf.text(formData.name, nameStartX, yPosition);
+      
+      const remainderStartX = nameStartX + pdf.getTextWidth(formData.name);
       pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'normal');
-      pdf.text(parts[1], startX + nameWidth, yPosition);
+      pdf.text(parts[1], remainderStartX, yPosition);
     } else if (line.includes('Anti-Narcotic Soldier')) {
       pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(34, 139, 34);
-      pdf.text(line, 105, yPosition, { align: 'center' });
+      pdf.setTextColor(0, 100, 0);
+      pdf.text(line, 105, yPosition, { align: 'center', maxWidth });
       pdf.setFont('helvetica', 'normal');
       pdf.setTextColor(0, 0, 0);
     } else {
-      pdf.text(line, 105, yPosition, { align: 'center' });
+      pdf.text(line, 105, yPosition, { align: 'center', maxWidth });
     }
-    yPosition += 6;
+    yPosition += lineHeight;
   });
   
-  // Bottom section with 3D effect
-  pdf.setFillColor(240, 240, 240);
+  // Bottom section with proper spacing
+  pdf.setFillColor(248, 249, 250);
   pdf.rect(20, 250, 170, 25, 'F');
   pdf.setDrawColor(200, 200, 200);
-  pdf.setLineWidth(1);
+  pdf.setLineWidth(0.5);
   pdf.rect(20, 250, 170, 25);
   
   // Generate QR code with verification URL
@@ -148,14 +157,14 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     console.error('Error generating QR code:', error);
   }
   
-  // Certificate ID and signature
-  pdf.setFontSize(10);
+  // Certificate ID and signature with proper positioning
+  pdf.setFontSize(9);
   pdf.setTextColor(0, 0, 0);
   pdf.text(`Certificate ID: ${certificateId}`, 45, 262);
-  pdf.text('Digitally Signed', 45, 268);
+  pdf.text('Digitally Signed', 45, 267);
   
   pdf.text('Authorized Signatory', 140, 262);
-  pdf.text('TGANB', 140, 268);
+  pdf.text('TGANB', 140, 267);
   
   // Download the PDF
   pdf.save(`ADS_Certificate_${formData.name.replace(/\s+/g, '_')}.pdf`);

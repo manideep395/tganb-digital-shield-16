@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -54,6 +53,7 @@ const Header = () => {
         { title: 'Events & Campaigns', href: '/events-campaigns' },
         { title: 'Testing Kits & Detection Methods', href: '/testing-kits' },
         { title: 'Education', href: '/education' },
+        { title: 'Myths & Facts', href: '/myths-facts' },
         { title: 'FAQs', href: '/faqs' }
       ]
     },

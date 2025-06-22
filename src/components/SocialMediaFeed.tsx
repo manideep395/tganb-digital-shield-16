@@ -50,16 +50,12 @@ const SocialMediaFeed = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50 to-slate-100 dark:from-gray-800 dark:to-gray-900">
+    <section className="py-16 bg-gradient-to-br from-blue-50 to-slate-100 dark:from-gray-800 dark:to-gray-900 font-poppins">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
             Social Media Feed
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Stay connected with TGANB through our social media channels for the latest updates, 
-            awareness campaigns, and community initiatives.
-          </p>
         </div>
 
         <div className="flex justify-center space-x-6 mb-8">
@@ -123,12 +119,6 @@ const SocialMediaFeed = () => {
             </div>
           </div>
         )}
-
-        <div className="text-center mt-8">
-          <p className="text-gray-600 dark:text-gray-300">
-            Join our growing community and be part of the fight against drug abuse
-          </p>
-        </div>
       </div>
     </section>
   );

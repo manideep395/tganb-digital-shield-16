@@ -24,12 +24,8 @@ const NewsEvents = () => {
     }
   };
 
-  const handleReadMore = (newsItem: any) => {
-    if (newsItem.link) {
-      navigate(newsItem.link);
-    } else {
-      navigate('/news');
-    }
+  const handleReadMore = (index: number) => {
+    navigate(`/news/${index}`);
   };
 
   const handleLearnMore = () => {
@@ -44,13 +40,13 @@ const NewsEvents = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Latest News Section */}
+          {/* Latest News Section - Show latest 3 news */}
           <div>
             <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
               📰 Latest News
             </h3>
             <div className="space-y-4">
-              {newsData.slice(0, 1).map((news, index) => (
+              {newsData.slice(0, 3).map((news, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden p-4 h-64"
@@ -81,7 +77,7 @@ const NewsEvents = () => {
                           variant="ghost" 
                           size="sm"
                           className="text-blue-600 hover:text-blue-700 p-0 text-xs"
-                          onClick={() => handleReadMore(news)}
+                          onClick={() => handleReadMore(index)}
                         >
                           Read Full Article →
                         </Button>

@@ -13,57 +13,56 @@ const News = () => {
   const getNewsTypeColor = (newsType: string) => {
     switch (newsType) {
       case 'Breaking News':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
       case 'Shocking News':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
       case 'Important Update':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
       case 'Achievement':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       case 'Alert':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
       default:
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
     }
   };
 
-  const handleReadMore = (newsItem: any) => {
-    // For now, just show an alert or navigate to a detail page
-    alert(`Reading: ${newsItem.title}`);
-    // You can implement actual news detail pages later
+  const handleReadMore = (index: number) => {
+    navigate(`/news/${index}`);
   };
 
   const handleLearnMore = () => {
-    alert('Learn More functionality - can be connected to detailed announcement pages');
+    // Navigate to detailed announcements page or show more details
+    navigate('/announcements'); // You can create this page later
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 font-poppins">
       <Header />
       
       <main className="py-12">
         <div className="container mx-auto px-4">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 font-poppins">
-              <span className="text-blue-600">News & Announcements</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              <span className="text-blue-600 dark:text-blue-400">News & Announcements</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
               Stay updated with the latest news and important announcements from Telangana Anti-Narcotics Bureau
             </p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* News Section */}
+            {/* News Section - Show all news */}
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                 <Newspaper className="w-8 h-8 text-blue-600 mr-3" />
                 Latest News
               </h2>
               
               <div className="space-y-6">
                 {newsData.map((news, index) => (
-                  <article key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-blue-100 hover:shadow-xl transition-all duration-300">
+                  <article key={index} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-blue-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
                     <div className="relative">
                       <img 
                         src={news.imageUrl} 
@@ -85,16 +84,16 @@ const News = () => {
                         </span>
                       </div>
                       
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 font-poppins">{news.title}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{news.title}</h3>
                       
                       {news.subtitle && (
-                        <h4 className="text-lg font-semibold text-blue-600 mb-3">{news.subtitle}</h4>
+                        <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-3">{news.subtitle}</h4>
                       )}
                       
                       <Button 
-                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold group" 
+                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold group" 
                         variant="ghost"
-                        onClick={() => handleReadMore(news)}
+                        onClick={() => handleReadMore(index)}
                       >
                         <span>Read Full Article</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -105,23 +104,23 @@ const News = () => {
               </div>
             </div>
 
-            {/* Announcements Section */}
+            {/* Announcements Section - Show all announcements */}
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                 <Users className="w-8 h-8 text-yellow-600 mr-3" />
                 Announcements
               </h2>
               
               <div className="space-y-6">
                 {announcementData.map((announcement, index) => (
-                  <div key={index} className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300">
+                  <div key={index} className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300">
                     <div className="flex items-start justify-between mb-3">
-                      <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">
+                      <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 px-3 py-1 rounded-full">
                         {announcement.date}
                       </span>
                     </div>
                     
-                    <h3 className="text-lg font-bold text-gray-900 mb-3 font-poppins">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                       {announcement.name}
                     </h3>
                     
@@ -137,7 +136,7 @@ const News = () => {
                         <Button 
                           variant="outline"
                           onClick={() => window.open(announcement.attachmentLink, '_blank')}
-                          className="border-yellow-600 text-yellow-700 hover:bg-yellow-50"
+                          className="border-yellow-600 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-400 dark:text-yellow-400"
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Download
@@ -149,11 +148,11 @@ const News = () => {
               </div>
 
               {/* Emergency Contact */}
-              <div className="mt-8 p-6 bg-gradient-to-r from-red-100 to-red-50 rounded-2xl border-l-4 border-red-500">
-                <h3 className="font-bold text-gray-900 mb-3 text-lg flex items-center">
+              <div className="mt-8 p-6 bg-gradient-to-r from-red-100 to-red-50 dark:from-red-900/20 dark:to-red-800/20 rounded-2xl border-l-4 border-red-500">
+                <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-lg flex items-center">
                   🚨 Emergency Helpline
                 </h3>
-                <p className="text-gray-700 mb-3">
+                <p className="text-gray-700 dark:text-gray-300 mb-3">
                   Report drug-related crimes immediately on our 24/7 helpline
                 </p>
                 <div className="text-3xl font-bold text-red-600">1908</div>
