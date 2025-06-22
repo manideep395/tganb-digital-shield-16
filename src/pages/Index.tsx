@@ -6,7 +6,6 @@ import InitiativesSlider from '../components/InitiativesSlider';
 import DirectorMessage from '../components/DirectorMessage';
 import AboutTGANB from '../components/AboutTGANB';
 import CelebrityCampaigns from '../components/CelebrityCampaigns';
-import AwarenessPrograms from '../components/AwarenessPrograms';
 import AnimatedMetrics from '../components/AnimatedMetrics';
 import NewsEvents from '../components/NewsEvents';
 import Footer from '../components/Footer';
@@ -21,8 +20,9 @@ const Index = () => {
         <InitiativesSlider />
         <DirectorMessage />
         <AboutTGANB />
-        <CelebrityCampaigns />
-        <AwarenessPrograms />
+        <div className="py-8">
+          <CelebrityCampaigns />
+        </div>
         <AnimatedMetrics />
         <NewsEvents />
       </main>

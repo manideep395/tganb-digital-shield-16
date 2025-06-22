@@ -1,24 +1,45 @@
 
 import { useState } from 'react';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const menuItems = [
-    { title: 'Home', href: '#', active: true },
-    { title: 'About', href: '#' },
-    { title: 'Know NPS', href: '#' },
-    { title: 'Awareness', href: '#' },
-    { title: 'Trainings', href: '#' },
-    { title: 'Statistics', href: '#' },
-    { title: 'Achievements', href: '#' },
-    { title: 'Initiatives', href: '#' },
-    { title: 'News', href: '#' },
-    { title: 'Certifications', href: '#' },
-    { title: 'Contact', href: '#' }
+    { title: 'Home', href: '/', active: true },
+    { 
+      title: 'About', 
+      href: '#',
+      dropdown: [
+        { title: 'About TGANB', href: '/about-tganb' },
+        { title: 'Vision & Mission', href: '/vision-mission' },
+        { title: 'Anti-Drug Committees', href: '/anti-drug-committees' }
+      ]
+    },
+    { title: 'Know NPS', href: '/know-nps' },
+    { title: 'Awareness', href: '/awareness' },
+    { title: 'Trainings', href: '/trainings' },
+    { title: 'Statistics', href: '/statistics' },
+    { title: 'Achievements', href: '/achievements' },
+    { title: 'Initiatives', href: '/initiatives' },
+    { title: 'News', href: '/news' },
+    { title: 'Certifications', href: '/certifications' },
+    { title: 'Contact', href: '/contact' },
+    { title: "Director's Note", href: '/directors-note' },
+    { title: 'Officers Directory', href: '/officers-directory' }
   ];
+
+  const handleNavigation = (href: string) => {
+    if (href !== '#') {
+      navigate(href);
+      setIsMenuOpen(false);
+      setActiveDropdown(null);
+    }
+  };
 
   return (
     <header className="bg-white shadow-lg border-b border-blue-600 sticky top-0 z-50 font-poppins">
@@ -69,16 +90,39 @@ const Header = () => {
 
             <div className="hidden lg:flex space-x-2 justify-center w-full">
               {menuItems.map((item, index) => (
-                <button 
-                  key={index} 
-                  className={`text-xs font-medium transition-all duration-200 py-2 px-3 rounded whitespace-nowrap ${
-                    item.active 
-                      ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold' 
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
-                  }`}
-                >
-                  {item.title}
-                </button>
+                <div key={index} className="relative group">
+                  <button 
+                    className={`text-xs font-medium transition-all duration-200 py-2 px-3 rounded whitespace-nowrap flex items-center gap-1 ${
+                      item.href === '/' 
+                        ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold' 
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                    }`}
+                    onClick={() => handleNavigation(item.href)}
+                    onMouseEnter={() => item.dropdown && setActiveDropdown(item.title)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    {item.title}
+                    {item.dropdown && <ChevronDown className="w-3 h-3" />}
+                  </button>
+                  
+                  {item.dropdown && activeDropdown === item.title && (
+                    <div 
+                      className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-48 z-50"
+                      onMouseEnter={() => setActiveDropdown(item.title)}
+                      onMouseLeave={() => setActiveDropdown(null)}
+                    >
+                      {item.dropdown.map((dropdownItem, dropdownIndex) => (
+                        <button
+                          key={dropdownIndex}
+                          className="w-full text-left py-2 px-4 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 first:rounded-t-lg last:rounded-b-lg"
+                          onClick={() => handleNavigation(dropdownItem.href)}
+                        >
+                          {dropdownItem.title}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
@@ -86,16 +130,27 @@ const Header = () => {
             {isMenuOpen && (
               <div className="lg:hidden absolute left-4 right-4 top-full mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
                 {menuItems.map((item, index) => (
-                  <button 
-                    key={index} 
-                    className={`w-full text-left py-2 px-4 text-sm font-medium ${
-                      item.active 
-                        ? 'text-blue-600 bg-blue-50 font-bold' 
-                        : 'text-gray-700 hover:bg-blue-50'
-                    }`}
-                  >
-                    {item.title}
-                  </button>
+                  <div key={index}>
+                    <button 
+                      className={`w-full text-left py-2 px-4 text-sm font-medium ${
+                        item.href === '/' 
+                          ? 'text-blue-600 bg-blue-50 font-bold' 
+                          : 'text-gray-700 hover:bg-blue-50'
+                      }`}
+                      onClick={() => handleNavigation(item.href)}
+                    >
+                      {item.title}
+                    </button>
+                    {item.dropdown && item.dropdown.map((dropdownItem, dropdownIndex) => (
+                      <button
+                        key={dropdownIndex}
+                        className="w-full text-left py-2 px-8 text-sm text-gray-600 hover:bg-blue-50"
+                        onClick={() => handleNavigation(dropdownItem.href)}
+                      >
+                        {dropdownItem.title}
+                      </button>
+                    ))}
+                  </div>
                 ))}
               </div>
             )}
