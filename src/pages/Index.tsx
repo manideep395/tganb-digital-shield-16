@@ -8,10 +8,13 @@ import InitiativesHighlight from '../components/InitiativesHighlight';
 import InitiativesSlider from '../components/InitiativesSlider';
 import NewsEvents from '../components/NewsEvents';
 import AnimatedMetrics from '../components/AnimatedMetrics';
-import AwarenessPrograms from '../components/AwarenessPrograms';
-import CelebrityCampaigns from '../components/CelebrityCampaigns';
-import ContactSection from '../components/ContactSection';
-import Gallery from '../components/Gallery';
+import AntiDrugSoldierSection from '../components/AntiDrugSoldierSection';
+import TrainingsSlider from '../components/TrainingsSlider';
+import AnonymousReportSection from '../components/AnonymousReportSection';
+import StatisticsSection from '../components/StatisticsSection';
+import StationsInfoSection from '../components/StationsInfoSection';
+import RehabilitationSection from '../components/RehabilitationSection';
+import TGANBStructureSection from '../components/TGANBStructureSection';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -27,10 +30,13 @@ const Index = () => {
       <InitiativesHighlight />
       <NewsEvents />
       <AnimatedMetrics />
-      <AwarenessPrograms />
-      <CelebrityCampaigns />
-      <Gallery />
-      <ContactSection />
+      <AntiDrugSoldierSection />
+      <TrainingsSlider />
+      <AnonymousReportSection />
+      <StatisticsSection />
+      <StationsInfoSection />
+      <RehabilitationSection />
+      <TGANBStructureSection />
       <Footer />
     </div>
   );

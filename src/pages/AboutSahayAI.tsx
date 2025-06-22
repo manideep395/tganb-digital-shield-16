@@ -12,7 +12,7 @@ const AboutSahayAI = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 font-poppins">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-50 to-cyan-50 font-poppins">
       <Header />
       
       <main className="py-16">
@@ -28,12 +28,12 @@ const AboutSahayAI = () => {
                 transition={{ duration: 2, repeat: Infinity }}
                 className="inline-block mb-6"
               >
-                <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-4xl">
+                <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-4xl">
                   🤝
                 </div>
               </motion.div>
               <h1 className="text-5xl font-bold text-gray-900 mb-4">
-                About <span className="text-green-600">Sahay.AI</span>
+                About <span className="text-blue-600">Sahay.AI</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Your compassionate AI counselor providing 24/7 multilingual support and guidance
@@ -43,7 +43,7 @@ const AboutSahayAI = () => {
             <div className="grid lg:grid-cols-2 gap-12 mb-12">
               <Card className="backdrop-blur-sm bg-white/90 shadow-xl border-0 rounded-2xl">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-green-600 flex items-center">
+                  <CardTitle className="text-2xl text-blue-600 flex items-center">
                     <Heart className="mr-3" />
                     Mission & Purpose
                   </CardTitle>
@@ -64,36 +64,36 @@ const AboutSahayAI = () => {
               <div className="grid grid-cols-2 gap-6">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-br from-green-100 to-emerald-100 p-6 rounded-2xl text-center"
+                  className="bg-gradient-to-br from-blue-100 to-cyan-100 p-6 rounded-2xl text-center"
                 >
-                  <Clock className="w-12 h-12 text-green-600 mx-auto mb-3" />
+                  <Clock className="w-12 h-12 text-blue-600 mx-auto mb-3" />
                   <h3 className="font-bold text-gray-800">24/7 Available</h3>
                   <p className="text-sm text-gray-600">Always here when you need support</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-br from-emerald-100 to-teal-100 p-6 rounded-2xl text-center"
+                  className="bg-gradient-to-br from-cyan-100 to-blue-100 p-6 rounded-2xl text-center"
                 >
-                  <Globe className="w-12 h-12 text-emerald-600 mx-auto mb-3" />
+                  <Globe className="w-12 h-12 text-cyan-600 mx-auto mb-3" />
                   <h3 className="font-bold text-gray-800">Multilingual</h3>
                   <p className="text-sm text-gray-600">English, Telugu, Hindi support</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-br from-teal-100 to-cyan-100 p-6 rounded-2xl text-center"
+                  className="bg-gradient-to-br from-blue-100 to-indigo-100 p-6 rounded-2xl text-center"
                 >
-                  <Shield className="w-12 h-12 text-teal-600 mx-auto mb-3" />
+                  <Shield className="w-12 h-12 text-blue-600 mx-auto mb-3" />
                   <h3 className="font-bold text-gray-800">Anonymous</h3>
                   <p className="text-sm text-gray-600">Complete privacy protection</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-br from-cyan-100 to-blue-100 p-6 rounded-2xl text-center"
+                  className="bg-gradient-to-br from-indigo-100 to-blue-100 p-6 rounded-2xl text-center"
                 >
-                  <Users className="w-12 h-12 text-cyan-600 mx-auto mb-3" />
+                  <Users className="w-12 h-12 text-indigo-600 mx-auto mb-3" />
                   <h3 className="font-bold text-gray-800">Expert Guidance</h3>
                   <p className="text-sm text-gray-600">Professional counseling support</p>
                 </motion.div>
@@ -102,20 +102,20 @@ const AboutSahayAI = () => {
 
             <Card className="backdrop-blur-sm bg-white/90 shadow-xl border-0 rounded-2xl mb-12">
               <CardHeader>
-                <CardTitle className="text-2xl text-green-600">Key Features</CardTitle>
+                <CardTitle className="text-2xl text-blue-600">Key Features</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                       <div>
                         <h4 className="font-semibold text-gray-800">Crisis Intervention</h4>
                         <p className="text-gray-600 text-sm">Immediate support during critical moments</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2"></div>
+                      <div className="w-2 h-2 bg-cyan-500 rounded-full mt-2"></div>
                       <div>
                         <h4 className="font-semibold text-gray-800">Resource Directory</h4>
                         <p className="text-gray-600 text-sm">Connects you to rehabilitation centers and helplines</p>
@@ -124,14 +124,14 @@ const AboutSahayAI = () => {
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-teal-500 rounded-full mt-2"></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                       <div>
                         <h4 className="font-semibold text-gray-800">Educational Content</h4>
                         <p className="text-gray-600 text-sm">Learn about drug effects and coping strategies</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-cyan-500 rounded-full mt-2"></div>
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
                       <div>
                         <h4 className="font-semibold text-gray-800">Emotional Support</h4>
                         <p className="text-gray-600 text-sm">Compassionate conversations when you need them</p>
@@ -145,7 +145,7 @@ const AboutSahayAI = () => {
             <div className="text-center">
               <Button 
                 onClick={() => navigate('/sahay-ai-chat')}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all"
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all"
               >
                 <MessageCircle className="mr-3" />
                 Start Chatting with Sahay.AI
