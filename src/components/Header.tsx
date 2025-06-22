@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,9 @@ const Header = () => {
         { title: 'Anti-Drug Committees', href: '/anti-drug-committees' },
         { title: 'About Logo', href: '/about-logo' },
         { title: "Director's Note", href: '/directors-note' },
-        { title: 'Officers Directory', href: '/officers-directory' }
+        { title: 'Officers Directory', href: '/officers-directory' },
+        { title: 'Central Co-ordination', href: '/central-coordination' },
+        { title: 'State Co-ordination', href: '/state-coordination' }
       ]
     },
     { 
@@ -31,11 +34,27 @@ const Header = () => {
         { title: 'Rehabilitation Centers', href: '/rehabilitation-centers' }
       ]
     },
-    { title: 'Awareness', href: '/awareness' },
+    { 
+      title: 'Initiatives', 
+      href: '#',
+      dropdown: [
+        { title: 'Mission Parivartana', href: '/mission-parivartana' },
+        { title: 'Operation Sankalp', href: '/operation-sankalp' },
+        { title: 'Prahari Clubs', href: '/prahari-clubs' }
+      ]
+    },
+    { 
+      title: 'Awareness', 
+      href: '#',
+      dropdown: [
+        { title: 'Events & Campaigns', href: '/events-campaigns' },
+        { title: 'Testing Kits & Detection Methods', href: '/testing-kits' },
+        { title: 'FAQs', href: '/faqs' }
+      ]
+    },
     { title: 'Trainings', href: '/trainings' },
     { title: 'Statistics', href: '/statistics' },
     { title: 'Achievements', href: '/achievements' },
-    { title: 'Initiatives', href: '/initiatives' },
     { title: 'News', href: '/news' },
     { title: 'Certifications', href: '/certifications' },
     { title: 'Contact', href: '/contact' }

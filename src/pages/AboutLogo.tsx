@@ -1,40 +1,15 @@
 
-import { Shield, Crown, Building, Flower2, Bird, Award } from 'lucide-react';
+import { Shield, Award } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const AboutLogo = () => {
   const logoElements = [
-    {
-      icon: Building,
-      title: "Warangal Arch",
-      description: "The Warangal Arch, a significant monument in Telangana, India, symbolizes the region's cultural and heritage. It is the main symbol in the Emblem of Telangana.",
-      color: "from-orange-500 to-orange-600"
-    },
-    {
-      icon: Crown,
-      title: "The Lion",
-      description: "The lion is a powerful and majestic creature. It is the symbol of strength, power, and courage.",
-      color: "from-yellow-500 to-yellow-600"
-    },
-    {
-      icon: Building,
-      title: "Charminar",
-      description: "Charminar is a historic monument located in Hyderabad, India. It is a prominent symbol of the city and has cultural and historical significance. Four minars signify the four cardinal directions – North, South, East, and West.",
-      color: "from-gray-600 to-gray-700"
-    },
-    {
-      icon: Flower2,
-      title: "The Wreath",
-      description: "A wreath is a circular arrangement of flowers, leaves, or branches, often used as a decorative element. It is a representation of faith.",
-      color: "from-green-500 to-green-600"
-    },
-    {
-      icon: Bird,
-      title: "The Eagle",
-      description: "The eagle is a powerful and iconic symbol. The eagle is often seen as wise and inspirational. An icon of this majestic creature shown soaring in flight indicates that bureau is always pushing higher and striving to achieve.",
-      color: "from-blue-500 to-blue-600"
-    }
+    "The Warangal Arch, a significant monument in Telangana, India, symbolizes the region's cultural and heritage. It is the main symbol in the Emblem of Telangana.",
+    "The lion is a powerful and majestic creature. It is the symbol of strength, power, and courage.",
+    "Charminar is a historic monument located in Hyderabad, India. It is a prominent symbol of the city and has cultural and historical significance. Four minars signify the four cardinal directions – North, South, East, and West.",
+    "A wreath is a circular arrangement of flowers, leaves, or branches, often used as a decorative element. It is a representation of faith.",
+    "The eagle is a powerful and iconic symbol. The eagle is often seen as wise and inspirational. An icon of this majestic creature shown soaring in flight indicates that bureau is always pushing higher and striving to achieve."
   ];
 
   return (
@@ -80,14 +55,15 @@ const AboutLogo = () => {
           {/* Logo Elements */}
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center font-poppins">Symbolic Elements</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="space-y-6">
               {logoElements.map((element, index) => (
-                <div key={index} className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-blue-50 group">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${element.color} rounded-full flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300`}>
-                    <element.icon className="w-8 h-8 text-white" />
+                <div key={index} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-blue-100">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm">{index + 1}</span>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">{element}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 text-center font-poppins">{element.title}</h3>
-                  <p className="text-gray-600 leading-relaxed text-center">{element.description}</p>
                 </div>
               ))}
             </div>
