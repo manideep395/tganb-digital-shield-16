@@ -30,7 +30,7 @@ const Header = () => {
         { title: 'State Co-ordination', href: '/state-coordination' },
         { title: 'TGANB GO 27', href: '/tganb-go-27' },
         { title: 'TGANB Structure', href: '/tganb-structure' },
-        { title: 'About T-RISING.AI', href: '/about-rising-ai' },
+        { title: 'About T-RISING.AI', href: '/about-t-rising-ai' },
         { title: 'About Sahay AI', href: '/about-sahay-ai', gradient: 'from-green-500 to-emerald-500' },
         { title: 'About Shield AI', href: '/about-shield-ai', gradient: 'from-blue-500 to-indigo-500' },
         { title: 'About Uday AI', href: '/about-uday-ai', gradient: 'from-purple-500 to-pink-500' }
@@ -73,13 +73,7 @@ const Header = () => {
         { title: 'Verification Center', href: '/certificate-verification' }
       ]
     },
-    { 
-      title: 'Reports', 
-      href: '#',
-      dropdown: [
-        { title: 'Drug Report Submission', href: '/drug-report-submission' }
-      ]
-    },
+    { title: 'Reports', href: '/drug-report-submission' },
     { title: 'Trainings', href: '/trainings' },
     { title: 'Statistics', href: '/statistics' },
     { 
@@ -252,12 +246,12 @@ const Header = () => {
                 </div>
               ))}
               
-              {/* T-RISING.AI Button - now connects to about-rising-ai page */}
+              {/* T-RISING.AI Button - renamed and connects to about-t-rising-ai page */}
               <button 
-                onClick={() => handleNavigation('/about-rising-ai')}
+                onClick={() => handleNavigation('/about-t-rising-ai')}
                 className="text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg"
               >
-                T-RISING.AI POP
+                T-RISING.AI
               </button>
             </div>
 
@@ -304,10 +298,10 @@ const Header = () => {
                 
                 {/* T-RISING.AI Mobile Button */}
                 <button 
-                  onClick={() => { handleNavigation('/about-rising-ai'); setIsMenuOpen(false); }}
+                  onClick={() => { handleNavigation('/about-t-rising-ai'); setIsMenuOpen(false); }}
                   className="w-full text-left py-2 px-4 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600"
                 >
-                  T-RISING.AI POP
+                  T-RISING.AI
                 </button>
                 
                 {/* Mobile Contact Info */}

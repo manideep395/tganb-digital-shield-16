@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
@@ -178,13 +179,16 @@ const ShieldAIRiskAssessment = () => {
               className="max-w-2xl mx-auto"
             >
               <div className="text-center mb-8">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="inline-block mb-4"
-                >
-                  <Shield className="w-20 h-20 text-blue-600" />
-                </motion.div>
+                <div className="inline-block mb-4 relative">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center relative">
+                    <Shield className="w-12 h-12 text-white" />
+                    <img 
+                      src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                      alt="TG ANB Logo" 
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full"
+                    />
+                  </div>
+                </div>
                 <h1 className="text-4xl font-bold text-gray-900 mb-4">
                   Shield.AI Risk Assessment
                 </h1>
@@ -278,7 +282,14 @@ const ShieldAIRiskAssessment = () => {
                     riskLevel === 'High' ? 'bg-red-500' : 
                     riskLevel === 'Moderate' ? 'bg-orange-500' : 'bg-green-500'
                   }`}>
-                    <Shield className="mr-2" />
+                    <div className="relative mr-2">
+                      <Shield className="w-6 h-6" />
+                      <img 
+                        src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                        alt="TG ANB Logo" 
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+                      />
+                    </div>
                     {riskLevel} Risk ({riskScore}%)
                   </div>
                 </CardHeader>

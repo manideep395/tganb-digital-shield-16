@@ -58,31 +58,26 @@ const SahayAIChatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDit5Xy8Vrya6Gul7OD2PCEANZL4hPzNNk", {
         method: "POST",
         headers: {
-          "Authorization": "Bearer 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",
-          "HTTP-Referer": window.location.origin,
-          "X-Title": "Sahay.AI - TG ANB",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "mistralai/mistral-small-3.2-24b-instruct:free",
-          "messages": [
+          contents: [
             {
-              "role": "system",
-              "content": "You are Sahay.AI, a compassionate AI assistant developed by Telangana Anti-Narcotics Bureau (TG ANB). Your role is to provide support, awareness, and guidance about drug abuse prevention and recovery. Be empathetic, informative, and always encourage seeking professional help when needed. Keep responses concise but helpful."
-            },
-            {
-              "role": "user",
-              "content": inputText
+              parts: [
+                {
+                  text: `You are Sahay.AI, a compassionate AI assistant developed by Telangana Anti-Narcotics Bureau (TG ANB). Your role is to provide support, awareness, and guidance about drug abuse prevention and recovery. Be empathetic, informative, and always encourage seeking professional help when needed. Keep responses concise but helpful. User's message: ${inputText}`
+                }
+              ]
             }
           ]
         })
       });
 
       const data = await response.json();
-      const aiResponse = data.choices?.[0]?.message?.content || "I'm here to help you. Could you please rephrase your question?";
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to help you. Could you please rephrase your question?";
 
       const aiMessage: Message = {
         id: messages.length + 2,

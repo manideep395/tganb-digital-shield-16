@@ -42,6 +42,7 @@ import LearningResources from './pages/LearningResources';
 import DrugTypes from './pages/DrugTypes';
 import NotFound from './pages/NotFound';
 import AboutRisingAI from './pages/AboutRisingAI';
+import AboutTRisingAI from './pages/AboutTRisingAI';
 import AboutSahayAI from './pages/AboutSahayAI';
 import AboutShieldAI from './pages/AboutShieldAI';
 import AboutUdayAI from './pages/AboutUdayAI';
@@ -71,6 +72,7 @@ function App() {
             <Route path="/tganb-go-27" element={<TganbGo27 />} />
             <Route path="/tganb-structure" element={<TganbStructure />} />
             <Route path="/about-rising-ai" element={<AboutRisingAI />} />
+            <Route path="/about-t-rising-ai" element={<AboutTRisingAI />} />
             <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
             <Route path="/about-shield-ai" element={<AboutShieldAI />} />
             <Route path="/about-uday-ai" element={<AboutUdayAI />} />
