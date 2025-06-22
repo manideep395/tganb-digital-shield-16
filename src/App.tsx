@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +22,11 @@ import EventsCampaigns from "./pages/EventsCampaigns";
 import TestingKits from "./pages/TestingKits";
 import FAQs from "./pages/FAQs";
 import NotFound from "./pages/NotFound";
+import LearningResources from "./pages/LearningResources";
+import Rehabilitation from "./pages/Rehabilitation";
+import DrugTypes from "./pages/DrugTypes";
+import Achievements from "./pages/Achievements";
+import News from "./pages/News";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +55,11 @@ const App = () => (
           <Route path="/events-campaigns" element={<EventsCampaigns />} />
           <Route path="/testing-kits" element={<TestingKits />} />
           <Route path="/faqs" element={<FAQs />} />
+          <Route path="/trainings" element={<LearningResources />} />
+          <Route path="/rehabilitation" element={<Rehabilitation />} />
+          <Route path="/drug-types" element={<DrugTypes />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/news" element={<News />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

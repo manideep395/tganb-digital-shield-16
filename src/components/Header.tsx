@@ -35,18 +35,12 @@ const Header = () => {
       ]
     },
     { 
-      title: 'Initiatives', 
+      title: 'Initiatives & Awareness', 
       href: '#',
       dropdown: [
         { title: 'Mission Parivartana', href: '/mission-parivartana' },
         { title: 'Operation Sankalp', href: '/operation-sankalp' },
-        { title: 'Prahari Clubs', href: '/prahari-clubs' }
-      ]
-    },
-    { 
-      title: 'Awareness', 
-      href: '#',
-      dropdown: [
+        { title: 'Prahari Clubs', href: '/prahari-clubs' },
         { title: 'Events & Campaigns', href: '/events-campaigns' },
         { title: 'Testing Kits & Detection Methods', href: '/testing-kits' },
         { title: 'FAQs', href: '/faqs' }
@@ -54,8 +48,14 @@ const Header = () => {
     },
     { title: 'Trainings', href: '/trainings' },
     { title: 'Statistics', href: '/statistics' },
-    { title: 'Achievements', href: '/achievements' },
-    { title: 'News', href: '/news' },
+    { 
+      title: 'News & Achievements', 
+      href: '#',
+      dropdown: [
+        { title: 'Achievements', href: '/achievements' },
+        { title: 'News', href: '/news' }
+      ]
+    },
     { title: 'Certifications', href: '/certifications' },
     { title: 'Contact', href: '/contact' }
   ];
