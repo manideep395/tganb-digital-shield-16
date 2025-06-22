@@ -71,7 +71,7 @@ const Header = () => {
   return (
     <header className="bg-white shadow-lg border-b border-blue-600 sticky top-0 z-50 font-poppins">
       {/* Top Header */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-2">
+      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-2">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img 
@@ -102,7 +102,7 @@ const Header = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="bg-white py-2">
+      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-2">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center lg:justify-between">
             {/* Mobile menu button */}
