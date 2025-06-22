@@ -1,12 +1,37 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState, useEffect } from 'react';
+import Header from '../components/Header';
+import AnnouncementTicker from '../components/AnnouncementTicker';
+import HeroSection from '../components/HeroSection';
+import InitiativesSlider from '../components/InitiativesSlider';
+import DirectorMessage from '../components/DirectorMessage';
+import AboutTGANB from '../components/AboutTGANB';
+import CelebrityCampaigns from '../components/CelebrityCampaigns';
+import AwarenessPrograms from '../components/AwarenessPrograms';
+import AnimatedMetrics from '../components/AnimatedMetrics';
+import Gallery from '../components/Gallery';
+import NewsEvents from '../components/NewsEvents';
+import ContactSection from '../components/ContactSection';
+import Footer from '../components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <Header />
+      <AnnouncementTicker />
+      <main className="relative">
+        <HeroSection />
+        <InitiativesSlider />
+        <DirectorMessage />
+        <AboutTGANB />
+        <CelebrityCampaigns />
+        <AwarenessPrograms />
+        <AnimatedMetrics />
+        <Gallery />
+        <NewsEvents />
+        <ContactSection />
+      </main>
+      <Footer />
     </div>
   );
 };
