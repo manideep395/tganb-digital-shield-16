@@ -16,7 +16,7 @@ const News = () => {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 font-poppins">
-              Latest <span className="text-blue-600">News & Announcements</span>
+              <span className="text-blue-600">News & Announcements</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
               Stay updated with the latest news and important announcements from Telangana Anti-Narcotics Bureau
@@ -61,8 +61,6 @@ const News = () => {
                         <h4 className="text-lg font-semibold text-blue-600 mb-3">{news.subtitle}</h4>
                       )}
                       
-                      <p className="text-gray-700 leading-relaxed mb-4 line-clamp-3">{news.description}</p>
-                      
                       <Button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold group" variant="ghost">
                         <span>Read Full Article</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -92,12 +90,6 @@ const News = () => {
                     <h3 className="text-lg font-bold text-gray-900 mb-3 font-poppins">
                       {announcement.name}
                     </h3>
-                    
-                    {announcement.description && (
-                      <p className="text-gray-700 mb-4 leading-relaxed">
-                        {announcement.description}
-                      </p>
-                    )}
                     
                     <div className="flex gap-3">
                       <Button className="bg-yellow-600 hover:bg-yellow-700 text-white">
