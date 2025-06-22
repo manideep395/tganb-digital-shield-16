@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,6 +30,9 @@ import Achievements from "./pages/Achievements";
 import News from "./pages/News";
 import Contact from "./pages/Contact";
 import Statistics from "./pages/Statistics";
+import Education from "./pages/Education";
+import TganbGo27 from "./pages/TganbGo27";
+import TganbStructure from "./pages/TganbStructure";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +52,8 @@ const App = () => (
           <Route path="/officers-directory" element={<OfficersDirectory />} />
           <Route path="/central-coordination" element={<CentralCoordination />} />
           <Route path="/state-coordination" element={<StateCoordination />} />
+          <Route path="/tganb-go-27" element={<TganbGo27 />} />
+          <Route path="/tganb-structure" element={<TganbStructure />} />
           <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
           <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
           <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
@@ -56,6 +62,7 @@ const App = () => (
           <Route path="/prahari-clubs" element={<PrahariClubs />} />
           <Route path="/events-campaigns" element={<EventsCampaigns />} />
           <Route path="/testing-kits" element={<TestingKits />} />
+          <Route path="/education" element={<Education />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/trainings" element={<LearningResources />} />
           <Route path="/statistics" element={<Statistics />} />

@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Menu, X, Phone, ChevronDown } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -21,7 +22,9 @@ const Header = () => {
         { title: "Director's Note", href: '/directors-note' },
         { title: 'Officers Directory', href: '/officers-directory' },
         { title: 'Central Co-ordination', href: '/central-coordination' },
-        { title: 'State Co-ordination', href: '/state-coordination' }
+        { title: 'State Co-ordination', href: '/state-coordination' },
+        { title: 'TGANB GO 27', href: '/tganb-go-27' },
+        { title: 'TGANB Structure', href: '/tganb-structure' }
       ]
     },
     { 
@@ -34,14 +37,21 @@ const Header = () => {
       ]
     },
     { 
-      title: 'Initiatives & Awareness', 
+      title: 'Initiatives', 
       href: '#',
       dropdown: [
         { title: 'Mission Parivartana', href: '/mission-parivartana' },
         { title: 'Operation Sankalp', href: '/operation-sankalp' },
-        { title: 'Prahari Clubs', href: '/prahari-clubs' },
+        { title: 'Prahari Clubs', href: '/prahari-clubs' }
+      ]
+    },
+    { 
+      title: 'Awareness', 
+      href: '#',
+      dropdown: [
         { title: 'Events & Campaigns', href: '/events-campaigns' },
         { title: 'Testing Kits & Detection Methods', href: '/testing-kits' },
+        { title: 'Education', href: '/education' },
         { title: 'FAQs', href: '/faqs' }
       ]
     },
@@ -55,7 +65,6 @@ const Header = () => {
         { title: 'News', href: '/news' }
       ]
     },
-    { title: 'Certifications', href: '/certifications' },
     { title: 'Contact', href: '/contact' }
   ];
 
@@ -65,6 +74,18 @@ const Header = () => {
       setIsMenuOpen(false);
       setActiveDropdown(null);
     }
+  };
+
+  const handleCall = (number: string) => {
+    window.location.href = `tel:${number}`;
+  };
+
+  const handleEmail = () => {
+    window.location.href = 'mailto:tsnabho-hyd@tspolice.gov.in';
+  };
+
+  const handleSocialMedia = (url: string) => {
+    window.open(url, '_blank');
   };
 
   return (
@@ -93,9 +114,58 @@ const Header = () => {
             <p className="text-sm text-blue-200">Government of Telangana</p>
           </div>
 
-          <div className="flex items-center space-x-2 bg-red-600 px-4 py-2 rounded-full text-base font-bold">
-            <Phone className="w-5 h-5" />
-            <span>1908</span>
+          <div className="flex flex-col items-end space-y-2">
+            <div className="flex items-center space-x-3">
+              <div 
+                className="flex items-center space-x-2 bg-red-600 px-3 py-1 rounded-full text-sm font-bold cursor-pointer hover:bg-red-700 transition-colors"
+                onClick={() => handleCall('1908')}
+              >
+                <Phone className="w-4 h-4" />
+                <span>1908</span>
+              </div>
+              <div 
+                className="flex items-center space-x-2 bg-blue-600 px-3 py-1 rounded-full text-xs font-medium cursor-pointer hover:bg-blue-700 transition-colors"
+                onClick={() => handleCall('8712671111')}
+              >
+                <Phone className="w-3 h-3" />
+                <span>8712671111</span>
+              </div>
+            </div>
+            <div 
+              className="flex items-center space-x-1 text-xs text-blue-200 cursor-pointer hover:text-white transition-colors"
+              onClick={handleEmail}
+            >
+              <Mail className="w-3 h-3" />
+              <span>tsnabho-hyd@tspolice.gov.in</span>
+            </div>
+            
+            {/* Social Media Links */}
+            <div className="flex space-x-2">
+              <button 
+                onClick={() => handleSocialMedia('https://www.instagram.com/telanganaantinarcoticsbureau/')}
+                className="w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
+              >
+                <Instagram className="w-3 h-3" />
+              </button>
+              <button 
+                onClick={() => handleSocialMedia('https://x.com/tg_anb?lang=en')}
+                className="w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-900 transition-colors"
+              >
+                <Twitter className="w-3 h-3" />
+              </button>
+              <button 
+                onClick={() => handleSocialMedia('https://www.facebook.com/telanganaantinarcoticsbureau/')}
+                className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+              >
+                <Facebook className="w-3 h-3" />
+              </button>
+              <button 
+                onClick={() => handleSocialMedia('https://www.youtube.com/@TG_ANB')}
+                className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
+              >
+                <Youtube className="w-3 h-3" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
