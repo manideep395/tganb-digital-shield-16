@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { districts } from '@/data/districts';
+import { telanganaDistricts } from '@/data/districts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Shield, FileText, AlertTriangle, Phone } from 'lucide-react';
@@ -117,7 +117,7 @@ const DrugReportSubmission = () => {
       console.error('Submission error:', error);
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your report. Please try again.",
+        description: "Failed to submit report. Please check your internet connection and try again.",
         variant: "destructive",
       });
     } finally {
@@ -195,7 +195,7 @@ const DrugReportSubmission = () => {
                     <Checkbox 
                       id="anonymous" 
                       checked={isAnonymous} 
-                      onCheckedChange={setIsAnonymous}
+                      onCheckedChange={(checked) => setIsAnonymous(checked === true)}
                       className="mt-1"
                     />
                     <div>
@@ -256,7 +256,7 @@ const DrugReportSubmission = () => {
                       <SelectValue placeholder="Select district where incident occurred" />
                     </SelectTrigger>
                     <SelectContent>
-                      {districts.map((district) => (
+                      {telanganaDistricts.map((district) => (
                         <SelectItem key={district} value={district}>
                           {district}
                         </SelectItem>
@@ -273,7 +273,7 @@ const DrugReportSubmission = () => {
                       <Checkbox 
                         id="dateUnknown" 
                         checked={dateUnknown} 
-                        onCheckedChange={setDateUnknown}
+                        onCheckedChange={(checked) => setDateUnknown(checked === true)}
                       />
                       <Label htmlFor="dateUnknown" className="text-sm text-gray-600 cursor-pointer">
                         Date/Time unknown
