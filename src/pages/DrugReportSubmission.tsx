@@ -1,138 +1,91 @@
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Shield, AlertTriangle, Upload, Send, Eye, EyeOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { format } from 'date-fns';
+import { districts } from '@/data/districts';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Shield, FileText, AlertTriangle, Phone } from 'lucide-react';
 
 const DrugReportSubmission = () => {
-  const navigate = useNavigate();
-  const [currentSection, setCurrentSection] = useState(1);
+  const [isAnonymous, setIsAnonymous] = useState(true);
+  const [reportType, setReportType] = useState('');
+  const [dateUnknown, setDateUnknown] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showReporterDetails, setShowReporterDetails] = useState(false);
-  
-  // Form state
+  const { toast } = useToast();
+
   const [formData, setFormData] = useState({
-    reportType: '',
-    locationIncident: '',
-    incidentDate: null as Date | null,
-    dateUnknown: false,
-    detailedDescription: '',
-    isAnonymous: true,
     reporterName: '',
     reporterEmail: '',
     reporterPhone: '',
+    locationIncident: '',
+    incidentDateTime: '',
+    detailedDescription: '',
     evidenceFile: null as File | null
   });
 
-  const reportTypes = [
-    'Drug Trafficking/Distribution',
-    'Drug Manufacturing/Production',
-    'Drug Possession/Use',
-    'Suspicious Activity',
-    'Drug-Related Violence',
-    'Other Drug-Related Crime'
-  ];
-
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error('File size must be less than 10MB');
-        return;
-      }
-      
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm', 'application/pdf'];
-      if (!allowedTypes.includes(file.type)) {
-        toast.error('File type not supported. Please upload images, videos, or PDF files.');
-        return;
-      }
-      
-      setFormData(prev => ({ ...prev, evidenceFile: file }));
-      toast.success('Evidence file uploaded successfully');
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData(prev => ({ ...prev, evidenceFile: file }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!reportType) {
+      toast({
+        title: "Error",
+        description: "Please select a report type.",
+        variant: "destructive",
+      });
+      return;
     }
-  };
 
-  const validateSection = (section: number): boolean => {
-    switch (section) {
-      case 1:
-        return formData.reportType !== '' && formData.locationIncident !== '';
-      case 2:
-        return formData.detailedDescription.length >= 100;
-      case 3:
-        if (!formData.isAnonymous) {
-          return formData.reporterName !== '' && formData.reporterEmail !== '';
-        }
-        return true;
-      default:
-        return true;
-    }
-  };
-
-  const nextSection = () => {
-    if (validateSection(currentSection)) {
-      setCurrentSection(prev => Math.min(prev + 1, 4));
-    } else {
-      toast.error('Please fill in all required fields before proceeding');
-    }
-  };
-
-  const prevSection = () => {
-    setCurrentSection(prev => Math.max(prev - 1, 1));
-  };
-
-  const submitReport = async () => {
-    if (!validateSection(3)) {
-      toast.error('Please complete all required fields');
+    if (!formData.locationIncident || !formData.detailedDescription) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      console.log('Starting report submission...');
-      
-      // Prepare report data for database
       const reportData = {
-        report_type: formData.reportType,
+        report_type: reportType,
+        is_anonymous: isAnonymous,
+        reporter_name: isAnonymous ? null : formData.reporterName,
+        reporter_email: isAnonymous ? null : formData.reporterEmail,
+        reporter_phone: isAnonymous ? null : formData.reporterPhone,
         location_incident: formData.locationIncident,
-        incident_date_time: formData.dateUnknown ? null : formData.incidentDate?.toISOString(),
-        date_unknown: formData.dateUnknown,
+        incident_date_time: dateUnknown ? null : (formData.incidentDateTime || null),
+        date_unknown: dateUnknown,
         detailed_description: formData.detailedDescription,
-        is_anonymous: formData.isAnonymous,
-        reporter_name: formData.isAnonymous ? null : formData.reporterName,
-        reporter_email: formData.isAnonymous ? null : formData.reporterEmail,
-        reporter_phone: formData.isAnonymous ? null : formData.reporterPhone,
-        evidence_file_url: null,
         evidence_file_name: formData.evidenceFile?.name || null,
         evidence_file_size: formData.evidenceFile?.size || null,
-        ip_address: 'hidden_for_privacy',
-        user_agent: navigator.userAgent.substring(0, 255),
         status: 'pending'
       };
 
-      console.log('Report data prepared:', reportData);
+      console.log('Submitting report data:', reportData);
 
-      // Submit report to database
       const { data, error } = await supabase
         .from('drug_reports')
         .insert([reportData])
-        .select()
-        .single();
+        .select();
 
       if (error) {
         console.error('Database error:', error);
@@ -140,450 +93,264 @@ const DrugReportSubmission = () => {
       }
 
       console.log('Report submitted successfully:', data);
-      
-      setCurrentSection(4);
-      toast.success('Report submitted successfully! Your report ID is: ' + data.id.substring(0, 8));
-      
+
+      toast({
+        title: "Success!",
+        description: "Your report has been submitted successfully. Thank you for helping make our community safer.",
+      });
+
+      // Reset form
+      setFormData({
+        reporterName: '',
+        reporterEmail: '',
+        reporterPhone: '',
+        locationIncident: '',
+        incidentDateTime: '',
+        detailedDescription: '',
+        evidenceFile: null
+      });
+      setReportType('');
+      setIsAnonymous(true);
+      setDateUnknown(false);
+
     } catch (error) {
-      console.error('Error submitting report:', error);
-      toast.error('Failed to submit report. Please check your internet connection and try again.');
+      console.error('Submission error:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your report. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-orange-900 font-poppins">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-red-400/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-orange-400/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
-      </div>
-
-      {/* Header */}
-      <div className="relative z-10 flex items-center justify-between p-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate('/')}
-          className="flex items-center gap-3 text-white hover:text-red-200 transition-colors font-poppins"
-        >
-          <ArrowLeft className="w-6 h-6" />
-          <span className="text-lg font-semibold">Back to Home</span>
-        </motion.button>
-
-        <div className="flex items-center gap-3">
-          <img 
-            src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
-            alt="TG ANB Logo" 
-            className="h-12 w-12 rounded-full"
-          />
-          <div className="text-white">
-            <h1 className="text-xl font-bold font-poppins">TG ANB</h1>
-            <p className="text-sm text-red-200">Secure Report Submission</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+      <Header />
+      
+      <main className="py-6">
+        <div className="container mx-auto px-4 max-w-4xl">
+          {/* Header Section */}
+          <div className="text-center mb-6">
+            <div className="flex items-center justify-center mb-4">
+              <Shield className="w-8 h-8 text-blue-600 mr-3" />
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 font-poppins">
+                Drug Crime Report Submission
+              </h1>
+            </div>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Help us combat drug-related crimes in our community. Your report will be handled confidentially by our specialized team.
+            </p>
           </div>
-        </div>
 
-        <div className="flex items-center gap-2 text-white">
-          <Shield className="w-6 h-6 text-green-400" />
-          <span className="text-sm font-poppins">Encrypted & Secure</span>
-        </div>
-      </div>
+          {/* Emergency Contact */}
+          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-4 mb-6 text-center">
+            <div className="flex items-center justify-center mb-2">
+              <Phone className="w-6 h-6 mr-2" />
+              <h3 className="text-xl font-bold">Emergency Helpline</h3>
+            </div>
+            <p className="text-sm mb-2">For immediate assistance, call our 24/7 helpline</p>
+            <div className="text-2xl font-bold">1908</div>
+          </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-88px)] p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-4xl"
-        >
-          <Card className="bg-black/40 backdrop-blur-xl border-white/20 shadow-2xl">
+          <Card className="shadow-xl border-0">
+            <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-xl">
+              <CardTitle className="flex items-center text-xl">
+                <FileText className="w-6 h-6 mr-2" />
+                Submit Your Report
+              </CardTitle>
+            </CardHeader>
+            
             <CardContent className="p-6">
-              {/* Progress Indicator */}
-              <div className="flex items-center justify-between mb-6">
-                {[1, 2, 3, 4].map((step) => (
-                  <div key={step} className="flex items-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold border-2 font-poppins ${
-                      currentSection >= step ? 'bg-red-600 border-red-600' : 'bg-white/10 border-white/30'
-                    }`}>
-                      {step}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Report Type */}
+                <div>
+                  <Label className="text-base font-semibold text-gray-700 mb-3 block">
+                    Type of Report <span className="text-red-500">*</span>
+                  </Label>
+                  <RadioGroup value={reportType} onValueChange={setReportType} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
+                      <RadioGroupItem value="drug_trafficking" id="trafficking" />
+                      <Label htmlFor="trafficking" className="cursor-pointer">Drug Trafficking</Label>
                     </div>
-                    {step < 4 && (
-                      <div className={`w-16 h-1 mx-2 ${
-                        currentSection > step ? 'bg-red-600' : 'bg-white/20'
-                      }`}></div>
-                    )}
-                  </div>
-                ))}
-              </div>
+                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
+                      <RadioGroupItem value="drug_possession" id="possession" />
+                      <Label htmlFor="possession" className="cursor-pointer">Drug Possession</Label>
+                    </div>
+                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
+                      <RadioGroupItem value="drug_manufacturing" id="manufacturing" />
+                      <Label htmlFor="manufacturing" className="cursor-pointer">Drug Manufacturing</Label>
+                    </div>
+                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
+                      <RadioGroupItem value="suspicious_activity" id="suspicious" />
+                      <Label htmlFor="suspicious" className="cursor-pointer">Suspicious Activity</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
 
-              {/* Section 1: Report Type & Location */}
-              {currentSection === 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-white mb-2 font-poppins">Report Details</h2>
-                    <p className="text-white/70 font-poppins">Please provide basic information about the incident</p>
-                  </div>
-
-                  <div className="space-y-4">
+                {/* Anonymous Reporting */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-2">
+                    <Checkbox 
+                      id="anonymous" 
+                      checked={isAnonymous} 
+                      onCheckedChange={setIsAnonymous}
+                      className="mt-1"
+                    />
                     <div>
-                      <label className="block text-white font-semibold mb-2 font-poppins">Type of Report *</label>
-                      <Select value={formData.reportType} onValueChange={(value) => handleInputChange('reportType', value)}>
-                        <SelectTrigger className="bg-white/10 border-white/30 text-white font-poppins">
-                          <SelectValue placeholder="Select report type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {reportTypes.map((type) => (
-                            <SelectItem key={type} value={type}>{type}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="block text-white font-semibold mb-2 font-poppins">Location of Incident *</label>
-                      <Input
-                        value={formData.locationIncident}
-                        onChange={(e) => handleInputChange('locationIncident', e.target.value)}
-                        placeholder="Enter location details (area, landmark, address)"
-                        className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-white font-semibold mb-2 font-poppins">Date & Time of Incident</label>
-                      <div className="flex items-center gap-4">
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              disabled={formData.dateUnknown}
-                              className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-poppins"
-                            >
-                              {formData.incidentDate ? format(formData.incidentDate, 'PPP') : 'Select date'}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={formData.incidentDate || undefined}
-                              onSelect={(date) => handleInputChange('incidentDate', date)}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            id="dateUnknown"
-                            checked={formData.dateUnknown}
-                            onCheckedChange={(checked) => {
-                              handleInputChange('dateUnknown', checked);
-                              if (checked) handleInputChange('incidentDate', null);
-                            }}
-                          />
-                          <label htmlFor="dateUnknown" className="text-white text-sm font-poppins">Date Unknown</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end">
-                    <Button onClick={nextSection} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 font-poppins">
-                      Next Step
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Section 2: Description & Evidence */}
-              {currentSection === 2 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-white mb-2 font-poppins">Incident Description</h2>
-                    <p className="text-white/70 font-poppins">Provide detailed information about what you witnessed</p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-white font-semibold mb-2 font-poppins">
-                        Detailed Description * <span className="text-sm text-white/70">(Minimum 100 characters)</span>
-                      </label>
-                      <Textarea
-                        value={formData.detailedDescription}
-                        onChange={(e) => handleInputChange('detailedDescription', e.target.value)}
-                        placeholder="Please provide a detailed description of the incident, including what you saw, heard, or witnessed. Include as many relevant details as possible."
-                        className="bg-white/10 border-white/30 text-white placeholder:text-white/50 min-h-24 font-poppins"
-                        rows={6}
-                      />
-                      <div className="text-right text-white/60 text-sm mt-1 font-poppins">
-                        {formData.detailedDescription.length}/100 minimum
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-white font-semibold mb-2 font-poppins">
-                        Evidence Upload <span className="text-sm text-white/70">(Optional)</span>
-                      </label>
-                      <div className="border-2 border-dashed border-white/30 rounded-lg p-4 bg-white/5">
-                        <div className="text-center">
-                          <Upload className="w-8 h-8 text-white/50 mx-auto mb-2" />
-                          <p className="text-white mb-1 font-poppins">Upload photos, videos, or documents</p>
-                          <p className="text-white/60 text-sm mb-3 font-poppins">Max 10MB • JPG, PNG, MP4, PDF supported</p>
-                          <input
-                            type="file"
-                            onChange={handleFileUpload}
-                            accept="image/*,video/*,.pdf"
-                            className="hidden"
-                            id="evidence-upload"
-                          />
-                          <label
-                            htmlFor="evidence-upload"
-                            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg cursor-pointer transition-colors font-poppins"
-                          >
-                            <Upload className="w-4 h-4" />
-                            Choose File
-                          </label>
-                          {formData.evidenceFile && (
-                            <div className="mt-3 p-2 bg-green-600/20 border border-green-500/30 rounded-lg">
-                              <p className="text-green-200 text-sm font-poppins">
-                                File uploaded: {formData.evidenceFile.name}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <Button 
-                      onClick={prevSection} 
-                      variant="outline" 
-                      className="border-white/30 text-white hover:bg-white/10 font-poppins"
-                    >
-                      Previous
-                    </Button>
-                    <Button onClick={nextSection} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 font-poppins">
-                      Next Step
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Section 3: Reporter Information */}
-              {currentSection === 3 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-white mb-2 font-poppins">Reporter Information</h2>
-                    <p className="text-white/70 font-poppins">Choose whether to submit anonymously or provide contact details</p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="bg-blue-600/20 border border-blue-500/30 rounded-lg p-3">
-                      <div className="flex items-center gap-3">
-                        <Checkbox
-                          id="anonymous"
-                          checked={formData.isAnonymous}
-                          onCheckedChange={(checked) => {
-                            handleInputChange('isAnonymous', checked);
-                            if (checked) {
-                              handleInputChange('reporterName', '');
-                              handleInputChange('reporterEmail', '');
-                              handleInputChange('reporterPhone', '');
-                            }
-                          }}
-                        />
-                        <label htmlFor="anonymous" className="text-white font-semibold font-poppins">
-                          Submit this report anonymously
-                        </label>
-                      </div>
-                      <p className="text-blue-200 text-sm mt-1 ml-6 font-poppins">
-                        Your identity will be completely protected and not shared with anyone.
+                      <Label htmlFor="anonymous" className="font-semibold text-gray-700 cursor-pointer">
+                        Submit Anonymously
+                      </Label>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Your identity will be protected. We recommend anonymous reporting for your safety.
                       </p>
                     </div>
+                  </div>
+                </div>
 
-                    {!formData.isAnonymous && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="space-y-3"
-                      >
-                        <div className="flex items-center gap-2 mb-3">
-                          <button
-                            onClick={() => setShowReporterDetails(!showReporterDetails)}
-                            className="flex items-center gap-2 text-white hover:text-red-200 transition-colors font-poppins"
-                          >
-                            {showReporterDetails ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            {showReporterDetails ? 'Hide' : 'Show'} contact details
-                          </button>
-                        </div>
-
-                        {showReporterDetails && (
-                          <div className="space-y-3">
-                            <div>
-                              <label className="block text-white font-semibold mb-1 font-poppins">Full Name *</label>
-                              <Input
-                                value={formData.reporterName}
-                                onChange={(e) => handleInputChange('reporterName', e.target.value)}
-                                placeholder="Enter your full name"
-                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-white font-semibold mb-1 font-poppins">Email Address *</label>
-                              <Input
-                                type="email"
-                                value={formData.reporterEmail}
-                                onChange={(e) => handleInputChange('reporterEmail', e.target.value)}
-                                placeholder="Enter your email address"
-                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-white font-semibold mb-1 font-poppins">
-                                Phone Number <span className="text-sm text-white/70">(Optional)</span>
-                              </label>
-                              <Input
-                                type="tel"
-                                value={formData.reporterPhone}
-                                onChange={(e) => handleInputChange('reporterPhone', e.target.value)}
-                                placeholder="Enter your phone number"
-                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-
-                    <div className="bg-yellow-600/20 border border-yellow-500/30 rounded-lg p-3">
-                      <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5" />
-                        <div>
-                          <p className="text-yellow-200 font-semibold mb-1 font-poppins">Important Notice</p>
-                          <p className="text-yellow-100 text-sm font-poppins">
-                            All reports are taken seriously and will be investigated by appropriate authorities. 
-                            False reporting is a criminal offense. Your data is encrypted and securely stored.
-                          </p>
-                        </div>
-                      </div>
+                {/* Contact Information - Only if not anonymous */}
+                {!isAnonymous && (
+                  <div className="grid md:grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
+                    <div>
+                      <Label htmlFor="name" className="text-sm font-medium text-gray-700">Full Name</Label>
+                      <Input
+                        id="name"
+                        value={formData.reporterName}
+                        onChange={(e) => handleInputChange('reporterName', e.target.value)}
+                        className="mt-1"
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.reporterEmail}
+                        onChange={(e) => handleInputChange('reporterEmail', e.target.value)}
+                        className="mt-1"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        value={formData.reporterPhone}
+                        onChange={(e) => handleInputChange('reporterPhone', e.target.value)}
+                        className="mt-1"
+                        placeholder="Your phone number"
+                      />
                     </div>
                   </div>
+                )}
 
-                  <div className="flex justify-between">
-                    <Button 
-                      onClick={prevSection} 
-                      variant="outline" 
-                      className="border-white/30 text-white hover:bg-white/10 font-poppins"
-                    >
-                      Previous
-                    </Button>
-                    <Button 
-                      onClick={submitReport}
-                      disabled={isSubmitting}
-                      className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 flex items-center gap-2 font-poppins"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Submitting...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4" />
-                          Submit Report
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
+                {/* Location */}
+                <div>
+                  <Label htmlFor="location" className="text-base font-semibold text-gray-700 mb-2 block">
+                    Location of Incident <span className="text-red-500">*</span>
+                  </Label>
+                  <Select value={formData.locationIncident} onValueChange={(value) => handleInputChange('locationIncident', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select district where incident occurred" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {districts.map((district) => (
+                        <SelectItem key={district} value={district}>
+                          {district}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Section 4: Confirmation */}
-              {currentSection === 4 && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center space-y-4"
-                >
-                  <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <motion.svg
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: 0.3, duration: 0.6 }}
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <motion.path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
+                {/* Date and Time */}
+                <div>
+                  <Label className="text-base font-semibold text-gray-700 mb-2 block">Incident Date & Time</Label>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="dateUnknown" 
+                        checked={dateUnknown} 
+                        onCheckedChange={setDateUnknown}
                       />
-                    </motion.svg>
+                      <Label htmlFor="dateUnknown" className="text-sm text-gray-600 cursor-pointer">
+                        Date/Time unknown
+                      </Label>
+                    </div>
+                    {!dateUnknown && (
+                      <Input
+                        type="datetime-local"
+                        value={formData.incidentDateTime}
+                        onChange={(e) => handleInputChange('incidentDateTime', e.target.value)}
+                        className="max-w-md"
+                      />
+                    )}
                   </div>
+                </div>
 
-                  <h2 className="text-2xl font-bold text-white mb-3 font-poppins">Report Submitted Successfully</h2>
-                  <p className="text-white/70 text-lg mb-4 font-poppins">
-                    Thank you for helping make our community safer. Your report has been securely submitted to the Telangana Anti-Narcotics Bureau.
+                {/* Description */}
+                <div>
+                  <Label htmlFor="description" className="text-base font-semibold text-gray-700 mb-2 block">
+                    Detailed Description <span className="text-red-500">*</span>
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={formData.detailedDescription}
+                    onChange={(e) => handleInputChange('detailedDescription', e.target.value)}
+                    className="min-h-32"
+                    placeholder="Please provide as much detail as possible about the incident, including what you observed, people involved, vehicles, etc."
+                  />
+                </div>
+
+                {/* Evidence Upload */}
+                <div>
+                  <Label htmlFor="evidence" className="text-base font-semibold text-gray-700 mb-2 block">
+                    Evidence (Optional)
+                  </Label>
+                  <Input
+                    id="evidence"
+                    type="file"
+                    onChange={handleFileChange}
+                    accept="image/*,video/*,.pdf,.doc,.docx"
+                    className="cursor-pointer"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Accepted formats: Images, Videos, PDF, Word documents (Max 10MB)
                   </p>
+                </div>
 
-                  <div className="bg-green-600/20 border border-green-500/30 rounded-lg p-4 mb-4">
-                    <h3 className="text-green-200 font-semibold mb-2 font-poppins">What happens next?</h3>
-                    <ul className="text-green-100 text-sm space-y-1 text-left font-poppins">
-                      <li>• Your report will be reviewed by trained investigators</li>
-                      <li>• Appropriate action will be taken based on the information provided</li>
-                      <li>• If you provided contact details, you may be contacted for additional information</li>
-                      <li>• All information is handled with strict confidentiality</li>
-                    </ul>
+                {/* Warning */}
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-2">
+                    <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-orange-800">Important Notice</h4>
+                      <p className="text-sm text-orange-700 mt-1">
+                        Filing a false report is a criminal offense. Please ensure all information provided is accurate and truthful.
+                      </p>
+                    </div>
                   </div>
+                </div>
 
-                  <div className="flex gap-3 justify-center">
-                    <Button 
-                      onClick={() => navigate('/')}
-                      className="bg-white text-red-900 hover:bg-white/90 px-6 py-2 font-poppins"
-                    >
-                      Return Home
-                    </Button>
-                    <Button 
-                      onClick={() => window.location.reload()}
-                      variant="outline"
-                      className="border-white/30 text-white hover:bg-white/10 px-6 py-2 font-poppins"
-                    >
-                      Submit Another Report
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
+                {/* Submit Button */}
+                <div className="pt-4">
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 text-lg rounded-xl"
+                  >
+                    {isSubmitting ? 'Submitting Report...' : 'Submit Report'}
+                  </Button>
+                </div>
+              </form>
             </CardContent>
           </Card>
-        </motion.div>
-      </div>
-
-      {/* Footer */}
-      <div className="relative z-10 bg-black/20 backdrop-blur-sm border-t border-white/10 p-3">
-        <div className="text-center text-white/60 text-sm font-poppins">
-          <p>Telangana Anti-Narcotics Bureau • Government of Telangana • Secure & Confidential</p>
         </div>
-      </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };

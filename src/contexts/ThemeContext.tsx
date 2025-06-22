@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark';
+type Theme = 'light';
 
 interface ThemeContextType {
   theme: Theme;
@@ -19,31 +19,17 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme] = useState<Theme>('light');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    // Always set light theme
+    document.documentElement.classList.remove('dark');
+    document.body.style.backgroundColor = '#ffffff';
+    document.body.style.color = '#111827';
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    
-    // Apply theme to body background
-    if (theme === 'dark') {
-      document.body.style.backgroundColor = '#1f2937';
-      document.body.style.color = '#f9fafb';
-    } else {
-      document.body.style.backgroundColor = '#ffffff';
-      document.body.style.color = '#111827';
-    }
-  }, [theme]);
-
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    // Do nothing - theme is always light
   };
 
   return (

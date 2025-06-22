@@ -2,7 +2,9 @@
 import HeroSection from '../components/HeroSection';
 import AnnouncementTicker from '../components/AnnouncementTicker';
 import AboutTGANB from '../components/AboutTGANB';
+import TRisingAIHighlight from '../components/TRisingAIHighlight';
 import DirectorMessage from '../components/DirectorMessage';
+import InitiativesHighlight from '../components/InitiativesHighlight';
 import InitiativesSlider from '../components/InitiativesSlider';
 import NewsEvents from '../components/NewsEvents';
 import AnimatedMetrics from '../components/AnimatedMetrics';
@@ -20,8 +22,9 @@ const Index = () => {
       <HeroSection />
       <AnnouncementTicker />
       <AboutTGANB />
+      <TRisingAIHighlight />
       <DirectorMessage />
-      <InitiativesSlider />
+      <InitiativesHighlight />
       <NewsEvents />
       <AnimatedMetrics />
       <AwarenessPrograms />

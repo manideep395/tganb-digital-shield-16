@@ -1,8 +1,19 @@
 
 import { Button } from '@/components/ui/button';
 import { Shield, Users, Target } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleExploreWork = () => {
+    navigate('/news');
+  };
+
+  const handleReportCrime = () => {
+    navigate('/drug-report-submission');
+  };
+
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 font-poppins">
       {/* 3D Background Elements */}
@@ -100,6 +111,7 @@ const HeroSection = () => {
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold font-poppins px-6 py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm border-2 border-yellow-400/50"
+              onClick={handleExploreWork}
             >
               Explore Our Work
             </Button>
@@ -107,6 +119,7 @@ const HeroSection = () => {
               size="lg" 
               variant="outline" 
               className="border-2 border-white text-blue-300 hover:bg-white hover:text-blue-900 font-bold font-poppins px-6 py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm bg-transparent"
+              onClick={handleReportCrime}
             >
               Report Drug Crime
             </Button>

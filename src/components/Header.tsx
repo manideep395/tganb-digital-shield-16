@@ -1,18 +1,13 @@
 
 import { useState } from 'react';
-import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Sun, Moon } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTheme } from '@/contexts/ThemeContext';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { motion } from 'framer-motion';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [isRisingAIOpen, setIsRisingAIOpen] = useState(false);
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
 
   const menuItems = [
     { title: 'Home', href: '/', active: true },
@@ -108,7 +103,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-lg border-b border-blue-600 dark:border-blue-400 sticky top-0 z-50 font-poppins transition-colors">
+    <header className="bg-white shadow-lg border-b border-blue-600 sticky top-0 z-50 font-poppins">
       {/* Top Header - Compact */}
       <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-1 md:py-2">
         <div className="container mx-auto px-4 flex items-center justify-between">
@@ -191,7 +186,7 @@ const Header = () => {
       </div>
 
       {/* Main Navigation - Compact */}
-      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 py-1">
+      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-1">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Mobile menu button */}
@@ -211,8 +206,8 @@ const Header = () => {
                   <button 
                     className={`text-xs font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
-                        ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold dark:text-blue-400 dark:bg-blue-900' 
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:bg-gray-800'
+                        ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold' 
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
                     }`}
                     onClick={() => handleNavigation(item.href)}
                     onMouseEnter={() => item.dropdown && setActiveDropdown(item.title)}
@@ -224,7 +219,7 @@ const Header = () => {
                   
                   {item.dropdown && activeDropdown === item.title && (
                     <div 
-                      className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 min-w-48 z-50"
+                      className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-48 z-50"
                       onMouseEnter={() => setActiveDropdown(item.title)}
                       onMouseLeave={() => setActiveDropdown(null)}
                     >
@@ -234,7 +229,7 @@ const Header = () => {
                           className={`w-full text-left py-2 px-4 text-sm font-medium first:rounded-t-lg last:rounded-b-lg ${
                             dropdownItem.gradient 
                               ? `text-white bg-gradient-to-r ${dropdownItem.gradient} hover:opacity-90`
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400'
+                              : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
                           }`}
                           onClick={() => handleNavigation(dropdownItem.href)}
                         >
@@ -255,26 +250,16 @@ const Header = () => {
               </button>
             </div>
 
-            {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              className="ml-2"
-            >
-              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-            </Button>
-
             {/* Mobile menu */}
             {isMenuOpen && (
-              <div className="lg:hidden absolute left-4 right-4 top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 max-h-64 overflow-y-auto z-50">
+              <div className="lg:hidden absolute left-4 right-4 top-full mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
                 {menuItems.map((item, index) => (
                   <div key={index}>
                     <button 
                       className={`w-full text-left py-2 px-4 text-sm font-medium ${
                         item.href === '/' 
-                          ? 'text-blue-600 bg-blue-50 font-bold dark:text-blue-400 dark:bg-blue-900' 
-                          : 'text-gray-700 hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700'
+                          ? 'text-blue-600 bg-blue-50 font-bold' 
+                          : 'text-gray-700 hover:bg-blue-50'
                       }`}
                       onClick={() => handleNavigation(item.href)}
                     >
@@ -286,7 +271,7 @@ const Header = () => {
                         className={`w-full text-left py-2 px-8 text-sm ${
                           dropdownItem.gradient 
                             ? `text-white bg-gradient-to-r ${dropdownItem.gradient}`
-                            : 'text-gray-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:bg-gray-700'
+                            : 'text-gray-600 hover:bg-blue-50'
                         }`}
                         onClick={() => handleNavigation(dropdownItem.href)}
                       >
@@ -296,7 +281,7 @@ const Header = () => {
                   </div>
                 ))}
                 
-                {/* T-RISING.AI Mobile Button - now redirects to /about-rising-ai */}
+                {/* T-RISING.AI Mobile Button */}
                 <button 
                   onClick={() => { handleNavigation('/about-rising-ai'); setIsMenuOpen(false); }}
                   className="w-full text-left py-2 px-4 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600"
@@ -305,7 +290,7 @@ const Header = () => {
                 </button>
                 
                 {/* Mobile Contact Info */}
-                <div className="border-t dark:border-gray-700 p-4 space-y-2">
+                <div className="border-t p-4 space-y-2">
                   <div className="flex space-x-2">
                     <button 
                       onClick={() => handleCall('1908')}
@@ -324,7 +309,7 @@ const Header = () => {
                   </div>
                   <button 
                     onClick={handleEmail}
-                    className="flex items-center space-x-1 text-xs text-blue-600 dark:text-blue-400"
+                    className="flex items-center space-x-1 text-xs text-blue-600"
                   >
                     <Mail className="w-3 h-3" />
                     <span>tsnabho-hyd@tspolice.gov.in</span>
@@ -334,7 +319,7 @@ const Header = () => {
                       <Instagram className="w-5 h-5 text-pink-600" />
                     </button>
                     <button onClick={() => handleSocialMedia('https://x.com/tg_anb?lang=en')}>
-                      <Twitter className="w-5 h-5 text-gray-800 dark:text-gray-400" />
+                      <Twitter className="w-5 h-5 text-gray-800" />
                     </button>
                     <button onClick={() => handleSocialMedia('https://www.facebook.com/telanganaantinarcoticsbureau/')}>
                       <Facebook className="w-5 h-5 text-blue-600" />
