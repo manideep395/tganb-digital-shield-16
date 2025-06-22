@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 interface VerificationResult {
   isValid: boolean;
@@ -17,12 +18,25 @@ interface VerificationResult {
 
 const CertificateVerification = () => {
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleVerification = async () => {
-    if (!searchTerm.trim()) {
+  useEffect(() => {
+    const idFromUrl = searchParams.get('id');
+    if (idFromUrl) {
+      setSearchTerm(idFromUrl);
+      // Auto-verify when coming from QR code
+      setTimeout(() => {
+        handleVerification(idFromUrl);
+      }, 500);
+    }
+  }, [searchParams]);
+
+  const handleVerification = async (certificateId?: string) => {
+    const searchValue = certificateId || searchTerm;
+    if (!searchValue.trim()) {
       toast({
         title: "Error",
         description: "Please enter a certificate ID or student name",
@@ -36,7 +50,7 @@ const CertificateVerification = () => {
       const { data, error } = await supabase
         .from('certificate_verification')
         .select('*')
-        .or(`certificate_id.ilike.%${searchTerm}%,student_name.ilike.%${searchTerm}%`);
+        .or(`certificate_id.ilike.%${searchValue}%,student_name.ilike.%${searchValue}%`);
 
       if (error) throw error;
 
@@ -73,14 +87,14 @@ const CertificateVerification = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8">
       <div className="container mx-auto px-4 max-w-2xl">
-        <Card>
+        <Card className="dark:bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-blue-800">
+            <CardTitle className="text-2xl font-bold text-center text-blue-800 dark:text-blue-300">
               Certificate Verification Center
             </CardTitle>
-            <p className="text-center text-gray-600">
+            <p className="text-center text-gray-600 dark:text-gray-300">
               Verify the authenticity of Anti-Drug Soldier certificates
             </p>
           </CardHeader>
@@ -92,11 +106,12 @@ const CertificateVerification = () => {
                 placeholder="Enter certificate ID (e.g., ADS/XXXXX) or student name"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                className="dark:bg-gray-700 dark:text-white"
               />
             </div>
 
             <Button
-              onClick={handleVerification}
+              onClick={() => handleVerification()}
               className="w-full bg-blue-600 hover:bg-blue-700"
               disabled={isSearching}
             >
@@ -104,7 +119,7 @@ const CertificateVerification = () => {
             </Button>
 
             {verificationResult && (
-              <Card className="mt-6">
+              <Card className="mt-6 dark:bg-gray-700">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-center mb-4">
                     {verificationResult.isValid ? (
@@ -124,10 +139,10 @@ const CertificateVerification = () => {
                     
                     {verificationResult.isValid && (
                       <div className="space-y-2">
-                        <p className="text-lg font-semibold">
+                        <p className="text-lg font-semibold dark:text-white">
                           Student Name: {verificationResult.studentName}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
                           Certificate ID: {verificationResult.certificateId}
                         </p>
                         <p className="text-sm text-green-600 font-medium">
@@ -146,9 +161,9 @@ const CertificateVerification = () => {
               </Card>
             )}
 
-            <div className="text-center text-sm text-gray-500 mt-6">
+            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
               <p>For any queries regarding certificate verification,</p>
-              <p>contact: <a href="tel:8712671111" className="text-blue-600">8712671111</a></p>
+              <p>contact: <a href="tel:8712671111" className="text-blue-600 dark:text-blue-400">8712671111</a></p>
             </div>
           </CardContent>
         </Card>

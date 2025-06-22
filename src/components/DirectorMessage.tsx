@@ -1,32 +1,23 @@
 
-import { useState } from 'react';
-import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const DirectorMessage = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const toggleVideo = () => {
-    setIsPlaying(!isPlaying);
-  };
-
   const handleReadMore = () => {
-    // Navigate to director note page
-    window.location.href = '/director-note';
+    window.location.href = '/directors-note';
   };
 
   return (
-    <section className="py-8 bg-gradient-to-b from-blue-50 to-white font-poppins">
+    <section className="py-8 bg-gradient-to-b from-blue-50 to-white font-poppins dark:from-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Director's Message</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">Director's Message</h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 items-center mb-8">
             {/* Director Info */}
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl shadow-xl p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
                 <div className="flex items-center space-x-4 mb-4">
                   <img 
                     src="/lovable-uploads/8f0c5105-a6c3-4812-85b3-0e1c39e29f3b.png" 
@@ -34,12 +25,12 @@ const DirectorMessage = () => {
                     className="w-16 h-16 rounded-full border-2 border-blue-600 object-cover"
                   />
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800">Sri. Sandeep Shandilya IPS</h3>
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white">Sri. Sandeep Shandilya IPS</h3>
                     <p className="text-blue-600 font-semibold text-sm">Director, TG ANB</p>
                   </div>
                 </div>
                 
-                <blockquote className="text-sm text-gray-700 italic leading-relaxed border-l-4 border-blue-600 pl-4 mb-4">
+                <blockquote className="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed border-l-4 border-blue-600 pl-4 mb-4">
                   "Don't Let Drugs Decide Your Destiny. Together, we can build a drug-free Telangana 
                   where every citizen can realize their full potential without the shadow of substance abuse."
                 </blockquote>
@@ -53,45 +44,54 @@ const DirectorMessage = () => {
               </div>
             </div>
 
-            {/* Video Section */}
-            <div className="relative">
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div className="aspect-video relative">
-                  {isPlaying ? (
-                    <iframe
-                      src="https://www.youtube.com/embed/tqFqKrmJAoU?autoplay=1&mute=0"
-                      title="Director's Message"
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <>
-                      <img 
-                        src="https://img.youtube.com/vi/tqFqKrmJAoU/maxresdefault.jpg"
-                        alt="Director's Message Thumbnail"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <Button
-                          size="lg"
-                          onClick={toggleVideo}
-                          className="bg-red-600 hover:bg-red-700 rounded-full w-16 h-16 shadow-2xl transform hover:scale-110 transition-all duration-300"
-                        >
-                          <Play className="w-6 h-6 ml-1" />
-                        </Button>
-                      </div>
-                    </>
-                  )}
+            {/* Director Photo */}
+            <div className="relative flex justify-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-6">
+                <img 
+                  src="/lovable-uploads/8f0c5105-a6c3-4812-85b3-0e1c39e29f3b.png"
+                  alt="Director TG ANB"
+                  className="w-64 h-64 rounded-full object-cover border-4 border-blue-600 shadow-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* DGP Message Section */}
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">DGP's Message</h2>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            {/* DGP Photo */}
+            <div className="relative flex justify-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-6">
+                <img 
+                  src="/lovable-uploads/58955152-6125-4601-abc9-e7cf3762b834.png"
+                  alt="Dr. Jitender DGP, Telangana"
+                  className="w-64 h-64 rounded-full object-cover border-4 border-green-600 shadow-2xl"
+                />
+              </div>
+            </div>
+
+            {/* DGP Info */}
+            <div className="space-y-4">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                <div className="flex items-center space-x-4 mb-4">
+                  <img 
+                    src="/lovable-uploads/58955152-6125-4601-abc9-e7cf3762b834.png" 
+                    alt="Dr. Jitender DGP" 
+                    className="w-16 h-16 rounded-full border-2 border-green-600 object-cover"
+                  />
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white">Dr. Jitender</h3>
+                    <p className="text-green-600 font-semibold text-sm">DGP, Telangana</p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-1">
-                    Don't Let Drugs Decide Your Destiny
-                  </h4>
-                  <p className="text-gray-600 text-sm">
-                    Message by Director TG ANB Sri. Sandeep Shandilya IPS
-                  </p>
-                </div>
+                
+                <blockquote className="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed border-l-4 border-green-600 pl-4 mb-4">
+                  "Drugs ruin lives by damaging mental and physical health. Each of you should spread 
+                  the message to at least 10 others — say no to drugs, yes to health and a good life."
+                </blockquote>
               </div>
             </div>
           </div>
