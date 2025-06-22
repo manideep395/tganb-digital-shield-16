@@ -10,6 +10,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { telanganaDistricts } from '@/data/districts';
 import { generateCertificatePDF } from '@/utils/certificateGenerator';
+import Header from './Header';
+import Footer from './Footer';
 
 interface FormData {
   name: string;
@@ -160,169 +162,182 @@ const AntiDrugSoldierForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-blue-800">
-              Anti-Drug Soldier Enrollment
-            </CardTitle>
-            <p className="text-center text-gray-600">
-              Join the movement against drug abuse and become an Anti-Drug Soldier
-            </p>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 font-poppins">
+      <Header />
+      <div className="py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <Card className="dark:bg-gray-800">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-center text-blue-800 dark:text-blue-300">
+                Anti-Drug Soldier Enrollment
+              </CardTitle>
+              <p className="text-center text-gray-600 dark:text-gray-300">
+                Join the movement against drug abuse and become an Anti-Drug Soldier
+              </p>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      required
+                      className="dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="parentGuardianName">Parent/Guardian Name *</Label>
+                    <Input
+                      id="parentGuardianName"
+                      value={formData.parentGuardianName}
+                      onChange={(e) => handleInputChange('parentGuardianName', e.target.value)}
+                      required
+                      className="dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="gender">Gender *</Label>
+                    <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
+                      <SelectTrigger className="dark:bg-gray-700 dark:text-white">
+                        <SelectValue placeholder="Select Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Others">Others</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="mobileNumber">Mobile Number *</Label>
+                    <Input
+                      id="mobileNumber"
+                      type="tel"
+                      value={formData.mobileNumber}
+                      onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
+                      required
+                      className="dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email ID *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      required
+                      className="dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="district">District *</Label>
+                    <Select value={formData.district} onValueChange={(value) => handleInputChange('district', value)}>
+                      <SelectTrigger className="dark:bg-gray-700 dark:text-white">
+                        <SelectValue placeholder="Select District" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {telanganaDistricts.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <div>
-                  <Label htmlFor="name">Full Name *</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                  <Label htmlFor="address">Address *</Label>
+                  <Textarea
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
                     required
+                    className="dark:bg-gray-700 dark:text-white"
                   />
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="institutionName">School/College/Office Name *</Label>
+                    <Input
+                      id="institutionName"
+                      value={formData.institutionName}
+                      onChange={(e) => handleInputChange('institutionName', e.target.value)}
+                      required
+                      className="dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="institutionType">Institution Type *</Label>
+                    <Select value={formData.institutionType} onValueChange={(value) => handleInputChange('institutionType', value)}>
+                      <SelectTrigger className="dark:bg-gray-700 dark:text-white">
+                        <SelectValue placeholder="Select Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="School">School</SelectItem>
+                        <SelectItem value="College">College</SelectItem>
+                        <SelectItem value="Office">Office</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {formData.institutionType && (
+                  <div>
+                    <Label htmlFor="classCourseDesignation">
+                      {formData.institutionType === 'School' ? 'Class' : 
+                       formData.institutionType === 'College' ? 'Course & Year' : 'Designation'} *
+                    </Label>
+                    <Input
+                      id="classCourseDesignation"
+                      value={formData.classCourseDesignation}
+                      onChange={(e) => handleInputChange('classCourseDesignation', e.target.value)}
+                      required
+                      className="dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                )}
+
                 <div>
-                  <Label htmlFor="parentGuardianName">Parent/Guardian Name *</Label>
+                  <Label htmlFor="photo">Upload Photo</Label>
                   <Input
-                    id="parentGuardianName"
-                    value={formData.parentGuardianName}
-                    onChange={(e) => handleInputChange('parentGuardianName', e.target.value)}
-                    required
+                    id="photo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="dark:bg-gray-700 dark:text-white"
                   />
                 </div>
+
                 <div>
-                  <Label htmlFor="gender">Gender *</Label>
-                  <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Others">Others</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="mobileNumber">Mobile Number *</Label>
-                  <Input
-                    id="mobileNumber"
-                    type="tel"
-                    value={formData.mobileNumber}
-                    onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
-                    required
+                  <Label htmlFor="remarks">Remarks</Label>
+                  <Textarea
+                    id="remarks"
+                    value={formData.remarks}
+                    onChange={(e) => handleInputChange('remarks', e.target.value)}
+                    placeholder="Any additional comments or remarks..."
+                    className="dark:bg-gray-700 dark:text-white"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="email">Email ID *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="district">District *</Label>
-                  <Select value={formData.district} onValueChange={(value) => handleInputChange('district', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select District" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {telanganaDistricts.map((district) => (
-                        <SelectItem key={district} value={district}>
-                          {district}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
 
-              <div>
-                <Label htmlFor="address">Address *</Label>
-                <Textarea
-                  id="address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label htmlFor="institutionName">School/College/Office Name *</Label>
-                  <Input
-                    id="institutionName"
-                    value={formData.institutionName}
-                    onChange={(e) => handleInputChange('institutionName', e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="institutionType">Institution Type *</Label>
-                  <Select value={formData.institutionType} onValueChange={(value) => handleInputChange('institutionType', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="School">School</SelectItem>
-                      <SelectItem value="College">College</SelectItem>
-                      <SelectItem value="Office">Office</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {formData.institutionType && (
-                <div>
-                  <Label htmlFor="classCourseDesignation">
-                    {formData.institutionType === 'School' ? 'Class' : 
-                     formData.institutionType === 'College' ? 'Course & Year' : 'Designation'} *
-                  </Label>
-                  <Input
-                    id="classCourseDesignation"
-                    value={formData.classCourseDesignation}
-                    onChange={(e) => handleInputChange('classCourseDesignation', e.target.value)}
-                    required
-                  />
-                </div>
-              )}
-
-              <div>
-                <Label htmlFor="photo">Upload Photo</Label>
-                <Input
-                  id="photo"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="remarks">Remarks</Label>
-                <Textarea
-                  id="remarks"
-                  value={formData.remarks}
-                  onChange={(e) => handleInputChange('remarks', e.target.value)}
-                  placeholder="Any additional comments or remarks..."
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Processing...' : 'Submit Enrollment'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Processing...' : 'Submit Enrollment'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };

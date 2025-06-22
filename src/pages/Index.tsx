@@ -1,31 +1,33 @@
 
-import Header from '../components/Header';
-import AnnouncementTicker from '../components/AnnouncementTicker';
 import HeroSection from '../components/HeroSection';
-import DirectorMessage from '../components/DirectorMessage';
+import AnnouncementTicker from '../components/AnnouncementTicker';
 import AboutTGANB from '../components/AboutTGANB';
-import CelebrityCampaigns from '../components/CelebrityCampaigns';
-import SocialMediaFeed from '../components/SocialMediaFeed';
-import AnimatedMetrics from '../components/AnimatedMetrics';
+import DirectorMessage from '../components/DirectorMessage';
+import InitiativesSlider from '../components/InitiativesSlider';
 import NewsEvents from '../components/NewsEvents';
+import AnimatedMetrics from '../components/AnimatedMetrics';
+import AwarenessPrograms from '../components/AwarenessPrograms';
+import CelebrityCampaigns from '../components/CelebrityCampaigns';
+import ContactSection from '../components/ContactSection';
+import Gallery from '../components/Gallery';
+import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 font-poppins dark:from-gray-900 dark:to-gray-800 dark:text-white">
+    <div className="min-h-screen">
       <Header />
+      <HeroSection />
       <AnnouncementTicker />
-      <main className="relative">
-        <HeroSection />
-        <DirectorMessage />
-        <AboutTGANB />
-        <div className="py-4">
-          <CelebrityCampaigns />
-        </div>
-        <SocialMediaFeed />
-        <AnimatedMetrics />
-        <NewsEvents />
-      </main>
+      <AboutTGANB />
+      <DirectorMessage />
+      <InitiativesSlider />
+      <NewsEvents />
+      <AnimatedMetrics />
+      <AwarenessPrograms />
+      <CelebrityCampaigns />
+      <Gallery />
+      <ContactSection />
       <Footer />
     </div>
   );

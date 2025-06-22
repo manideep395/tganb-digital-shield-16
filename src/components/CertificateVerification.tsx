@@ -9,6 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
 
 interface VerificationResult {
   isValid: boolean;
@@ -87,87 +89,91 @@ const CertificateVerification = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <Card className="dark:bg-gray-800">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-blue-800 dark:text-blue-300">
-              Certificate Verification Center
-            </CardTitle>
-            <p className="text-center text-gray-600 dark:text-gray-300">
-              Verify the authenticity of Anti-Drug Soldier certificates
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor="searchTerm">Certificate ID or Student Name</Label>
-              <Input
-                id="searchTerm"
-                placeholder="Enter certificate ID (e.g., ADS/XXXXX) or student name"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="dark:bg-gray-700 dark:text-white"
-              />
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 font-poppins">
+      <Header />
+      <div className="py-8">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <Card className="dark:bg-gray-800">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-center text-blue-800 dark:text-blue-300">
+                Certificate Verification Center
+              </CardTitle>
+              <p className="text-center text-gray-600 dark:text-gray-300">
+                Verify the authenticity of Anti-Drug Soldier certificates
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label htmlFor="searchTerm">Certificate ID or Student Name</Label>
+                <Input
+                  id="searchTerm"
+                  placeholder="Enter certificate ID (e.g., ADS/XXXXX) or student name"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="dark:bg-gray-700 dark:text-white"
+                />
+              </div>
 
-            <Button
-              onClick={() => handleVerification()}
-              className="w-full bg-blue-600 hover:bg-blue-700"
-              disabled={isSearching}
-            >
-              {isSearching ? 'Verifying...' : 'Verify Certificate'}
-            </Button>
+              <Button
+                onClick={() => handleVerification()}
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                disabled={isSearching}
+              >
+                {isSearching ? 'Verifying...' : 'Verify Certificate'}
+              </Button>
 
-            {verificationResult && (
-              <Card className="mt-6 dark:bg-gray-700">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-center mb-4">
-                    {verificationResult.isValid ? (
-                      <CheckCircle className="w-16 h-16 text-green-500" />
-                    ) : (
-                      <XCircle className="w-16 h-16 text-red-500" />
-                    )}
-                  </div>
-                  
-                  <div className="text-center space-y-3">
-                    <Badge 
-                      variant={verificationResult.isValid ? "default" : "destructive"}
-                      className="text-lg px-4 py-2"
-                    >
-                      {verificationResult.isValid ? "VERIFIED" : "NOT FOUND"}
-                    </Badge>
+              {verificationResult && (
+                <Card className="mt-6 dark:bg-gray-700">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-center mb-4">
+                      {verificationResult.isValid ? (
+                        <CheckCircle className="w-16 h-16 text-green-500" />
+                      ) : (
+                        <XCircle className="w-16 h-16 text-red-500" />
+                      )}
+                    </div>
                     
-                    {verificationResult.isValid && (
-                      <div className="space-y-2">
-                        <p className="text-lg font-semibold dark:text-white">
-                          Student Name: {verificationResult.studentName}
+                    <div className="text-center space-y-3">
+                      <Badge 
+                        variant={verificationResult.isValid ? "default" : "destructive"}
+                        className="text-lg px-4 py-2"
+                      >
+                        {verificationResult.isValid ? "VERIFIED" : "NOT FOUND"}
+                      </Badge>
+                      
+                      {verificationResult.isValid && (
+                        <div className="space-y-2">
+                          <p className="text-lg font-semibold dark:text-white">
+                            Student Name: {verificationResult.studentName}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
+                            Certificate ID: {verificationResult.certificateId}
+                          </p>
+                          <p className="text-sm text-green-600 font-medium">
+                            This certificate is authentic and issued by TGANB
+                          </p>
+                        </div>
+                      )}
+                      
+                      {!verificationResult.isValid && (
+                        <p className="text-sm text-red-600">
+                          Certificate not found in our database. Please check the details and try again.
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          Certificate ID: {verificationResult.certificateId}
-                        </p>
-                        <p className="text-sm text-green-600 font-medium">
-                          This certificate is authentic and issued by TGANB
-                        </p>
-                      </div>
-                    )}
-                    
-                    {!verificationResult.isValid && (
-                      <p className="text-sm text-red-600">
-                        Certificate not found in our database. Please check the details and try again.
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
-              <p>For any queries regarding certificate verification,</p>
-              <p>contact: <a href="tel:8712671111" className="text-blue-600 dark:text-blue-400">8712671111</a></p>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
+                <p>For any queries regarding certificate verification,</p>
+                <p>contact: <a href="tel:8712671111" className="text-blue-600 dark:text-blue-400">8712671111</a></p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
