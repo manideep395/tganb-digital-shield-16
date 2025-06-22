@@ -60,16 +60,6 @@ const Header = () => {
       ]
     },
     { 
-      title: 'RISING AI', 
-      href: '#',
-      isSpecial: true,
-      dropdown: [
-        { title: 'Sahay AI', href: '/sahay-ai', gradient: 'from-green-500 to-emerald-500' },
-        { title: 'Shield AI', href: '/shield-ai', gradient: 'from-blue-500 to-indigo-500' },
-        { title: 'Uday AI', href: '/uday-ai', gradient: 'from-purple-500 to-pink-500' }
-      ]
-    },
-    { 
       title: 'Certifications', 
       href: '#',
       dropdown: [
@@ -87,7 +77,18 @@ const Header = () => {
         { title: 'News', href: '/news' }
       ]
     },
-    { title: 'Contact', href: '/contact' }
+    { title: 'Contact', href: '/contact' },
+    { 
+      title: 'RISING AI', 
+      href: '#',
+      isSpecial: true,
+      dropdown: [
+        { title: 'About T-RISING.AI', href: '/about-rising-ai', gradient: 'from-blue-500 to-purple-500' },
+        { title: 'Sahay AI', href: '/sahay-ai', gradient: 'from-green-500 to-emerald-500' },
+        { title: 'Shield AI', href: '/shield-ai', gradient: 'from-blue-500 to-indigo-500' },
+        { title: 'Uday AI', href: '/uday-ai', gradient: 'from-purple-500 to-pink-500' }
+      ]
+    }
   ];
 
   const handleNavigation = (href: string) => {
@@ -119,21 +120,21 @@ const Header = () => {
             <img 
               src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
               alt="Government of Telangana" 
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
+              className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-white/30"
             />
             <div className="h-6 w-px bg-white/30 hidden md:block"></div>
             <img 
               src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
               alt="TG ANB Logo" 
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
+              className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-white/30"
             />
           </div>
           
           <div className="text-center flex-1">
-            <h1 className="text-base md:text-xl font-bold font-poppins tracking-wide">
+            <h1 className="text-lg md:text-2xl font-bold font-poppins tracking-wide">
               TELANGANA ANTI NARCOTICS BUREAU (TGANB)
             </h1>
-            <p className="text-xs text-blue-200 hidden md:block">Government of Telangana</p>
+            <p className="text-sm md:text-base text-blue-200 hidden md:block">Government of Telangana</p>
           </div>
 
           {/* Desktop Contact Info */}

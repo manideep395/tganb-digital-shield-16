@@ -1,3 +1,4 @@
+
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 
@@ -89,13 +90,13 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   
   // Certificate content with proper spacing and formatting
   pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(11);
+  pdf.setFontSize(12);
   pdf.setTextColor(0, 0, 0);
   
   let yPosition = 145;
-  const lineHeight = 6;
+  const lineHeight = 7;
   
-  // Line 1
+  // Main certification text
   const line1Part1 = `This is to proudly certify that `;
   const line1Part2 = `${formData.name}`;
   const line1Part3 = `, a student of`;
@@ -117,27 +118,27 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.text(line1Part3, part3StartX, yPosition);
   yPosition += lineHeight;
   
-  // Line 2
+  // Institution name and enrollment text
   pdf.text(`${formData.institutionName}, has been officially enrolled as an`, 105, yPosition, { align: 'center' });
   yPosition += lineHeight + 2;
   
-  // Line 3 - Anti-Narcotic Soldier in blue
+  // Anti-Narcotic Soldier in blue
   pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(0, 51, 102);
   pdf.text('Anti-Narcotic Soldier', 105, yPosition, { align: 'center' });
   yPosition += lineHeight + 2;
   
-  // Line 4 - rest in black
+  // Remaining text in black
   pdf.setFont('helvetica', 'normal');
   pdf.setTextColor(0, 0, 0);
   pdf.text('under the initiative of the Telangana Anti', 105, yPosition, { align: 'center' });
   yPosition += lineHeight;
   
   pdf.text(`Narcotics Bureau on ${new Date().toLocaleDateString()}.`, 105, yPosition, { align: 'center' });
-  yPosition += lineHeight + 4;
+  yPosition += lineHeight + 6;
   
-  // Rest of the content
-  const remainingContent = [
+  // New concise content
+  const contentLines = [
     'Through this enrollment, the student has pledged to actively participate',
     'in building a drug-free society by promoting awareness about the harmful',
     'effects of narcotics, encouraging healthy choices among peers, and',
@@ -154,7 +155,7 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     'awareness, strength, and integrity.'
   ];
   
-  remainingContent.forEach((line) => {
+  contentLines.forEach((line) => {
     if (line === '') {
       yPosition += lineHeight / 2;
       return;
@@ -163,7 +164,7 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     yPosition += lineHeight;
   });
   
-  // Bottom section with attractive design - increased spacing from content
+  // Bottom section with attractive design
   yPosition = 250;
   pdf.setFillColor(240, 245, 255);
   pdf.roundedRect(25, yPosition, 160, 25, 3, 3, 'F');

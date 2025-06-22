@@ -41,6 +41,7 @@ import AboutRisingAI from "./pages/AboutRisingAI";
 import SahayAI from "./pages/SahayAI";
 import ShieldAI from "./pages/ShieldAI";
 import UdayAI from "./pages/UdayAI";
+import SahayAIChatbot from "./pages/SahayAIChatbot";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="/tganb-structure" element={<TganbStructure />} />
             <Route path="/about-rising-ai" element={<AboutRisingAI />} />
             <Route path="/sahay-ai" element={<SahayAI />} />
+            <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
             <Route path="/shield-ai" element={<ShieldAI />} />
             <Route path="/uday-ai" element={<UdayAI />} />
             <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />

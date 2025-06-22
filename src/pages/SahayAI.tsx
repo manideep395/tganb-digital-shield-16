@@ -1,4 +1,3 @@
-
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
@@ -169,8 +168,11 @@ const SahayAI = () => {
                 </li>
               </ul>
               <div className="text-center">
-                <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg">
-                  🔗 Chat with Sahay.AI
+                <Button 
+                  onClick={() => window.location.href = '/sahay-ai-chat'}
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
+                >
+                  💬 Chat with Sahay.AI
                 </Button>
               </div>
             </div>
