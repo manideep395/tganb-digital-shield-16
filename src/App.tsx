@@ -47,6 +47,7 @@ import AboutShieldAI from './pages/AboutShieldAI';
 import AboutUdayAI from './pages/AboutUdayAI';
 import AntiDrugSoldierEnrollment from './pages/AntiDrugSoldierEnrollment';
 import CertificateVerification from './pages/CertificateVerification';
+import DrugReportSubmission from './pages/DrugReportSubmission';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -99,6 +100,7 @@ function App() {
             <Route path="/drug-types" element={<DrugTypes />} />
             <Route path="/anti-drug-soldier-enrollment" element={<AntiDrugSoldierEnrollment />} />
             <Route path="/certificate-verification" element={<CertificateVerification />} />
+            <Route path="/drug-report-submission" element={<DrugReportSubmission />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

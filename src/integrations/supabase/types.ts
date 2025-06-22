@@ -87,6 +87,75 @@ export type Database = {
         }
         Relationships: []
       }
+      drug_reports: {
+        Row: {
+          created_at: string
+          date_unknown: boolean | null
+          detailed_description: string
+          evidence_file_name: string | null
+          evidence_file_size: number | null
+          evidence_file_url: string | null
+          id: string
+          incident_date_time: string | null
+          ip_address: string | null
+          is_anonymous: boolean
+          location_incident: string
+          report_type: string
+          reporter_email: string | null
+          reporter_name: string | null
+          reporter_phone: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          status: string | null
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          date_unknown?: boolean | null
+          detailed_description: string
+          evidence_file_name?: string | null
+          evidence_file_size?: number | null
+          evidence_file_url?: string | null
+          id?: string
+          incident_date_time?: string | null
+          ip_address?: string | null
+          is_anonymous?: boolean
+          location_incident: string
+          report_type: string
+          reporter_email?: string | null
+          reporter_name?: string | null
+          reporter_phone?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          date_unknown?: boolean | null
+          detailed_description?: string
+          evidence_file_name?: string | null
+          evidence_file_size?: number | null
+          evidence_file_url?: string | null
+          id?: string
+          incident_date_time?: string | null
+          ip_address?: string | null
+          is_anonymous?: boolean
+          location_incident?: string
+          report_type?: string
+          reporter_email?: string | null
+          reporter_name?: string | null
+          reporter_phone?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
