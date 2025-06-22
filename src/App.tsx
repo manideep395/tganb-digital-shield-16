@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,6 +37,10 @@ import MythsFacts from "./pages/MythsFacts";
 import AntiDrugSoldierForm from "./components/AntiDrugSoldierForm";
 import CertificateVerification from "./components/CertificateVerification";
 import NewsDetail from "./components/NewsDetail";
+import AboutRisingAI from "./pages/AboutRisingAI";
+import SahayAI from "./pages/SahayAI";
+import ShieldAI from "./pages/ShieldAI";
+import UdayAI from "./pages/UdayAI";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +63,10 @@ const App = () => (
             <Route path="/state-coordination" element={<StateCoordination />} />
             <Route path="/tganb-go-27" element={<TganbGo27 />} />
             <Route path="/tganb-structure" element={<TganbStructure />} />
+            <Route path="/about-rising-ai" element={<AboutRisingAI />} />
+            <Route path="/sahay-ai" element={<SahayAI />} />
+            <Route path="/shield-ai" element={<ShieldAI />} />
+            <Route path="/uday-ai" element={<UdayAI />} />
             <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
             <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
             <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />

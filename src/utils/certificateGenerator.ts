@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 
@@ -10,18 +9,11 @@ interface FormData {
 export const generateCertificatePDF = async (formData: FormData, certificateId: string, photoUrl?: string) => {
   const pdf = new jsPDF('portrait', 'mm', 'a4');
   
-  // Set up gradient background
-  pdf.setFillColor(240, 245, 255);
+  // Set white background
+  pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, 210, 297, 'F');
   
-  // Add subtle gradient effect
-  for (let i = 0; i < 20; i++) {
-    const alpha = 0.05 - (i * 0.002);
-    pdf.setFillColor(59, 130, 246, alpha);
-    pdf.rect(0, i * 15, 210, 15, 'F');
-  }
-  
-  // Add TGANB logo as watermark
+  // Add TGANB logo as watermark with 20% opacity
   try {
     const tganbWatermark = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
     pdf.setGState({ opacity: 0.2 });
@@ -38,7 +30,7 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   
   // Inner decorative border
   pdf.setLineWidth(0.5);
-  pdf.setDrawColor(59, 130, 246);
+  pdf.setDrawColor(0, 51, 102);
   pdf.rect(20, 20, 170, 257);
   
   // Three logos at top - properly positioned
@@ -97,16 +89,55 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   
   // Certificate content with proper spacing and formatting
   pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(10);
+  pdf.setFontSize(11);
   pdf.setTextColor(0, 0, 0);
   
-  const content = [
-    `This is to proudly certify that ${formData.name}, a student of`,
-    `${formData.institutionName}, has been officially enrolled as an`,
-    '',
-    'under the initiative of the Telangana Anti',
-    `Narcotics Bureau on ${new Date().toLocaleDateString()}.`,
-    '',
+  let yPosition = 145;
+  const lineHeight = 6;
+  
+  // Line 1
+  const line1Part1 = `This is to proudly certify that `;
+  const line1Part2 = `${formData.name}`;
+  const line1Part3 = `, a student of`;
+  
+  const line1Width = pdf.getTextWidth(line1Part1 + line1Part2 + line1Part3);
+  const startX = 105 - (line1Width / 2);
+  
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(line1Part1, startX, yPosition);
+  
+  const nameStartX = startX + pdf.getTextWidth(line1Part1);
+  pdf.setTextColor(0, 51, 102);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text(line1Part2, nameStartX, yPosition);
+  
+  const part3StartX = nameStartX + pdf.getTextWidth(line1Part2);
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text(line1Part3, part3StartX, yPosition);
+  yPosition += lineHeight;
+  
+  // Line 2
+  pdf.text(`${formData.institutionName}, has been officially enrolled as an`, 105, yPosition, { align: 'center' });
+  yPosition += lineHeight + 2;
+  
+  // Line 3 - Anti-Narcotic Soldier in blue
+  pdf.setFont('helvetica', 'bold');
+  pdf.setTextColor(0, 51, 102);
+  pdf.text('Anti-Narcotic Soldier', 105, yPosition, { align: 'center' });
+  yPosition += lineHeight + 2;
+  
+  // Line 4 - rest in black
+  pdf.setFont('helvetica', 'normal');
+  pdf.setTextColor(0, 0, 0);
+  pdf.text('under the initiative of the Telangana Anti', 105, yPosition, { align: 'center' });
+  yPosition += lineHeight;
+  
+  pdf.text(`Narcotics Bureau on ${new Date().toLocaleDateString()}.`, 105, yPosition, { align: 'center' });
+  yPosition += lineHeight + 4;
+  
+  // Rest of the content
+  const remainingContent = [
     'Through this enrollment, the student has pledged to actively participate',
     'in building a drug-free society by promoting awareness about the harmful',
     'effects of narcotics, encouraging healthy choices among peers, and',
@@ -123,57 +154,28 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     'awareness, strength, and integrity.'
   ];
   
-  let yPosition = 145;
-  const lineHeight = 5;
-  
-  content.forEach((line) => {
+  remainingContent.forEach((line) => {
     if (line === '') {
       yPosition += lineHeight / 2;
       return;
     }
-    
-    if (line.includes(formData.name)) {
-      // Handle student name highlighting
-      const parts = line.split(formData.name);
-      const fullLineWidth = pdf.getTextWidth(line);
-      const startX = 105 - (fullLineWidth / 2);
-      
-      pdf.setTextColor(0, 0, 0);
-      pdf.text(parts[0], startX, yPosition);
-      
-      const nameStartX = startX + pdf.getTextWidth(parts[0]);
-      pdf.setTextColor(0, 51, 102);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text(formData.name, nameStartX, yPosition);
-      
-      const remainderStartX = nameStartX + pdf.getTextWidth(formData.name);
-      pdf.setTextColor(0, 0, 0);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(parts[1], remainderStartX, yPosition);
-    } else if (line.includes('Anti-Narcotic Soldier')) {
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(0, 51, 102);
-      pdf.text(line, 105, yPosition, { align: 'center' });
-      pdf.setFont('helvetica', 'normal');
-      pdf.setTextColor(0, 0, 0);
-    } else {
-      pdf.text(line, 105, yPosition, { align: 'center' });
-    }
+    pdf.text(line, 105, yPosition, { align: 'center' });
     yPosition += lineHeight;
   });
   
-  // Bottom section with attractive design
+  // Bottom section with attractive design - increased spacing from content
+  yPosition = 250;
   pdf.setFillColor(240, 245, 255);
-  pdf.roundedRect(25, 250, 160, 25, 3, 3, 'F');
+  pdf.roundedRect(25, yPosition, 160, 25, 3, 3, 'F');
   pdf.setDrawColor(0, 51, 102);
   pdf.setLineWidth(1);
-  pdf.roundedRect(25, 250, 160, 25, 3, 3, 'S');
+  pdf.roundedRect(25, yPosition, 160, 25, 3, 3, 'S');
   
   // Generate QR code with verification URL
   const verificationUrl = `${window.location.origin}/certificate-verification?id=${certificateId}`;
   try {
     const qrCodeDataURL = await QRCode.toDataURL(verificationUrl, { width: 60 });
-    pdf.addImage(qrCodeDataURL, 'PNG', 30, 255, 15, 15);
+    pdf.addImage(qrCodeDataURL, 'PNG', 30, yPosition + 5, 15, 15);
   } catch (error) {
     console.error('Error generating QR code:', error);
   }
@@ -182,15 +184,15 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setFontSize(8);
   pdf.setTextColor(0, 51, 102);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Certificate Information', 50, 258);
+  pdf.text('Certificate Information', 50, yPosition + 8);
   
   pdf.setFont('helvetica', 'normal');
   pdf.setTextColor(0, 0, 0);
-  pdf.text(`ID: ${certificateId}`, 50, 263);
-  pdf.text('Digitally Verified', 50, 267);
+  pdf.text(`ID: ${certificateId}`, 50, yPosition + 13);
+  pdf.text('Digitally Verified', 50, yPosition + 17);
   
-  pdf.text('Authorized by TGANB', 140, 263);
-  pdf.text('Government of Telangana', 140, 267);
+  pdf.text('Authorized by TGANB', 140, yPosition + 13);
+  pdf.text('Government of Telangana', 140, yPosition + 17);
   
   // Download the PDF
   pdf.save(`ADS_Certificate_${formData.name.replace(/\s+/g, '_')}.pdf`);

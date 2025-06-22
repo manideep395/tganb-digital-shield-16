@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,8 @@ const Header = () => {
         { title: 'Central Co-ordination', href: '/central-coordination' },
         { title: 'State Co-ordination', href: '/state-coordination' },
         { title: 'TGANB GO 27', href: '/tganb-go-27' },
-        { title: 'TGANB Structure', href: '/tganb-structure' }
+        { title: 'TGANB Structure', href: '/tganb-structure' },
+        { title: 'About T-RISING.AI', href: '/about-rising-ai' }
       ]
     },
     { 
@@ -55,6 +57,16 @@ const Header = () => {
         { title: 'Education', href: '/education' },
         { title: 'Myths & Facts', href: '/myths-facts' },
         { title: 'FAQs', href: '/faqs' }
+      ]
+    },
+    { 
+      title: 'RISING AI', 
+      href: '#',
+      isSpecial: true,
+      dropdown: [
+        { title: 'Sahay AI', href: '/sahay-ai', gradient: 'from-green-500 to-emerald-500' },
+        { title: 'Shield AI', href: '/shield-ai', gradient: 'from-blue-500 to-indigo-500' },
+        { title: 'Uday AI', href: '/uday-ai', gradient: 'from-purple-500 to-pink-500' }
       ]
     },
     { 
@@ -107,18 +119,18 @@ const Header = () => {
             <img 
               src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
               alt="Government of Telangana" 
-              className="h-8 w-8 md:h-10 md:w-10 rounded-full border border-white/30"
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
             />
             <div className="h-6 w-px bg-white/30 hidden md:block"></div>
             <img 
               src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
               alt="TG ANB Logo" 
-              className="h-8 w-8 md:h-10 md:w-10 rounded-full border border-white/30"
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
             />
           </div>
           
           <div className="text-center flex-1">
-            <h1 className="text-sm md:text-lg font-bold font-poppins tracking-wide">
+            <h1 className="text-base md:text-xl font-bold font-poppins tracking-wide">
               TELANGANA ANTI NARCOTICS BUREAU (TGANB)
             </h1>
             <p className="text-xs text-blue-200 hidden md:block">Government of Telangana</p>
@@ -203,6 +215,8 @@ const Header = () => {
                     className={`text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
                         ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold dark:text-blue-400 dark:bg-blue-900' 
+                        : item.isSpecial 
+                        ? 'text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg'
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:bg-gray-800'
                     }`}
                     onClick={() => handleNavigation(item.href)}
@@ -222,7 +236,11 @@ const Header = () => {
                       {item.dropdown.map((dropdownItem, dropdownIndex) => (
                         <button
                           key={dropdownIndex}
-                          className="w-full text-left py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 first:rounded-t-lg last:rounded-b-lg"
+                          className={`w-full text-left py-2 px-4 text-sm font-medium first:rounded-t-lg last:rounded-b-lg ${
+                            dropdownItem.gradient 
+                              ? `text-white bg-gradient-to-r ${dropdownItem.gradient} hover:opacity-90`
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400'
+                          }`}
                           onClick={() => handleNavigation(dropdownItem.href)}
                         >
                           {dropdownItem.title}
@@ -253,6 +271,8 @@ const Header = () => {
                       className={`w-full text-left py-2 px-4 text-sm font-medium ${
                         item.href === '/' 
                           ? 'text-blue-600 bg-blue-50 font-bold dark:text-blue-400 dark:bg-blue-900' 
+                          : item.isSpecial
+                          ? 'text-white bg-gradient-to-r from-purple-600 to-pink-600 font-bold'
                           : 'text-gray-700 hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                       onClick={() => handleNavigation(item.href)}
@@ -262,7 +282,11 @@ const Header = () => {
                     {item.dropdown && item.dropdown.map((dropdownItem, dropdownIndex) => (
                       <button
                         key={dropdownIndex}
-                        className="w-full text-left py-2 px-8 text-sm text-gray-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:bg-gray-700"
+                        className={`w-full text-left py-2 px-8 text-sm ${
+                          dropdownItem.gradient 
+                            ? `text-white bg-gradient-to-r ${dropdownItem.gradient}`
+                            : 'text-gray-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:bg-gray-700'
+                        }`}
                         onClick={() => handleNavigation(dropdownItem.href)}
                       >
                         {dropdownItem.title}
