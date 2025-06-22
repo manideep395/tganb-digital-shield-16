@@ -4,7 +4,7 @@ import { ArrowDown, Shield, Users, Target } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700">
+    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 font-poppins">
       {/* 3D Background Elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-yellow-400/30 to-transparent rounded-full blur-xl animate-pulse"></div>
@@ -13,40 +13,64 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 text-center text-white relative z-10">
-        {/* Hero Content */}
-        <div className="max-w-5xl mx-auto space-y-4 animate-fade-in">
-          <div className="flex justify-center mb-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-lg animate-pulse"></div>
-              <Shield className="w-16 h-16 text-yellow-400 relative z-10 animate-bounce" />
-            </div>
+        {/* Three Logos Row */}
+        <div className="flex justify-center items-center space-x-8 mb-6 animate-fade-in">
+          {/* Telangana Emblem - Left */}
+          <div className="relative">
+            <img 
+              src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
+              alt="Telangana Emblem" 
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-yellow-400 shadow-lg animate-pulse"
+            />
           </div>
           
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-poppins leading-tight mb-3">
+          {/* TGANB Logo - Center (Main) */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-lg animate-pulse"></div>
+            <img 
+              src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+              alt="TG ANB Logo" 
+              className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-yellow-400 shadow-2xl relative z-10 animate-bounce hover:scale-110 transition-transform duration-300"
+            />
+          </div>
+          
+          {/* Telangana Police Logo - Right */}
+          <div className="relative">
+            <img 
+              src="/lovable-uploads/db384303-58f4-497a-9043-3cb10d049cee.png" 
+              alt="Telangana Police Logo" 
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-yellow-400 shadow-lg animate-pulse"
+            />
+          </div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="max-w-4xl mx-auto space-y-4 animate-fade-in">
+          <h1 className="text-2xl md:text-4xl font-bold font-poppins leading-tight">
             <span className="block text-yellow-400 text-lg md:text-2xl animate-pulse mb-2">
               TELANGANA ANTI-NARCOTICS BUREAU
             </span>
-            <span className="text-white text-xl md:text-3xl lg:text-4xl">
+            <span className="text-white text-xl md:text-3xl">
               Building a Drug-Free Telangana
             </span>
           </h1>
           
-          <p className="text-sm md:text-lg text-blue-100 max-w-3xl mx-auto leading-relaxed mb-6">
+          <p className="text-sm md:text-lg text-blue-100 max-w-3xl mx-auto leading-relaxed">
             Dedicated to Combating Drug Abuse Through Enforcement, Awareness, and Community Empowerment
           </p>
 
           {/* Feature Icons */}
-          <div className="flex justify-center items-center space-x-8 mb-8">
+          <div className="flex justify-center items-center space-x-8 my-6">
             <div className="text-center transform hover:scale-110 transition-transform duration-300">
-              <Shield className="w-8 h-8 text-yellow-400 mx-auto mb-1" />
+              <Shield className="w-6 h-6 text-yellow-400 mx-auto mb-1" />
               <span className="text-xs font-poppins">Protection</span>
             </div>
             <div className="text-center transform hover:scale-110 transition-transform duration-300">
-              <Users className="w-8 h-8 text-yellow-400 mx-auto mb-1" />
+              <Users className="w-6 h-6 text-yellow-400 mx-auto mb-1" />
               <span className="text-xs font-poppins">Community</span>
             </div>
             <div className="text-center transform hover:scale-110 transition-transform duration-300">
-              <Target className="w-8 h-8 text-yellow-400 mx-auto mb-1" />
+              <Target className="w-6 h-6 text-yellow-400 mx-auto mb-1" />
               <span className="text-xs font-poppins">Prevention</span>
             </div>
           </div>
