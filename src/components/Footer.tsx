@@ -1,5 +1,5 @@
 
-import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Youtube, Shield } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -11,14 +11,17 @@ const Footer = () => {
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-lg animate-pulse delay-500"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="grid md:grid-cols-4 gap-6">
+      <div className="container mx-auto px-4 py-6 relative z-10">
+        <div className="grid md:grid-cols-2 gap-6">
           {/* Logo and About */}
-          <div className="col-span-1 md:col-span-2">
+          <div>
             <div className="flex items-center space-x-4 mb-4">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-md animate-pulse"></div>
-                <Shield className="w-12 h-12 text-yellow-400 relative z-10" />
+                <img 
+                  src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                  alt="TG ANB Logo" 
+                  className="h-12 w-12 rounded-full border border-white/30"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-bold">TG ANB</h3>
@@ -44,19 +47,6 @@ const Footer = () => {
                 <Youtube className="w-4 h-4" />
               </a>
             </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-bold mb-3 text-yellow-400">Quick Links</h4>
-            <ul className="space-y-2 text-gray-300 text-sm">
-              <li><a href="#" className="hover:text-yellow-400 transition-colors transform hover:translate-x-1 inline-block">About TG ANB</a></li>
-              <li><a href="#" className="hover:text-yellow-400 transition-colors transform hover:translate-x-1 inline-block">Director's Message</a></li>
-              <li><a href="#" className="hover:text-yellow-400 transition-colors transform hover:translate-x-1 inline-block">Our Initiatives</a></li>
-              <li><a href="#" className="hover:text-yellow-400 transition-colors transform hover:translate-x-1 inline-block">Awareness Programs</a></li>
-              <li><a href="#" className="hover:text-yellow-400 transition-colors transform hover:translate-x-1 inline-block">Statistics</a></li>
-              <li><a href="#" className="hover:text-yellow-400 transition-colors transform hover:translate-x-1 inline-block">Certifications</a></li>
-            </ul>
           </div>
 
           {/* Contact Info */}
