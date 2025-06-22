@@ -14,16 +14,6 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, 210, 297, 'F');
   
-  // Add TGANB logo as watermark with reduced opacity
-  try {
-    const tganbWatermark = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
-    // Create a new graphics state for transparency
-    const gState = new (pdf as any).GState({ opacity: 0.15 });
-    pdf.addImage(tganbWatermark, 'PNG', 70, 110, 70, 70);
-  } catch (error) {
-    console.log('Error adding watermark:', error);
-  }
-  
   // Add main border with police dark blue color
   pdf.setDrawColor(0, 51, 102);
   pdf.setLineWidth(2);
@@ -51,16 +41,16 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     console.log('Error adding logos:', error);
   }
   
-  // Use Arial for professional look (closer to TrueType)
-  pdf.setFont('helvetica', 'bold');
+  // Use Times-Bold for professional look
+  pdf.setFont('times', 'bold');
   
   // Header text - TELANGANA ANTI NARCOTICS BUREAU in police dark blue
-  pdf.setFontSize(12); // Reduced from 14
+  pdf.setFontSize(12);
   pdf.setTextColor(0, 51, 102);
   pdf.text('TELANGANA ANTI NARCOTICS BUREAU', 105, 65, { align: 'center' });
   
   // Certificate title
-  pdf.setFontSize(16); // Reduced from 18
+  pdf.setFontSize(14);
   pdf.setTextColor(0, 0, 0);
   pdf.text('Certificate of Enrollment', 105, 75, { align: 'center' });
   
@@ -88,15 +78,15 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     }
   }
   
-  // Certificate content with smaller font and proper spacing
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(9); // Reduced from 10
+  // Certificate content with Times New Roman Bold size 10
+  pdf.setFont('times', 'bold');
+  pdf.setFontSize(10);
   pdf.setTextColor(0, 0, 0);
   
   let yPosition = 145;
-  const lineHeight = 4; // Reduced line height
+  const lineHeight = 5;
   
-  // Main certification text with smaller font
+  // Main certification text
   const line1Part1 = `This is to proudly certify that `;
   const line1Part2 = `${formData.name}`;
   const line1Part3 = `, a student of`;
@@ -109,12 +99,10 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   
   const nameStartX = startX + pdf.getTextWidth(line1Part1);
   pdf.setTextColor(0, 51, 102);
-  pdf.setFont('helvetica', 'bold');
   pdf.text(line1Part2, nameStartX, yPosition);
   
   const part3StartX = nameStartX + pdf.getTextWidth(line1Part2);
   pdf.setTextColor(0, 0, 0);
-  pdf.setFont('helvetica', 'normal');
   pdf.text(line1Part3, part3StartX, yPosition);
   yPosition += lineHeight;
   
@@ -123,14 +111,11 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   yPosition += lineHeight + 1;
   
   // Anti-Narcotic Soldier in blue
-  pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(0, 51, 102);
   pdf.text('Anti-Narcotic Soldier', 105, yPosition, { align: 'center' });
   yPosition += lineHeight + 1;
   
-  // Remaining text in black with smaller font
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(8); // Even smaller for details
+  // Remaining text in black
   pdf.setTextColor(0, 0, 0);
   pdf.text('under the initiative of the Telangana Anti', 105, yPosition, { align: 'center' });
   yPosition += lineHeight;
@@ -138,7 +123,7 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.text(`Narcotics Bureau on ${new Date().toLocaleDateString()}.`, 105, yPosition, { align: 'center' });
   yPosition += lineHeight + 3;
   
-  // Concise content with smaller font
+  // Content with proper spacing
   const contentLines = [
     'Through this enrollment, the student has pledged to actively participate',
     'in building a drug-free society by promoting awareness about the harmful',
@@ -160,9 +145,9 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   });
   
   // Bottom section with attractive design
-  yPosition = 255; // Adjusted position
+  yPosition = 255;
   pdf.setFillColor(240, 245, 255);
-  pdf.roundedRect(25, yPosition, 160, 20, 3, 3, 'F'); // Reduced height
+  pdf.roundedRect(25, yPosition, 160, 20, 3, 3, 'F');
   pdf.setDrawColor(0, 51, 102);
   pdf.setLineWidth(1);
   pdf.roundedRect(25, yPosition, 160, 20, 3, 3, 'S');
@@ -171,18 +156,17 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   const verificationUrl = `${window.location.origin}/certificate-verification?id=${certificateId}`;
   try {
     const qrCodeDataURL = await QRCode.toDataURL(verificationUrl, { width: 50 });
-    pdf.addImage(qrCodeDataURL, 'PNG', 30, yPosition + 3, 12, 12); // Smaller QR code
+    pdf.addImage(qrCodeDataURL, 'PNG', 30, yPosition + 3, 12, 12);
   } catch (error) {
     console.error('Error generating QR code:', error);
   }
   
-  // Certificate information with smaller font
-  pdf.setFontSize(6); // Smaller font for certificate info
+  // Certificate information with Times New Roman Bold
+  pdf.setFontSize(8);
   pdf.setTextColor(0, 51, 102);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('times', 'bold');
   pdf.text('Certificate Information', 47, yPosition + 6);
   
-  pdf.setFont('helvetica', 'normal');
   pdf.setTextColor(0, 0, 0);
   pdf.text(`ID: ${certificateId}`, 47, yPosition + 10);
   pdf.text('Digitally Verified', 47, yPosition + 13);
