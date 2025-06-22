@@ -1,12 +1,42 @@
 
 import { useState } from 'react';
-import { Play, Pause, Volume2, X } from 'lucide-react';
+import { Play, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { celebrityVideos } from '@/data/celebrityVideos';
 
 const CelebrityCampaigns = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
+  // Mock data for celebrity videos - in a real app this would come from your data file
+  const celebrityVideos = [
+    {
+      id: "dQw4w9WgXcQ",
+      title: "Anti-Drug Awareness Campaign by Celebrity 1",
+      celebrity: "Celebrity Name 1",
+      thumbnail: "/placeholder.svg",
+      duration: "2:30",
+      views: "10K",
+      date: "2 days ago"
+    },
+    {
+      id: "dQw4w9WgXcQ",
+      title: "Say No to Drugs - Celebrity Message",
+      celebrity: "Celebrity Name 2", 
+      thumbnail: "/placeholder.svg",
+      duration: "3:15",
+      views: "25K",
+      date: "1 week ago"
+    },
+    {
+      id: "dQw4w9WgXcQ",
+      title: "Youth Against Drugs Campaign",
+      celebrity: "Celebrity Name 3",
+      thumbnail: "/placeholder.svg", 
+      duration: "4:00",
+      views: "15K",
+      date: "3 days ago"
+    }
+  ];
 
   const handleVideoPlay = (videoId: string) => {
     setSelectedVideo(videoId);
