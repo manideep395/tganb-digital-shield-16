@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Send, Bot, User, Shield, Heart, Phone, MapPin, Globe, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,23 @@ const SahayAIChatbot = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [language, setLanguage] = useState('EN');
+
+  // Function to format AI response text
+  const formatMessage = (text: string) => {
+    // Split by numbered lists first
+    let formattedText = text.replace(/(\d+\.\s)/g, '\n$1');
+    
+    // Handle bold text conversion
+    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Handle line breaks after colons
+    formattedText = formattedText.replace(/:\s/g, ':\n');
+    
+    // Convert newlines to proper line breaks
+    formattedText = formattedText.replace(/\n/g, '<br/>');
+    
+    return formattedText;
+  };
 
   const sendMessage = async () => {
     if (!inputText.trim()) return;
@@ -173,7 +189,14 @@ const SahayAIChatbot = () => {
                         {message.isUser ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                       </div>
                       <div className={`px-4 py-2 rounded-lg ${message.isUser ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-white border'}`}>
-                        <p className="text-sm">{message.text}</p>
+                        {message.isUser ? (
+                          <p className="text-sm">{message.text}</p>
+                        ) : (
+                          <div 
+                            className="text-sm" 
+                            dangerouslySetInnerHTML={{ __html: formatMessage(message.text) }}
+                          />
+                        )}
                         <p className={`text-xs mt-1 ${message.isUser ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'}`}>
                           {message.timestamp.toLocaleTimeString()}
                         </p>
