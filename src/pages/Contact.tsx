@@ -5,11 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Phone, Mail, MapPin, Clock, Download } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import * as XLSX from 'xlsx';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -24,48 +23,46 @@ const Contact = () => {
     query: ''
   });
 
-  const [submittedData, setSubmittedData] = useState<any[]>([]);
-
   const functionalUnits = [
     { sl: 1, unit: "Head Quarters", designation: "Director", contact: "8712661700" },
-    { sl: 2, unit: "", designation: "SP Admin", contact: "8712661701" },
-    { sl: 3, unit: "", designation: "SP West", contact: "8712661800" },
-    { sl: 4, unit: "", designation: "SP East & Operations", contact: "8712661900" },
+    { sl: 2, unit: "Head Quarters", designation: "SP Admin", contact: "8712661701" },
+    { sl: 3, unit: "Head Quarters", designation: "SP West", contact: "8712661800" },
+    { sl: 4, unit: "Head Quarters", designation: "SP East & Operations", contact: "8712661900" },
     { sl: 5, unit: "Investigation and Legal Wing (Hqrs.)", designation: "DSP", contact: "8712661758" },
-    { sl: 6, unit: "", designation: "Inspector", contact: "8712661748" },
+    { sl: 6, unit: "Investigation and Legal Wing (Hqrs.)", designation: "Inspector", contact: "8712661748" },
     { sl: 7, unit: "Technical Wing (Hqrs.)", designation: "DSP", contact: "8712661757" },
-    { sl: 8, unit: "", designation: "Inspector", contact: "8712661738" },
+    { sl: 8, unit: "Technical Wing (Hqrs.)", designation: "Inspector", contact: "8712661738" },
     { sl: 9, unit: "Documentation & Training Wing(Hqrs.)", designation: "DSP", contact: "8712661705" },
-    { sl: 10, unit: "", designation: "Inspector", contact: "8712661736" },
+    { sl: 10, unit: "Documentation & Training Wing(Hqrs.)", designation: "Inspector", contact: "8712661736" },
     { sl: 11, unit: "Awareness Wing (Hqrs.)", designation: "DSP", contact: "8712661710" },
-    { sl: 12, unit: "", designation: "Inspector", contact: "8712661735" },
+    { sl: 12, unit: "Awareness Wing (Hqrs.)", designation: "Inspector", contact: "8712661735" },
     { sl: 13, unit: "Administration Wing(Hqrs.)", designation: "DSP", contact: "8712661709" },
     { sl: 14, unit: "Logistics Wing (Hqrs.)", designation: "DSP", contact: "8712661707" },
     { sl: 15, unit: "State Task Force", designation: "DSP", contact: "8712661756" },
-    { sl: 16, unit: "", designation: "Inspector", contact: "8712661744" },
-    { sl: 17, unit: "", designation: "Inspector", contact: "8712661747" },
+    { sl: 16, unit: "State Task Force", designation: "Inspector", contact: "8712661744" },
+    { sl: 17, unit: "State Task Force", designation: "Inspector", contact: "8712661747" },
     { sl: 18, unit: "Hyderabad Narcotics Police Station (HNPS)", designation: "DSP", contact: "8712661759" },
-    { sl: 19, unit: "", designation: "Inspector", contact: "8712661732" },
-    { sl: 20, unit: "", designation: "Inspector", contact: "8712661733" },
+    { sl: 19, unit: "Hyderabad Narcotics Police Station (HNPS)", designation: "Inspector", contact: "8712661732" },
+    { sl: 20, unit: "Hyderabad Narcotics Police Station (HNPS)", designation: "Inspector", contact: "8712661733" },
     { sl: 21, unit: "Cyberabad Narcotics Police Station (CNPS)", designation: "DSP", contact: "8712661708" },
-    { sl: 22, unit: "", designation: "Inspector", contact: "8712661740" },
-    { sl: 23, unit: "", designation: "Inspector", contact: "8712661734" },
+    { sl: 22, unit: "Cyberabad Narcotics Police Station (CNPS)", designation: "Inspector", contact: "8712661740" },
+    { sl: 23, unit: "Cyberabad Narcotics Police Station (CNPS)", designation: "Inspector", contact: "8712661734" },
     { sl: 24, unit: "Rachakonda Narcotics Police Station (RNPS)", designation: "DSP", contact: "8712661714" },
-    { sl: 25, unit: "", designation: "Inspector", contact: "8712661746" },
-    { sl: 26, unit: "", designation: "Inspector", contact: "8712661745" },
+    { sl: 25, unit: "Rachakonda Narcotics Police Station (RNPS)", designation: "Inspector", contact: "8712661746" },
+    { sl: 26, unit: "Rachakonda Narcotics Police Station (RNPS)", designation: "Inspector", contact: "8712661745" },
     { sl: 27, unit: "Warangal Narcotics Police Station (WNPS)", designation: "DSP", contact: "8712661711" },
-    { sl: 28, unit: "", designation: "Inspector", contact: "8712661737" },
-    { sl: 29, unit: "", designation: "Inspector", contact: "8712661742" },
+    { sl: 28, unit: "Warangal Narcotics Police Station (WNPS)", designation: "Inspector", contact: "8712661737" },
+    { sl: 29, unit: "Warangal Narcotics Police Station (WNPS)", designation: "Inspector", contact: "8712661742" },
     { sl: 30, unit: "Regional Narcotic Control Centre (RNCC) Karimnagar", designation: "DSP", contact: "8712661755" },
-    { sl: 31, unit: "", designation: "Inspector", contact: "8712661743" },
+    { sl: 31, unit: "Regional Narcotic Control Centre (RNCC) Karimnagar", designation: "Inspector", contact: "8712661743" },
     { sl: 32, unit: "Regional Narcotic Control Centre (RNCC) Sangareddy & Mahabubnagar", designation: "DSP", contact: "8712661706" },
-    { sl: 33, unit: "", designation: "Inspector", contact: "8712661760" },
+    { sl: 33, unit: "Regional Narcotic Control Centre (RNCC) Sangareddy & Mahabubnagar", designation: "Inspector", contact: "8712661760" },
     { sl: 34, unit: "Regional Narcotic Control Centre (RNCC) Khammam", designation: "DSP", contact: "8712661713" },
-    { sl: 35, unit: "", designation: "Inspector", contact: "8712661760" },
+    { sl: 35, unit: "Regional Narcotic Control Centre (RNCC) Khammam", designation: "Inspector", contact: "8712661760" },
     { sl: 36, unit: "Regional Narcotic Control Centre (RNCC) Nizamabad", designation: "DSP", contact: "8712661704" },
-    { sl: 37, unit: "", designation: "Inspector", contact: "8712661741" },
+    { sl: 37, unit: "Regional Narcotic Control Centre (RNCC) Nizamabad", designation: "Inspector", contact: "8712661741" },
     { sl: 38, unit: "RNCC Railways", designation: "DSP", contact: "8712661712" },
-    { sl: 39, unit: "", designation: "Inspector", contact: "8712661761" }
+    { sl: 39, unit: "RNCC Railways", designation: "Inspector", contact: "8712661761" }
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -79,20 +76,9 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const timestamp = new Date().toLocaleString();
-    const submissionData = {
-      timestamp,
-      ...formData
-    };
-
-    setSubmittedData(prev => [...prev, submissionData]);
-
-    // Export to Excel immediately after submission
-    exportToExcel([...submittedData, submissionData]);
-
     toast({
       title: "Feedback Submitted Successfully!",
-      description: "Your feedback has been recorded and exported to Excel file.",
+      description: "Thank you for your feedback. We will get back to you soon.",
     });
 
     // Reset form
@@ -106,29 +92,6 @@ const Contact = () => {
       country: '',
       query: ''
     });
-  };
-
-  const exportToExcel = (dataToExport: any[]) => {
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Feedback Data");
-    
-    // Auto-adjust column widths
-    const cols = [
-      { wch: 20 }, // timestamp
-      { wch: 20 }, // name
-      { wch: 25 }, // email
-      { wch: 15 }, // phone
-      { wch: 15 }, // village
-      { wch: 15 }, // district
-      { wch: 15 }, // state
-      { wch: 15 }, // country
-      { wch: 50 }  // query
-    ];
-    worksheet['!cols'] = cols;
-    
-    const fileName = `TGANB_Feedback_${new Date().toISOString().split('T')[0]}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
   };
 
   return (
@@ -230,20 +193,7 @@ const Contact = () => {
         {/* Feedback Form */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Send us your Feedback
-              {submittedData.length > 0 && (
-                <Button 
-                  onClick={() => exportToExcel(submittedData)}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export to Excel
-                </Button>
-              )}
-            </CardTitle>
+            <CardTitle>Send us your Feedback</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
