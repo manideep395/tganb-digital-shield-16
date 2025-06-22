@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { Shield, BarChart3, Download, ArrowRight, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { Shield, BarChart3, Download, ArrowRight, CheckCircle, AlertTriangle, XCircle, Brain, Users, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
@@ -34,6 +33,12 @@ interface RiskReport {
   score: number;
   summary: string;
   preventionTips: string[];
+  detailedAnalysis: {
+    emotionalRisk: string;
+    socialRisk: string;
+    environmentalRisk: string;
+    recommendations: string[];
+  };
 }
 
 const ShieldAIRiskAssessment = () => {
@@ -63,14 +68,14 @@ const ShieldAIRiskAssessment = () => {
   const [riskReport, setRiskReport] = useState<RiskReport | null>(null);
 
   const sections = [
-    { title: 'Emotional Wellbeing', icon: '🧠' },
-    { title: 'Peer Influence & Social Behavior', icon: '👥' },
-    { title: 'Environmental Triggers', icon: '🏠' }
+    { title: 'Emotional Wellbeing', icon: Brain, color: 'from-blue-500 to-cyan-500' },
+    { title: 'Social Influence', icon: Users, color: 'from-green-500 to-emerald-500' },
+    { title: 'Environment', icon: Home, color: 'from-purple-500 to-pink-500' }
   ];
 
   const environmentalTriggers = [
     'Academic pressure',
-    'Financial stress',
+    'Financial stress', 
     'Family conflicts',
     'Social isolation',
     'Work stress',
@@ -93,7 +98,7 @@ const ShieldAIRiskAssessment = () => {
     setIsLoading(true);
     
     try {
-      const prompt = `Analyze this risk assessment data and provide a risk evaluation:
+      const prompt = `Analyze this comprehensive risk assessment data and provide a detailed risk evaluation:
       
       Emotional Wellbeing:
       - Loneliness: ${questionnaire.emotionalWellbeing.loneliness}
@@ -115,10 +120,22 @@ const ShieldAIRiskAssessment = () => {
       
       Please provide:
       1. Risk level (Low/Moderate/High)
-      2. A brief summary
-      3. 4-5 specific prevention tips
+      2. A comprehensive summary
+      3. 6-8 specific prevention tips
+      4. Detailed analysis for each category
+      5. Personalized recommendations
       
-      Format as JSON: {"riskLevel": "Low/Moderate/High", "summary": "...", "preventionTips": ["tip1", "tip2", ...]}`;
+      Format as JSON: {
+        "riskLevel": "Low/Moderate/High", 
+        "summary": "...", 
+        "preventionTips": [...],
+        "detailedAnalysis": {
+          "emotionalRisk": "...",
+          "socialRisk": "...", 
+          "environmentalRisk": "...",
+          "recommendations": [...]
+        }
+      }`;
 
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -133,7 +150,7 @@ const ShieldAIRiskAssessment = () => {
           "messages": [
             {
               "role": "system",
-              "content": "You are Shield.AI, a professional risk assessment tool by TG ANB. Analyze questionnaire data and provide constructive, non-judgmental prevention guidance."
+              "content": "You are Shield.AI, a professional risk assessment tool by TG ANB. Analyze questionnaire data comprehensively and provide detailed, constructive, non-judgmental prevention guidance with specific actionable insights."
             },
             {
               "role": "user",
@@ -155,18 +172,27 @@ const ShieldAIRiskAssessment = () => {
           score
         });
       } catch {
-        // Fallback if JSON parsing fails
+        // Enhanced fallback with detailed analysis
         setRiskReport({
           riskLevel: 'Moderate',
           score: 50,
-          summary: 'Based on your responses, we recommend staying aware of your risk factors and building strong prevention strategies.',
+          summary: 'Based on your responses, we recommend staying aware of your risk factors and building strong prevention strategies. Your assessment shows areas that need attention and support.',
           preventionTips: [
             'Practice assertive refusal skills when pressured',
             'Build strong peer groups with positive interests',
-            'Develop healthy stress management techniques',
+            'Develop healthy stress management techniques like meditation',
             'Maintain open communication with trusted adults',
-            'Engage in positive activities and hobbies'
-          ]
+            'Engage in positive activities and hobbies regularly',
+            'Seek professional help when feeling overwhelmed',
+            'Create a support network of family and friends',
+            'Avoid high-risk situations and environments'
+          ],
+          detailedAnalysis: {
+            emotionalRisk: 'Please consult with our counselors for a detailed emotional assessment.',
+            socialRisk: 'Our team can help you evaluate your social environment.',
+            environmentalRisk: 'Contact us to discuss environmental risk factors.',
+            recommendations: ['Reach out to TG ANB helpline for personalized guidance']
+          }
         });
       }
       
@@ -183,7 +209,13 @@ const ShieldAIRiskAssessment = () => {
           'Avoid situations where drugs might be present',
           'Seek help from counselors when feeling overwhelmed',
           'Engage in healthy activities that bring you joy'
-        ]
+        ],
+        detailedAnalysis: {
+          emotionalRisk: 'Please consult with our counselors for a detailed emotional assessment.',
+          socialRisk: 'Our team can help you evaluate your social environment.',
+          environmentalRisk: 'Contact us to discuss environmental risk factors.',
+          recommendations: ['Reach out to TG ANB helpline for personalized guidance']
+        }
       });
       setShowReport(true);
     } finally {
@@ -194,7 +226,7 @@ const ShieldAIRiskAssessment = () => {
   const getRiskColor = (level: string) => {
     switch (level) {
       case 'Low': return 'text-green-600';
-      case 'Moderate': return 'text-yellow-600';
+      case 'Moderate': return 'text-yellow-600'; 
       case 'High': return 'text-red-600';
       default: return 'text-gray-600';
     }
@@ -202,10 +234,10 @@ const ShieldAIRiskAssessment = () => {
 
   const getRiskIcon = (level: string) => {
     switch (level) {
-      case 'Low': return <CheckCircle className="w-8 h-8 text-green-600" />;
-      case 'Moderate': return <AlertTriangle className="w-8 h-8 text-yellow-600" />;
-      case 'High': return <XCircle className="w-8 h-8 text-red-600" />;
-      default: return <Shield className="w-8 h-8 text-gray-600" />;
+      case 'Low': return <CheckCircle className="w-12 h-12 text-green-600" />;
+      case 'Moderate': return <AlertTriangle className="w-12 h-12 text-yellow-600" />;
+      case 'High': return <XCircle className="w-12 h-12 text-red-600" />;
+      default: return <Shield className="w-12 h-12 text-gray-600" />;
     }
   };
 
@@ -219,56 +251,117 @@ const ShieldAIRiskAssessment = () => {
         <Header />
         
         <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
-                Your Shield.AI Risk Assessment Report
+                Your Comprehensive Shield.AI Risk Assessment Report
               </h1>
               <p className="text-gray-600 dark:text-gray-300">
-                Personalized prevention guidance based on your responses
+                Detailed analysis and personalized prevention guidance based on your responses
               </p>
             </div>
 
-            <Card className="mb-8">
+            {/* Risk Score Card */}
+            <Card className="mb-8 bg-gradient-to-r from-white to-blue-50 dark:from-gray-800 dark:to-gray-700">
               <CardHeader className="text-center">
                 <div className="flex justify-center mb-4">
                   {getRiskIcon(riskReport.riskLevel)}
                 </div>
-                <CardTitle className={`text-3xl ${getRiskColor(riskReport.riskLevel)}`}>
+                <CardTitle className={`text-4xl ${getRiskColor(riskReport.riskLevel)}`}>
                   {riskReport.riskLevel} Risk Level
                 </CardTitle>
-                <div className="w-full bg-gray-200 rounded-full h-4 mt-4">
+                <div className="w-full bg-gray-200 rounded-full h-6 mt-4 max-w-md mx-auto">
                   <div 
-                    className={`h-4 rounded-full ${
+                    className={`h-6 rounded-full transition-all duration-1000 ${
                       riskReport.riskLevel === 'Low' ? 'bg-green-500' : 
                       riskReport.riskLevel === 'Moderate' ? 'bg-yellow-500' : 'bg-red-500'
                     }`}
                     style={{ width: `${riskReport.score}%` }}
                   ></div>
                 </div>
+                <p className="text-2xl font-bold mt-2">{riskReport.score}%</p>
               </CardHeader>
               <CardContent>
-                <p className="text-lg text-gray-700 dark:text-gray-300 text-center">
+                <p className="text-lg text-gray-700 dark:text-gray-300 text-center leading-relaxed">
                   {riskReport.summary}
                 </p>
               </CardContent>
             </Card>
 
+            {/* Detailed Analysis */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-blue-700 dark:text-blue-400">
+                    <Brain className="w-6 h-6 mr-2" />
+                    Emotional Assessment
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 dark:text-gray-300">{riskReport.detailedAnalysis.emotionalRisk}</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-green-700 dark:text-green-400">
+                    <Users className="w-6 h-6 mr-2" />
+                    Social Assessment
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 dark:text-gray-300">{riskReport.detailedAnalysis.socialRisk}</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-purple-700 dark:text-purple-400">
+                    <Home className="w-6 h-6 mr-2" />
+                    Environmental Assessment
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 dark:text-gray-300">{riskReport.detailedAnalysis.environmentalRisk}</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Prevention Tips */}
             <Card className="mb-8">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Shield className="w-6 h-6 mr-2 text-blue-600" />
-                  Your Personalized Prevention Tips
+                <CardTitle className="flex items-center text-2xl">
+                  <Shield className="w-8 h-8 mr-3 text-blue-600" />
+                  Your Personalized Prevention Action Plan
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   {riskReport.preventionTips.map((tip, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <div className="bg-blue-100 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                        <span className="text-blue-600 font-bold">{index + 1}</span>
+                    <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-bold text-sm">{index + 1}</span>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">{tip}</p>
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{tip}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Professional Recommendations */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="text-xl text-green-700 dark:text-green-400">
+                  Professional Recommendations
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {riskReport.detailedAnalysis.recommendations.map((rec, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <p className="text-gray-700 dark:text-gray-300">{rec}</p>
                     </div>
                   ))}
                 </div>
@@ -276,12 +369,12 @@ const ShieldAIRiskAssessment = () => {
             </Card>
 
             <div className="text-center space-y-4">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Download className="w-4 h-4 mr-2" />
-                Download PDF Report
+              <Button className="bg-blue-600 hover:bg-blue-700 px-8 py-3 text-lg">
+                <Download className="w-5 h-5 mr-2" />
+                Download Comprehensive PDF Report
               </Button>
               <div>
-                <Button variant="outline" onClick={() => setShowReport(false)}>
+                <Button variant="outline" onClick={() => setShowReport(false)} className="px-6 py-2">
                   Retake Assessment
                 </Button>
               </div>
@@ -290,10 +383,15 @@ const ShieldAIRiskAssessment = () => {
         </div>
 
         {/* Emergency Help Strip */}
-        <div className="bg-red-600 text-white p-4">
+        <div className="bg-red-600 text-white p-6">
           <div className="container mx-auto text-center">
-            <p className="font-bold mb-2">Need immediate help or want to talk to someone?</p>
-            <p className="text-lg">📞 TG ANB Drug Helpline: 8712671111</p>
+            <p className="font-bold mb-3 text-lg">Need immediate help or want to talk to someone?</p>
+            <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-6">
+              <p className="text-xl font-semibold">📞 TG ANB Drug Helpline: 8712671111</p>
+              <Button className="bg-white text-red-600 hover:bg-gray-100 font-semibold">
+                Find Local Counselor
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -306,68 +404,83 @@ const ShieldAIRiskAssessment = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 font-poppins">
       <Header />
       
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-green-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <Shield className="w-16 h-16 mr-4" />
+      {/* Enhanced Hero Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="flex items-center justify-center mb-8">
+            <div className="animate-pulse">
+              <Shield className="w-20 h-20 mr-6" />
+            </div>
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-2">Shield.AI</h1>
-              <p className="text-xl opacity-90">Know Your Risk. Protect Your Future.</p>
+              <h1 className="text-5xl md:text-7xl font-bold mb-4">Shield.AI</h1>
+              <p className="text-2xl opacity-90">Know Your Risk. Protect Your Future.</p>
             </div>
           </div>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
-            Take this AI-powered prevention test to assess your exposure to drug-related risks and receive personalized, confidential guidance.
+          <p className="text-xl mb-10 max-w-3xl mx-auto leading-relaxed">
+            Take this comprehensive AI-powered prevention assessment to understand your exposure to drug-related risks and receive detailed, personalized guidance for a safer future.
           </p>
           <Button 
             onClick={scrollToQuiz}
-            className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
+            className="bg-white text-blue-600 hover:bg-gray-100 px-10 py-4 text-xl font-bold rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
           >
-            🛡️ Start Risk Test
+            🛡️ Start Advanced Risk Assessment
           </Button>
         </div>
       </section>
 
-      {/* Questionnaire Section */}
-      <div id="quiz-section" className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              {sections.map((section, index) => (
-                <div 
-                  key={index}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
-                    index === currentSection ? 'bg-blue-100 text-blue-600' : 
-                    index < currentSection ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'
-                  }`}
-                >
-                  <span>{section.icon}</span>
-                  <span className="font-medium">{section.title}</span>
-                </div>
-              ))}
+      {/* Enhanced Questionnaire Section */}
+      <div id="quiz-section" className="container mx-auto px-4 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-12">
+            <div className="flex justify-between items-center mb-6">
+              {sections.map((section, index) => {
+                const IconComponent = section.icon;
+                return (
+                  <div 
+                    key={index}
+                    className={`flex flex-col items-center space-y-2 px-6 py-4 rounded-xl transition-all duration-500 transform ${
+                      index === currentSection 
+                        ? `bg-gradient-to-r ${section.color} text-white scale-110 shadow-2xl` 
+                        : index < currentSection 
+                        ? 'bg-green-100 text-green-600 scale-105' 
+                        : 'bg-gray-100 text-gray-500 scale-95'
+                    }`}
+                  >
+                    <IconComponent className="w-8 h-8" />
+                    <span className="font-bold text-sm text-center">{section.title}</span>
+                  </div>
+                );
+              })}
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-4 shadow-inner">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-700 shadow-lg"
                 style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
               ></div>
             </div>
+            <p className="text-center mt-3 text-lg font-semibold text-gray-600 dark:text-gray-300">
+              Section {currentSection + 1} of {sections.length}
+            </p>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">
-                {sections[currentSection].icon} {sections[currentSection].title}
+          <Card className="shadow-2xl bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 border-0">
+            <CardHeader className="pb-2">
+              <CardTitle className={`text-3xl flex items-center bg-gradient-to-r ${sections[currentSection].color} bg-clip-text text-transparent`}>
+                {React.createElement(sections[currentSection].icon, { className: "w-10 h-10 mr-4" })}
+                {sections[currentSection].title}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8 p-8">
               {currentSection === 0 && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Do you often feel lonely or isolated?</label>
-                    <div className="space-y-2">
+                <div className="space-y-8 animate-fade-in">
+                  <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-blue-800 dark:text-blue-300">
+                      How often do you feel lonely or isolated?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                       {['Never', 'Rarely', 'Sometimes', 'Often', 'Always'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="loneliness"
@@ -377,35 +490,44 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               emotionalWellbeing: { ...prev.emotionalWellbeing, loneliness: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-blue-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      How would you rate your stress level? ({questionnaire.emotionalWellbeing.stress[0]}/10)
+                  <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-purple-800 dark:text-purple-300">
+                      Rate your current stress level: {questionnaire.emotionalWellbeing.stress[0]}/10
                     </label>
-                    <Slider
-                      value={questionnaire.emotionalWellbeing.stress}
-                      onValueChange={(value) => setQuestionnaire(prev => ({
-                        ...prev,
-                        emotionalWellbeing: { ...prev.emotionalWellbeing, stress: value }
-                      }))}
-                      max={10}
-                      step={1}
-                      className="w-full"
-                    />
+                    <div className="px-4">
+                      <Slider
+                        value={questionnaire.emotionalWellbeing.stress}
+                        onValueChange={(value) => setQuestionnaire(prev => ({
+                          ...prev,
+                          emotionalWellbeing: { ...prev.emotionalWellbeing, stress: value }
+                        }))}
+                        max={10}
+                        step={1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        <span>No Stress</span>
+                        <span>Moderate</span>
+                        <span>Extreme Stress</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Do you experience anxiety or panic attacks?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-green-800 dark:text-green-300">
+                      Do you experience anxiety or panic attacks?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Never', 'Rarely', 'Sometimes', 'Often'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-green-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="anxiety"
@@ -415,19 +537,21 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               emotionalWellbeing: { ...prev.emotionalWellbeing, anxiety: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-green-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Have you felt depressed or hopeless recently?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-orange-800 dark:text-orange-300">
+                      Have you felt depressed or hopeless recently?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['No', 'Occasionally', 'Frequently', 'Most of the time'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="depression"
@@ -437,23 +561,25 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               emotionalWellbeing: { ...prev.emotionalWellbeing, depression: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-orange-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
-                </>
+                </div>
               )}
 
               {currentSection === 1 && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Have you ever been offered drugs by a friend or acquaintance?</label>
-                    <div className="space-y-2">
+                <div className="space-y-8 animate-fade-in">
+                  <div className="p-6 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-red-800 dark:text-red-300">
+                      Have you ever been offered drugs by a friend or acquaintance?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Never', 'Once', 'A few times', 'Many times'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-red-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="offeredDrugs"
@@ -463,19 +589,21 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               peerInfluence: { ...prev.peerInfluence, offeredDrugs: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-red-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Do any of your close friends use drugs?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-green-800 dark:text-green-300">
+                      Do any of your close friends use drugs?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['No', 'I suspect so', 'Some do', 'Most do'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-green-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="friendsUseDrugs"
@@ -485,19 +613,21 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               peerInfluence: { ...prev.peerInfluence, friendsUseDrugs: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-green-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">How often do you feel peer pressure to fit in?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-purple-800 dark:text-purple-300">
+                      How often do you feel peer pressure to fit in?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Never', 'Rarely', 'Sometimes', 'Often', 'Always'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-purple-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="peerPressure"
@@ -507,19 +637,21 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               peerInfluence: { ...prev.peerInfluence, peerPressure: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-purple-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">How would you describe your social circle?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-green-800 dark:text-green-300">
+                      How would you describe your social circle?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Very supportive', 'Mostly supportive', 'Mixed influences', 'Often negative', 'Very negative'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-green-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="socialCircle"
@@ -529,23 +661,42 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               peerInfluence: { ...prev.peerInfluence, socialCircle: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-green-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
-                </>
+                </div>
               )}
 
               {currentSection === 2 && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Are drugs easily accessible in your neighborhood or school?</label>
-                    <div className="space-y-2">
+                <div className="space-y-8 animate-fade-in">
+                  <div className="p-6 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">
+                      Which situations make you feel most vulnerable? (Select all that apply)
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {environmentalTriggers.map(trigger => (
+                        <label key={trigger} className="flex items-center space-x-3 p-4 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border-2 border-transparent hover:border-gray-300">
+                          <Checkbox
+                            checked={questionnaire.environmental.triggers.includes(trigger)}
+                            onCheckedChange={(checked) => handleTriggerChange(trigger, checked as boolean)}
+                          />
+                          <span className="font-medium">{trigger}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-purple-800 dark:text-purple-300">
+                      Are drugs easily accessible in your neighborhood or school?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Not at all', 'I\'m not sure', 'Somewhat accessible', 'Very accessible'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-purple-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="drugAccessibility"
@@ -555,19 +706,21 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               environmental: { ...prev.environmental, drugAccessibility: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-purple-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">How would you describe your neighborhood?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-green-800 dark:text-green-300">
+                      How would you describe your neighborhood?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Very safe', 'Mostly safe', 'Some issues', 'Many problems', 'Very unsafe'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-green-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="neighborhood"
@@ -577,19 +730,21 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               environmental: { ...prev.environmental, neighborhood: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-green-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">How supportive is your family?</label>
-                    <div className="space-y-2">
+                  <div className="p-6 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl">
+                    <label className="block text-lg font-semibold mb-4 text-orange-800 dark:text-orange-300">
+                      How supportive is your family?
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {['Very supportive', 'Mostly supportive', 'Sometimes supportive', 'Not very supportive', 'Not supportive at all'].map(option => (
-                        <label key={option} className="flex items-center space-x-2">
+                        <label key={option} className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-600 transition-colors">
                           <input
                             type="radio"
                             name="familySupport"
@@ -599,62 +754,48 @@ const ShieldAIRiskAssessment = () => {
                               ...prev,
                               environmental: { ...prev.environmental, familySupport: e.target.value }
                             }))}
-                            className="text-blue-600"
+                            className="text-orange-600 scale-125"
                           />
-                          <span>{option}</span>
+                          <span className="font-medium">{option}</span>
                         </label>
                       ))}
                     </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Which of these situations make you feel most vulnerable? (Select all that apply)</label>
-                    <div className="space-y-2">
-                      {environmentalTriggers.map(trigger => (
-                        <label key={trigger} className="flex items-center space-x-2">
-                          <Checkbox
-                            checked={questionnaire.environmental.triggers.includes(trigger)}
-                            onCheckedChange={(checked) => handleTriggerChange(trigger, checked as boolean)}
-                          />
-                          <span>{trigger}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </>
+                </div>
               )}
 
-              <div className="flex justify-between pt-6">
+              <div className="flex justify-between pt-8">
                 {currentSection > 0 && (
                   <Button 
                     variant="outline" 
                     onClick={() => setCurrentSection(prev => prev - 1)}
+                    className="px-8 py-3 text-lg"
                   >
-                    Previous
+                    ← Previous
                   </Button>
                 )}
                 {currentSection < sections.length - 1 ? (
                   <Button 
                     onClick={() => setCurrentSection(prev => prev + 1)}
-                    className="ml-auto"
+                    className="ml-auto px-8 py-3 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   >
-                    Next <ArrowRight className="w-4 h-4 ml-2" />
+                    Next → <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 ) : (
                   <Button 
                     onClick={generateRiskReport}
                     disabled={isLoading}
-                    className="ml-auto bg-green-600 hover:bg-green-700"
+                    className="ml-auto px-10 py-4 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-xl"
                   >
                     {isLoading ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Analyzing...
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                        Analyzing Your Risk...
                       </>
                     ) : (
                       <>
-                        <BarChart3 className="w-4 h-4 mr-2" />
-                        Generate Report
+                        <BarChart3 className="w-5 h-5 mr-3" />
+                        Generate Comprehensive Report
                       </>
                     )}
                   </Button>
@@ -666,15 +807,15 @@ const ShieldAIRiskAssessment = () => {
       </div>
 
       {/* Privacy Notice */}
-      <div className="bg-green-50 dark:bg-green-900/20 py-8">
+      <div className="bg-green-50 dark:bg-green-900/20 py-12">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Shield className="w-8 h-8 text-green-600 mr-3" />
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white">100% Private & Confidential</h3>
+          <div className="flex items-center justify-center mb-6">
+            <Shield className="w-12 h-12 text-green-600 mr-4" />
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">100% Private & Confidential</h3>
           </div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Shield.AI respects your privacy. No personal information is collected or stored. 
-            This tool is designed for awareness, not surveillance.
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-lg">
+            Shield.AI respects your privacy completely. No personal information is collected or stored. 
+            This advanced tool is designed for awareness and prevention, never for surveillance or judgment.
           </p>
         </div>
       </div>

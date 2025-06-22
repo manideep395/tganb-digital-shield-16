@@ -1,13 +1,14 @@
-
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isRisingAIOpen, setIsRisingAIOpen] = useState(false);
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
@@ -27,7 +28,10 @@ const Header = () => {
         { title: 'State Co-ordination', href: '/state-coordination' },
         { title: 'TGANB GO 27', href: '/tganb-go-27' },
         { title: 'TGANB Structure', href: '/tganb-structure' },
-        { title: 'About T-RISING.AI', href: '/about-rising-ai' }
+        { title: 'About T-RISING.AI', href: '/about-rising-ai' },
+        { title: 'Sahay AI', href: '/sahay-ai', gradient: 'from-green-500 to-emerald-500' },
+        { title: 'Shield AI', href: '/shield-ai', gradient: 'from-blue-500 to-indigo-500' },
+        { title: 'Uday AI', href: '/uday-ai', gradient: 'from-purple-500 to-pink-500' }
       ]
     },
     { 
@@ -77,18 +81,7 @@ const Header = () => {
         { title: 'News', href: '/news' }
       ]
     },
-    { title: 'Contact', href: '/contact' },
-    { 
-      title: 'RISING AI', 
-      href: '#',
-      isSpecial: true,
-      dropdown: [
-        { title: 'About T-RISING.AI', href: '/about-rising-ai', gradient: 'from-blue-500 to-purple-500' },
-        { title: 'Sahay AI', href: '/sahay-ai', gradient: 'from-green-500 to-emerald-500' },
-        { title: 'Shield AI', href: '/shield-ai', gradient: 'from-blue-500 to-indigo-500' },
-        { title: 'Uday AI', href: '/uday-ai', gradient: 'from-purple-500 to-pink-500' }
-      ]
-    }
+    { title: 'Contact', href: '/contact' }
   ];
 
   const handleNavigation = (href: string) => {
@@ -216,8 +209,6 @@ const Header = () => {
                     className={`text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
                         ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold dark:text-blue-400 dark:bg-blue-900' 
-                        : item.isSpecial 
-                        ? 'text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg'
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:bg-gray-800'
                     }`}
                     onClick={() => handleNavigation(item.href)}
@@ -251,6 +242,71 @@ const Header = () => {
                   )}
                 </div>
               ))}
+              
+              {/* T-RISING.AI Dialog Button */}
+              <Dialog open={isRisingAIOpen} onOpenChange={setIsRisingAIOpen}>
+                <DialogTrigger asChild>
+                  <button className="text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg">
+                    T-RISING.AI
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      T-RISING.AI
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-6">
+                    <p className="text-center text-gray-600 dark:text-gray-300">
+                      Telangana's Revolutionary Intelligence System for Integrated Narcotics Governance using AI
+                    </p>
+                    
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="text-center p-6 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800">
+                        <div className="text-4xl mb-4">🤝</div>
+                        <h3 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">Sahay AI</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                          Your compassionate AI counselor providing 24/7 support, guidance, and resources for addiction recovery.
+                        </p>
+                        <Button 
+                          onClick={() => { handleNavigation('/sahay-ai'); setIsRisingAIOpen(false); }}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          Try Sahay AI
+                        </Button>
+                      </div>
+                      
+                      <div className="text-center p-6 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800">
+                        <div className="text-4xl mb-4">🛡️</div>
+                        <h3 className="text-xl font-bold text-blue-700 dark:text-blue-400 mb-2">Shield AI</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                          Advanced risk assessment tool to identify vulnerability factors and provide personalized prevention strategies.
+                        </p>
+                        <Button 
+                          onClick={() => { handleNavigation('/shield-ai'); setIsRisingAIOpen(false); }}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          Try Shield AI
+                        </Button>
+                      </div>
+                      
+                      <div className="text-center p-6 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800">
+                        <div className="text-4xl mb-4">🌅</div>
+                        <h3 className="text-xl font-bold text-purple-700 dark:text-purple-400 mb-2">Uday AI</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                          Personalized recovery planner creating daily schedules and motivation plans for individuals in recovery.
+                        </p>
+                        <Button 
+                          onClick={() => { handleNavigation('/uday-ai'); setIsRisingAIOpen(false); }}
+                          className="bg-purple-600 hover:bg-purple-700 text-white"
+                        >
+                          Try Uday AI
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             {/* Theme Toggle */}
@@ -272,8 +328,6 @@ const Header = () => {
                       className={`w-full text-left py-2 px-4 text-sm font-medium ${
                         item.href === '/' 
                           ? 'text-blue-600 bg-blue-50 font-bold dark:text-blue-400 dark:bg-blue-900' 
-                          : item.isSpecial
-                          ? 'text-white bg-gradient-to-r from-purple-600 to-pink-600 font-bold'
                           : 'text-gray-700 hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                       onClick={() => handleNavigation(item.href)}
@@ -295,6 +349,14 @@ const Header = () => {
                     ))}
                   </div>
                 ))}
+                
+                {/* T-RISING.AI Mobile Button */}
+                <button 
+                  onClick={() => setIsRisingAIOpen(true)}
+                  className="w-full text-left py-2 px-4 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600"
+                >
+                  T-RISING.AI
+                </button>
                 
                 {/* Mobile Contact Info */}
                 <div className="border-t dark:border-gray-700 p-4 space-y-2">

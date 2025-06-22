@@ -14,11 +14,11 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, 210, 297, 'F');
   
-  // Add TGANB logo as watermark with 20% opacity
+  // Add TGANB logo as watermark with 15% opacity
   try {
     const tganbWatermark = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
-    pdf.setGState({ opacity: 0.2 });
-    pdf.addImage(tganbWatermark, 'PNG', 75, 120, 60, 60);
+    pdf.setGState({ opacity: 0.15 });
+    pdf.addImage(tganbWatermark, 'PNG', 70, 110, 70, 70);
     pdf.setGState({ opacity: 1 });
   } catch (error) {
     console.log('Error adding watermark:', error);
@@ -51,8 +51,8 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     console.log('Error adding logos:', error);
   }
   
-  // Use Helvetica as closest to Poppins
-  pdf.setFont('helvetica', 'bold');
+  // Use Times for more professional look (closest to TrueType)
+  pdf.setFont('times', 'bold');
   
   // Header text - TELANGANA ANTI NARCOTICS BUREAU in police dark blue
   pdf.setFontSize(14);
@@ -88,13 +88,13 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     }
   }
   
-  // Certificate content with proper spacing and formatting
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(12);
+  // Certificate content with smaller font and proper spacing
+  pdf.setFont('times', 'normal');
+  pdf.setFontSize(10); // Reduced from 12
   pdf.setTextColor(0, 0, 0);
   
   let yPosition = 145;
-  const lineHeight = 7;
+  const lineHeight = 5; // Reduced line height
   
   // Main certification text
   const line1Part1 = `This is to proudly certify that `;
@@ -109,50 +109,45 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   
   const nameStartX = startX + pdf.getTextWidth(line1Part1);
   pdf.setTextColor(0, 51, 102);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('times', 'bold');
   pdf.text(line1Part2, nameStartX, yPosition);
   
   const part3StartX = nameStartX + pdf.getTextWidth(line1Part2);
   pdf.setTextColor(0, 0, 0);
-  pdf.setFont('helvetica', 'normal');
+  pdf.setFont('times', 'normal');
   pdf.text(line1Part3, part3StartX, yPosition);
   yPosition += lineHeight;
   
   // Institution name and enrollment text
   pdf.text(`${formData.institutionName}, has been officially enrolled as an`, 105, yPosition, { align: 'center' });
-  yPosition += lineHeight + 2;
+  yPosition += lineHeight + 1;
   
   // Anti-Narcotic Soldier in blue
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('times', 'bold');
   pdf.setTextColor(0, 51, 102);
   pdf.text('Anti-Narcotic Soldier', 105, yPosition, { align: 'center' });
-  yPosition += lineHeight + 2;
+  yPosition += lineHeight + 1;
   
-  // Remaining text in black
-  pdf.setFont('helvetica', 'normal');
+  // Remaining text in black with smaller font
+  pdf.setFont('times', 'normal');
+  pdf.setFontSize(9); // Even smaller for details
   pdf.setTextColor(0, 0, 0);
   pdf.text('under the initiative of the Telangana Anti', 105, yPosition, { align: 'center' });
   yPosition += lineHeight;
   
   pdf.text(`Narcotics Bureau on ${new Date().toLocaleDateString()}.`, 105, yPosition, { align: 'center' });
-  yPosition += lineHeight + 6;
+  yPosition += lineHeight + 4;
   
-  // New concise content
+  // Concise content with smaller font
   const contentLines = [
     'Through this enrollment, the student has pledged to actively participate',
     'in building a drug-free society by promoting awareness about the harmful',
-    'effects of narcotics, encouraging healthy choices among peers, and',
-    'supporting community-driven anti-drug campaigns.',
+    'effects of narcotics and supporting community-driven anti-drug campaigns.',
     '',
     'As an Anti-Narcotic Soldier, the student commits to leading by example',
-    'and contributing to the vision of a safe, responsible, and addiction-free',
-    'nation.',
+    'and contributing to the vision of a safe, responsible, and addiction-free nation.',
     '',
-    'We appreciate and recognize this valuable step taken towards national',
-    'well-being and social responsibility. The enrollment of this individual',
-    'as an Anti-Narcotic Soldier symbolizes their dedication to making a',
-    'positive impact in society and inspiring others to follow the path of',
-    'awareness, strength, and integrity.'
+    'We recognize this valuable step towards national well-being and social responsibility.'
   ];
   
   contentLines.forEach((line) => {
@@ -181,19 +176,19 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     console.error('Error generating QR code:', error);
   }
   
-  // Certificate information
-  pdf.setFontSize(8);
+  // Certificate information with smaller font
+  pdf.setFontSize(7); // Smaller font for certificate info
   pdf.setTextColor(0, 51, 102);
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('times', 'bold');
   pdf.text('Certificate Information', 50, yPosition + 8);
   
-  pdf.setFont('helvetica', 'normal');
+  pdf.setFont('times', 'normal');
   pdf.setTextColor(0, 0, 0);
-  pdf.text(`ID: ${certificateId}`, 50, yPosition + 13);
-  pdf.text('Digitally Verified', 50, yPosition + 17);
+  pdf.text(`ID: ${certificateId}`, 50, yPosition + 12);
+  pdf.text('Digitally Verified', 50, yPosition + 16);
   
-  pdf.text('Authorized by TGANB', 140, yPosition + 13);
-  pdf.text('Government of Telangana', 140, yPosition + 17);
+  pdf.text('Authorized by TGANB', 140, yPosition + 12);
+  pdf.text('Government of Telangana', 140, yPosition + 16);
   
   // Download the PDF
   pdf.save(`ADS_Certificate_${formData.name.replace(/\s+/g, '_')}.pdf`);
