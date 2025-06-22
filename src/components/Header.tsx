@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { motion } from 'framer-motion';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,9 +30,9 @@ const Header = () => {
         { title: 'TGANB GO 27', href: '/tganb-go-27' },
         { title: 'TGANB Structure', href: '/tganb-structure' },
         { title: 'About T-RISING.AI', href: '/about-rising-ai' },
-        { title: 'Sahay AI', href: '/sahay-ai-chat', gradient: 'from-green-500 to-emerald-500' },
-        { title: 'Shield AI', href: '/shield-ai-assessment', gradient: 'from-blue-500 to-indigo-500' },
-        { title: 'Uday AI', href: '/uday-ai-planner', gradient: 'from-purple-500 to-pink-500' }
+        { title: 'About Sahay AI', href: '/about-sahay-ai', gradient: 'from-green-500 to-emerald-500' },
+        { title: 'About Shield AI', href: '/about-shield-ai', gradient: 'from-blue-500 to-indigo-500' },
+        { title: 'About Uday AI', href: '/about-uday-ai', gradient: 'from-purple-500 to-pink-500' }
       ]
     },
     { 
@@ -250,106 +251,156 @@ const Header = () => {
                     T-RISING.AI
                   </button>
                 </DialogTrigger>
-                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-4xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+                <DialogContent className="max-w-7xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+                  <DialogHeader className="text-center pb-6">
+                    <DialogTitle className="text-5xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-4">
                       T-RISING.AI
                     </DialogTitle>
+                    <p className="text-xl text-gray-600 font-medium">
+                      Telangana's Revolutionary Intelligence System for Integrated Narcotics Governance using AI
+                    </p>
                   </DialogHeader>
-                  <div className="space-y-8">
-                    <div className="text-center">
-                      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
-                        Telangana's Revolutionary Intelligence System for Integrated Narcotics Governance using AI
+                  
+                  <div className="space-y-12">
+                    <div className="text-center bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg">
+                      <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                        Comprehensive AI Ecosystem for Drug Prevention & Recovery
                       </h2>
-                      <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
-                        A comprehensive AI-powered ecosystem designed to combat drug abuse through three specialized AI models, 
-                        each serving a unique purpose in prevention, support, and recovery.
+                      <p className="text-lg text-gray-600 max-w-5xl mx-auto leading-relaxed">
+                        Three specialized AI models working together to create a complete support system - 
+                        from prevention and risk assessment to recovery planning and emotional support.
                       </p>
                     </div>
                     
                     <div className="grid lg:grid-cols-3 gap-8">
-                      <div className="group hover:scale-105 transition-transform duration-300">
-                        <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg">
+                      <motion.div 
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        className="group relative"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                        <div className="relative h-full p-8 rounded-3xl bg-white shadow-xl border border-green-200">
                           <div className="text-center">
                             <div className="text-6xl mb-6">🤝</div>
-                            <h3 className="text-2xl font-bold text-green-700 dark:text-green-400 mb-4">Sahay AI</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                              Your compassionate AI counselor providing 24/7 multilingual support, guidance, and resources for addiction recovery. 
-                              Available in English, Telugu, and Hindi.
+                            <h3 className="text-3xl font-bold text-green-700 mb-4">Sahay AI</h3>
+                            <p className="text-gray-600 mb-6 leading-relaxed">
+                              Your compassionate AI counselor providing 24/7 multilingual support, crisis intervention, 
+                              and guidance for addiction recovery. Available in English, Telugu, and Hindi.
                             </p>
-                            <div className="space-y-2 text-sm text-gray-500 mb-6">
-                              <div>✓ 24/7 Availability</div>
-                              <div>✓ Multilingual Support</div>
-                              <div>✓ Anonymous & Secure</div>
-                              <div>✓ Crisis Intervention</div>
+                            <div className="grid grid-cols-2 gap-3 text-sm text-gray-500 mb-8">
+                              <div className="bg-green-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Crisis Support</div>
+                              </div>
+                              <div className="bg-green-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ 24/7 Available</div>
+                              </div>
+                              <div className="bg-green-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Multilingual</div>
+                              </div>
+                              <div className="bg-green-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Anonymous</div>
+                              </div>
                             </div>
                             <Button 
                               onClick={() => { handleNavigation('/sahay-ai-chat'); setIsRisingAIOpen(false); }}
-                              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3"
+                              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 rounded-2xl shadow-lg transform hover:scale-105 transition-all"
                             >
-                              💬 Chat with Sahay AI
+                              💬 Chat Now
                             </Button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                       
-                      <div className="group hover:scale-105 transition-transform duration-300">
-                        <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-200 dark:border-blue-800 shadow-lg">
+                      <motion.div 
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        className="group relative"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                        <div className="relative h-full p-8 rounded-3xl bg-white shadow-xl border border-blue-200">
                           <div className="text-center">
                             <div className="text-6xl mb-6">🛡️</div>
-                            <h3 className="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">Shield AI</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                              Advanced risk assessment tool using behavioral analysis to identify vulnerability factors and 
-                              provide personalized prevention strategies before problems begin.
+                            <h3 className="text-3xl font-bold text-blue-700 mb-4">Shield AI</h3>
+                            <p className="text-gray-600 mb-6 leading-relaxed">
+                              Advanced risk assessment using behavioral analysis to identify vulnerability factors 
+                              and provide personalized prevention strategies before problems begin.
                             </p>
-                            <div className="space-y-2 text-sm text-gray-500 mb-6">
-                              <div>✓ Risk Analysis</div>
-                              <div>✓ Personalized Tips</div>
-                              <div>✓ Early Detection</div>
-                              <div>✓ PDF Reports</div>
+                            <div className="grid grid-cols-2 gap-3 text-sm text-gray-500 mb-8">
+                              <div className="bg-blue-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Risk Analysis</div>
+                              </div>
+                              <div className="bg-blue-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Prevention Tips</div>
+                              </div>
+                              <div className="bg-blue-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Early Detection</div>
+                              </div>
+                              <div className="bg-blue-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ PDF Reports</div>
+                              </div>
                             </div>
                             <Button 
                               onClick={() => { handleNavigation('/shield-ai-assessment'); setIsRisingAIOpen(false); }}
-                              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3"
+                              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg transform hover:scale-105 transition-all"
                             >
-                              🔍 Take Risk Assessment
+                              🔍 Take Assessment
                             </Button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                       
-                      <div className="group hover:scale-105 transition-transform duration-300">
-                        <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800 shadow-lg">
+                      <motion.div 
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        className="group relative"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                        <div className="relative h-full p-8 rounded-3xl bg-white shadow-xl border border-purple-200">
                           <div className="text-center">
                             <div className="text-6xl mb-6">🌅</div>
-                            <h3 className="text-2xl font-bold text-purple-700 dark:text-purple-400 mb-4">Uday AI</h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                              Personalized recovery planner creating dynamic daily schedules, motivation plans, and progress tracking 
-                              for individuals in their recovery journey.
+                            <h3 className="text-3xl font-bold text-purple-700 mb-4">Uday AI</h3>
+                            <p className="text-gray-600 mb-6 leading-relaxed">
+                              Personalized recovery planner creating dynamic daily schedules, motivation plans, 
+                              and progress tracking for individuals in their recovery journey.
                             </p>
-                            <div className="space-y-2 text-sm text-gray-500 mb-6">
-                              <div>✓ Daily Planning</div>
-                              <div>✓ Progress Tracking</div>
-                              <div>✓ Motivational Content</div>
-                              <div>✓ Personalized Schedules</div>
+                            <div className="grid grid-cols-2 gap-3 text-sm text-gray-500 mb-8">
+                              <div className="bg-purple-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Daily Planning</div>
+                              </div>
+                              <div className="bg-purple-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Progress Track</div>
+                              </div>
+                              <div className="bg-purple-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Motivation</div>
+                              </div>
+                              <div className="bg-purple-50 p-3 rounded-lg">
+                                <div className="font-semibold">✓ Recovery Plans</div>
+                              </div>
                             </div>
                             <Button 
                               onClick={() => { handleNavigation('/uday-ai-planner'); setIsRisingAIOpen(false); }}
-                              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3"
+                              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 rounded-2xl shadow-lg transform hover:scale-105 transition-all"
                             >
-                              🌅 Start Recovery Plan
+                              🌅 Start Recovery
                             </Button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     </div>
 
-                    <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-8 text-center">
-                      <h3 className="text-2xl font-bold mb-4">Powered by Telangana Anti-Narcotics Bureau</h3>
-                      <p className="text-lg opacity-90">
-                        Together, these AI tools create a comprehensive ecosystem for drug prevention, support, and recovery - 
-                        making Telangana a pioneer in AI-driven public safety and citizen welfare.
-                      </p>
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur opacity-20"></div>
+                      <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-3xl p-10 text-center shadow-2xl">
+                        <div className="flex justify-center mb-6">
+                          <img 
+                            src="/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
+                            alt="TGANB Logo" 
+                            className="h-16 w-16 rounded-full border-2 border-white/30"
+                          />
+                        </div>
+                        <h3 className="text-3xl font-bold mb-4">Powered by Telangana Anti-Narcotics Bureau</h3>
+                        <p className="text-xl opacity-90 max-w-4xl mx-auto">
+                          Together, these AI tools create a comprehensive ecosystem for drug prevention, support, and recovery - 
+                          making Telangana a pioneer in AI-driven public safety and citizen welfare.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </DialogContent>

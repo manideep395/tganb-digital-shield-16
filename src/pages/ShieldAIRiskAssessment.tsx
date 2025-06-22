@@ -9,6 +9,7 @@ import { Shield, Download, User, MapPin, Calendar, Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import jsPDF from 'jspdf';
+import { generateAIPDF } from '../utils/pdfGenerator';
 
 interface FormData {
   name: string;
@@ -127,82 +128,42 @@ const ShieldAIRiskAssessment = () => {
     setShowResults(true);
   };
 
-  const generatePDFReport = () => {
-    const pdf = new jsPDF('portrait', 'mm', 'a4');
-    
-    // Header with logos and title
-    try {
-      // Telangana Government Logo (left)
-      const telanganaGovImg = '/lovable-uploads/dc5b1429-5d0c-4d96-a676-6979624c1570.png';
-      pdf.addImage(telanganaGovImg, 'PNG', 20, 15, 25, 25);
-      
-      // TGANB Logo (center-left)
-      const tganbImg = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
-      pdf.addImage(tganbImg, 'PNG', 50, 15, 25, 25);
-    } catch (error) {
-      console.log('Error adding logos:', error);
-    }
-
-    // Header text
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(16);
-    pdf.setTextColor(0, 51, 102);
-    pdf.text('TELANGANA ANTI NARCOTICS BUREAU (TGANB)', 80, 25);
-    pdf.setFontSize(12);
-    pdf.text('Shield.AI Risk Assessment Report', 80, 32);
-
-    // User details section
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(10);
-    pdf.setTextColor(0, 0, 0);
-    
-    let yPos = 55;
-    pdf.text(`Name: ${formData.name}`, 20, yPos);
-    pdf.text(`Age: ${formData.age}`, 20, yPos + 7);
-    pdf.text(`Location: ${formData.location}`, 20, yPos + 14);
-    pdf.text(`Phone: ${formData.phone}`, 20, yPos + 21);
-    pdf.text(`Generated: ${new Date().toLocaleString()}`, 20, yPos + 28);
-
-    // Risk assessment results
-    yPos = 95;
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(14);
-    pdf.setTextColor(riskLevel === 'High' ? 255 : riskLevel === 'Moderate' ? 255 : 0, 
-                     riskLevel === 'High' ? 0 : riskLevel === 'Moderate' ? 165 : 128, 
-                     riskLevel === 'High' ? 0 : 0);
-    pdf.text(`Risk Level: ${riskLevel} (${riskScore}%)`, 20, yPos);
-
-    // Prevention tips
-    yPos += 20;
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(12);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text('Personalized Prevention Tips:', 20, yPos);
-
-    const tips = [
-      "Build strong, positive peer relationships",
-      "Develop healthy stress management techniques",
-      "Stay informed about drug risks and consequences", 
-      "Seek support when feeling overwhelmed",
-      "Engage in regular physical activities and hobbies"
+  const generatePDFReport = async () => {
+    const detailedRecommendations = [
+      "Build Strong Support Networks: Cultivate relationships with positive, supportive friends and family members who encourage healthy choices and provide emotional support during challenging times.",
+      "Develop Healthy Coping Mechanisms: Learn and practice stress management techniques such as deep breathing, meditation, regular exercise, creative activities, or talking to trusted individuals.",
+      "Increase Drug Awareness Education: Stay informed about the risks, effects, and consequences of different substances. Knowledge empowers better decision-making and helps recognize dangerous situations.",
+      "Create Safe Environmental Boundaries: Identify and avoid high-risk locations, situations, or social groups where substance use is common or encouraged.",
+      "Establish Clear Personal Goals: Set short-term and long-term objectives for your education, career, and personal growth to maintain focus and motivation.",
+      "Practice Assertive Communication: Develop skills to confidently say 'no' to peer pressure and communicate your boundaries clearly without feeling guilty or isolated.",
+      "Engage in Positive Activities: Participate in sports, hobbies, volunteering, or community activities that provide fulfillment and connect you with like-minded individuals.",
+      "Monitor Mental Health: Pay attention to your emotional well-being and seek professional help if experiencing persistent sadness, anxiety, or other mental health concerns.",
+      "Build Decision-Making Skills: Practice evaluating potential consequences before making choices, especially in social situations involving peer pressure.",
+      "Maintain Open Communication: Keep honest dialogue with trusted adults, counselors, or family members who can provide guidance and support when needed."
     ];
 
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(10);
-    tips.forEach((tip, index) => {
-      yPos += 10;
-      pdf.text(`• ${tip}`, 25, yPos);
-    });
+    const riskAnalysis = [
+      `Based on your assessment, your overall risk level is ${riskLevel} (${riskScore}%).`,
+      "This evaluation considers multiple factors including emotional wellbeing, peer influence, environmental exposure, and behavioral patterns.",
+      "Your responses indicate specific areas where focused prevention strategies can be most effective.",
+      "Regular self-assessment and implementing personalized prevention strategies can significantly reduce risk factors over time."
+    ];
 
-    // Footer disclaimer
-    yPos = 270;
-    pdf.setFontSize(8);
-    pdf.setTextColor(128, 128, 128);
-    pdf.text('DISCLAIMER: This is an AI-generated assessment and not a medical diagnosis.', 20, yPos);
-    pdf.text('If you are in a critical situation, please visit rehabilitation specialists immediately.', 20, yPos + 5);
-    pdf.text('For emergency assistance, contact TG ANB Helpline: 8712671111', 20, yPos + 10);
+    const config = {
+      title: 'Shield.AI Risk Assessment Report',
+      userDetails: formData,
+      content: riskAnalysis,
+      recommendations: detailedRecommendations,
+      riskLevel,
+      riskScore
+    };
 
-    pdf.save(`Shield_AI_Risk_Assessment_${formData.name.replace(/\s+/g, '_')}.pdf`);
+    try {
+      const pdf = await generateAIPDF(config);
+      pdf.save(`Shield_AI_Risk_Assessment_${formData.name.replace(/\s+/g, '_')}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   };
 
   if (showPersonalInfo) {
