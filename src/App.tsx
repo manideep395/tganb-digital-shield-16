@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { QueryClient, ThemeProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 
 import Index from './pages/Index';
@@ -25,8 +26,6 @@ import TestingKits from './pages/TestingKits';
 import Education from './pages/Education';
 import MythsFacts from './pages/MythsFacts';
 import FAQs from './pages/FAQs';
-import AntiDrugSoldierEnrollment from './pages/AntiDrugSoldierEnrollment';
-import CertificateVerification from './pages/CertificateVerification';
 import Statistics from './pages/Statistics';
 import Achievements from './pages/Achievements';
 import News from './pages/News';
@@ -46,59 +45,58 @@ import AboutSahayAI from './pages/AboutSahayAI';
 import AboutShieldAI from './pages/AboutShieldAI';
 import AboutUdayAI from './pages/AboutUdayAI';
 
+// Create a client
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <QueryClient>
-      <ThemeProvider>
-        <Toaster />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about-tganb" element={<AboutTGANB />} />
-            <Route path="/vision-mission" element={<VisionMission />} />
-            <Route path="/anti-drug-committees" element={<AntiDrugCommittees />} />
-            <Route path="/about-logo" element={<AboutLogo />} />
-            <Route path="/directors-note" element={<DirectorsNote />} />
-            <Route path="/officers-directory" element={<OfficersDirectory />} />
-            <Route path="/central-coordination" element={<CentralCoordination />} />
-            <Route path="/state-coordination" element={<StateCoordination />} />
-            <Route path="/tganb-go-27" element={<TganbGo27 />} />
-            <Route path="/tganb-structure" element={<TganbStructure />} />
-            <Route path="/about-rising-ai" element={<AboutRisingAI />} />
-            <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
-            <Route path="/about-shield-ai" element={<AboutShieldAI />} />
-            <Route path="/about-uday-ai" element={<AboutUdayAI />} />
-            <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
-            <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
-            <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
-            <Route path="/mission-parivartana" element={<MissionParivartana />} />
-            <Route path="/operation-sankalp" element={<OperationSankalp />} />
-            <Route path="/prahari-clubs" element={<PrahariClubs />} />
-            <Route path="/events-campaigns" element={<EventsCampaigns />} />
-            <Route path="/testing-kits" element={<TestingKits />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/myths-facts" element={<MythsFacts />} />
-            <Route path="/faqs" element={<FAQs />} />
-            <Route path="/anti-drug-soldier-enrollment" element={<AntiDrugSoldierEnrollment />} />
-            <Route path="/certificate-verification" element={<CertificateVerification />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/achievements" element={<Achievements />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/sahay-ai" element={<SahayAI />} />
-            <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
-            <Route path="/shield-ai" element={<ShieldAI />} />
-            <Route path="/shield-ai-assessment" element={<ShieldAIRiskAssessment />} />
-            <Route path="/uday-ai" element={<UdayAI />} />
-            <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
-            <Route path="/rehabilitation" element={<Rehabilitation />} />
-            <Route path="/learning-resources" element={<LearningResources />} />
-            <Route path="/drug-types" element={<DrugTypes />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    </QueryClient>
+    <QueryClientProvider client={queryClient}>
+      <Toaster />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/about-tganb" element={<AboutTGANB />} />
+          <Route path="/vision-mission" element={<VisionMission />} />
+          <Route path="/anti-drug-committees" element={<AntiDrugCommittees />} />
+          <Route path="/about-logo" element={<AboutLogo />} />
+          <Route path="/directors-note" element={<DirectorsNote />} />
+          <Route path="/officers-directory" element={<OfficersDirectory />} />
+          <Route path="/central-coordination" element={<CentralCoordination />} />
+          <Route path="/state-coordination" element={<StateCoordination />} />
+          <Route path="/tganb-go-27" element={<TganbGo27 />} />
+          <Route path="/tganb-structure" element={<TganbStructure />} />
+          <Route path="/about-rising-ai" element={<AboutRisingAI />} />
+          <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
+          <Route path="/about-shield-ai" element={<AboutShieldAI />} />
+          <Route path="/about-uday-ai" element={<AboutUdayAI />} />
+          <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
+          <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
+          <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
+          <Route path="/mission-parivartana" element={<MissionParivartana />} />
+          <Route path="/operation-sankalp" element={<OperationSankalp />} />
+          <Route path="/prahari-clubs" element={<PrahariClubs />} />
+          <Route path="/events-campaigns" element={<EventsCampaigns />} />
+          <Route path="/testing-kits" element={<TestingKits />} />
+          <Route path="/education" element={<Education />} />
+          <Route path="/myths-facts" element={<MythsFacts />} />
+          <Route path="/faqs" element={<FAQs />} />
+          <Route path="/statistics" element={<Statistics />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/sahay-ai" element={<SahayAI />} />
+          <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
+          <Route path="/shield-ai" element={<ShieldAI />} />
+          <Route path="/shield-ai-assessment" element={<ShieldAIRiskAssessment />} />
+          <Route path="/uday-ai" element={<UdayAI />} />
+          <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
+          <Route path="/rehabilitation" element={<Rehabilitation />} />
+          <Route path="/learning-resources" element={<LearningResources />} />
+          <Route path="/drug-types" element={<DrugTypes />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
