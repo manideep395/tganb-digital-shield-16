@@ -51,13 +51,11 @@ const DrugReportSubmission = () => {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Check file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
         toast.error('File size must be less than 10MB');
         return;
       }
       
-      // Check file type
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm', 'application/pdf'];
       if (!allowedTypes.includes(file.type)) {
         toast.error('File type not supported. Please upload images, videos, or PDF files.');
@@ -106,29 +104,9 @@ const DrugReportSubmission = () => {
     setIsSubmitting(true);
     
     try {
-      let evidenceFileUrl = null;
-      let evidenceFileName = null;
-      let evidenceFileSize = null;
-
-      // Upload evidence file if provided
-      if (formData.evidenceFile) {
-        const fileExt = formData.evidenceFile.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('drug-report-evidence')
-          .upload(fileName, formData.evidenceFile);
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        evidenceFileUrl = uploadData.path;
-        evidenceFileName = formData.evidenceFile.name;
-        evidenceFileSize = formData.evidenceFile.size;
-      }
-
-      // Submit report to database
+      console.log('Starting report submission...');
+      
+      // Prepare report data for database
       const reportData = {
         report_type: formData.reportType,
         location_incident: formData.locationIncident,
@@ -139,13 +117,17 @@ const DrugReportSubmission = () => {
         reporter_name: formData.isAnonymous ? null : formData.reporterName,
         reporter_email: formData.isAnonymous ? null : formData.reporterEmail,
         reporter_phone: formData.isAnonymous ? null : formData.reporterPhone,
-        evidence_file_url: evidenceFileUrl,
-        evidence_file_name: evidenceFileName,
-        evidence_file_size: evidenceFileSize,
+        evidence_file_url: null,
+        evidence_file_name: formData.evidenceFile?.name || null,
+        evidence_file_size: formData.evidenceFile?.size || null,
         ip_address: 'hidden_for_privacy',
-        user_agent: navigator.userAgent.substring(0, 255)
+        user_agent: navigator.userAgent.substring(0, 255),
+        status: 'pending'
       };
 
+      console.log('Report data prepared:', reportData);
+
+      // Submit report to database
       const { data, error } = await supabase
         .from('drug_reports')
         .insert([reportData])
@@ -153,22 +135,25 @@ const DrugReportSubmission = () => {
         .single();
 
       if (error) {
+        console.error('Database error:', error);
         throw error;
       }
 
+      console.log('Report submitted successfully:', data);
+      
       setCurrentSection(4);
       toast.success('Report submitted successfully! Your report ID is: ' + data.id.substring(0, 8));
       
     } catch (error) {
       console.error('Error submitting report:', error);
-      toast.error('Failed to submit report. Please try again.');
+      toast.error('Failed to submit report. Please check your internet connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-red-900 via-red-800 to-orange-900 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-orange-900 font-poppins">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-red-400/10 rounded-full blur-3xl animate-pulse"></div>
@@ -177,12 +162,12 @@ const DrugReportSubmission = () => {
       </div>
 
       {/* Header */}
-      <div className="relative z-10 flex items-center justify-between p-6 bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <div className="relative z-10 flex items-center justify-between p-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate('/')}
-          className="flex items-center gap-3 text-white hover:text-red-200 transition-colors"
+          className="flex items-center gap-3 text-white hover:text-red-200 transition-colors font-poppins"
         >
           <ArrowLeft className="w-6 h-6" />
           <span className="text-lg font-semibold">Back to Home</span>
@@ -195,37 +180,37 @@ const DrugReportSubmission = () => {
             className="h-12 w-12 rounded-full"
           />
           <div className="text-white">
-            <h1 className="text-xl font-bold">TG ANB</h1>
+            <h1 className="text-xl font-bold font-poppins">TG ANB</h1>
             <p className="text-sm text-red-200">Secure Report Submission</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-white">
           <Shield className="w-6 h-6 text-green-400" />
-          <span className="text-sm">Encrypted & Secure</span>
+          <span className="text-sm font-poppins">Encrypted & Secure</span>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-88px)] p-6">
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-88px)] p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-4xl"
         >
           <Card className="bg-black/40 backdrop-blur-xl border-white/20 shadow-2xl">
-            <CardContent className="p-8">
+            <CardContent className="p-6">
               {/* Progress Indicator */}
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-6">
                 {[1, 2, 3, 4].map((step) => (
                   <div key={step} className="flex items-center">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold border-2 ${
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold border-2 font-poppins ${
                       currentSection >= step ? 'bg-red-600 border-red-600' : 'bg-white/10 border-white/30'
                     }`}>
                       {step}
                     </div>
                     {step < 4 && (
-                      <div className={`w-24 h-1 mx-4 ${
+                      <div className={`w-16 h-1 mx-2 ${
                         currentSection > step ? 'bg-red-600' : 'bg-white/20'
                       }`}></div>
                     )}
@@ -240,16 +225,16 @@ const DrugReportSubmission = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className="space-y-6"
                 >
-                  <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-white mb-2">Report Details</h2>
-                    <p className="text-white/70">Please provide basic information about the incident</p>
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-white mb-2 font-poppins">Report Details</h2>
+                    <p className="text-white/70 font-poppins">Please provide basic information about the incident</p>
                   </div>
 
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     <div>
-                      <label className="block text-white font-semibold mb-3">Type of Report *</label>
+                      <label className="block text-white font-semibold mb-2 font-poppins">Type of Report *</label>
                       <Select value={formData.reportType} onValueChange={(value) => handleInputChange('reportType', value)}>
-                        <SelectTrigger className="bg-white/10 border-white/30 text-white">
+                        <SelectTrigger className="bg-white/10 border-white/30 text-white font-poppins">
                           <SelectValue placeholder="Select report type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -261,24 +246,24 @@ const DrugReportSubmission = () => {
                     </div>
 
                     <div>
-                      <label className="block text-white font-semibold mb-3">Location of Incident *</label>
+                      <label className="block text-white font-semibold mb-2 font-poppins">Location of Incident *</label>
                       <Input
                         value={formData.locationIncident}
                         onChange={(e) => handleInputChange('locationIncident', e.target.value)}
                         placeholder="Enter location details (area, landmark, address)"
-                        className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
+                        className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-white font-semibold mb-3">Date & Time of Incident</label>
+                      <label className="block text-white font-semibold mb-2 font-poppins">Date & Time of Incident</label>
                       <div className="flex items-center gap-4">
                         <Popover>
                           <PopoverTrigger asChild>
                             <Button
                               variant="outline"
                               disabled={formData.dateUnknown}
-                              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                              className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-poppins"
                             >
                               {formData.incidentDate ? format(formData.incidentDate, 'PPP') : 'Select date'}
                             </Button>
@@ -302,14 +287,14 @@ const DrugReportSubmission = () => {
                               if (checked) handleInputChange('incidentDate', null);
                             }}
                           />
-                          <label htmlFor="dateUnknown" className="text-white text-sm">Date Unknown</label>
+                          <label htmlFor="dateUnknown" className="text-white text-sm font-poppins">Date Unknown</label>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex justify-end">
-                    <Button onClick={nextSection} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3">
+                    <Button onClick={nextSection} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 font-poppins">
                       Next Step
                     </Button>
                   </div>
@@ -323,37 +308,37 @@ const DrugReportSubmission = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className="space-y-6"
                 >
-                  <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-white mb-2">Incident Description</h2>
-                    <p className="text-white/70">Provide detailed information about what you witnessed</p>
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-white mb-2 font-poppins">Incident Description</h2>
+                    <p className="text-white/70 font-poppins">Provide detailed information about what you witnessed</p>
                   </div>
 
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     <div>
-                      <label className="block text-white font-semibold mb-3">
+                      <label className="block text-white font-semibold mb-2 font-poppins">
                         Detailed Description * <span className="text-sm text-white/70">(Minimum 100 characters)</span>
                       </label>
                       <Textarea
                         value={formData.detailedDescription}
                         onChange={(e) => handleInputChange('detailedDescription', e.target.value)}
                         placeholder="Please provide a detailed description of the incident, including what you saw, heard, or witnessed. Include as many relevant details as possible."
-                        className="bg-white/10 border-white/30 text-white placeholder:text-white/50 min-h-32"
-                        rows={8}
+                        className="bg-white/10 border-white/30 text-white placeholder:text-white/50 min-h-24 font-poppins"
+                        rows={6}
                       />
-                      <div className="text-right text-white/60 text-sm mt-2">
+                      <div className="text-right text-white/60 text-sm mt-1 font-poppins">
                         {formData.detailedDescription.length}/100 minimum
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-white font-semibold mb-3">
+                      <label className="block text-white font-semibold mb-2 font-poppins">
                         Evidence Upload <span className="text-sm text-white/70">(Optional)</span>
                       </label>
-                      <div className="border-2 border-dashed border-white/30 rounded-lg p-6 bg-white/5">
+                      <div className="border-2 border-dashed border-white/30 rounded-lg p-4 bg-white/5">
                         <div className="text-center">
-                          <Upload className="w-12 h-12 text-white/50 mx-auto mb-4" />
-                          <p className="text-white mb-2">Upload photos, videos, or documents</p>
-                          <p className="text-white/60 text-sm mb-4">Max 10MB • JPG, PNG, MP4, PDF supported</p>
+                          <Upload className="w-8 h-8 text-white/50 mx-auto mb-2" />
+                          <p className="text-white mb-1 font-poppins">Upload photos, videos, or documents</p>
+                          <p className="text-white/60 text-sm mb-3 font-poppins">Max 10MB • JPG, PNG, MP4, PDF supported</p>
                           <input
                             type="file"
                             onChange={handleFileUpload}
@@ -363,14 +348,14 @@ const DrugReportSubmission = () => {
                           />
                           <label
                             htmlFor="evidence-upload"
-                            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg cursor-pointer transition-colors"
+                            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg cursor-pointer transition-colors font-poppins"
                           >
                             <Upload className="w-4 h-4" />
                             Choose File
                           </label>
                           {formData.evidenceFile && (
-                            <div className="mt-4 p-3 bg-green-600/20 border border-green-500/30 rounded-lg">
-                              <p className="text-green-200 text-sm">
+                            <div className="mt-3 p-2 bg-green-600/20 border border-green-500/30 rounded-lg">
+                              <p className="text-green-200 text-sm font-poppins">
                                 File uploaded: {formData.evidenceFile.name}
                               </p>
                             </div>
@@ -381,10 +366,14 @@ const DrugReportSubmission = () => {
                   </div>
 
                   <div className="flex justify-between">
-                    <Button onClick={prevSection} variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                    <Button 
+                      onClick={prevSection} 
+                      variant="outline" 
+                      className="border-white/30 text-white hover:bg-white/10 font-poppins"
+                    >
                       Previous
                     </Button>
-                    <Button onClick={nextSection} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3">
+                    <Button onClick={nextSection} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 font-poppins">
                       Next Step
                     </Button>
                   </div>
@@ -398,13 +387,13 @@ const DrugReportSubmission = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className="space-y-6"
                 >
-                  <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-white mb-2">Reporter Information</h2>
-                    <p className="text-white/70">Choose whether to submit anonymously or provide contact details</p>
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-white mb-2 font-poppins">Reporter Information</h2>
+                    <p className="text-white/70 font-poppins">Choose whether to submit anonymously or provide contact details</p>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="bg-blue-600/20 border border-blue-500/30 rounded-lg p-4">
+                  <div className="space-y-4">
+                    <div className="bg-blue-600/20 border border-blue-500/30 rounded-lg p-3">
                       <div className="flex items-center gap-3">
                         <Checkbox
                           id="anonymous"
@@ -418,11 +407,11 @@ const DrugReportSubmission = () => {
                             }
                           }}
                         />
-                        <label htmlFor="anonymous" className="text-white font-semibold">
+                        <label htmlFor="anonymous" className="text-white font-semibold font-poppins">
                           Submit this report anonymously
                         </label>
                       </div>
-                      <p className="text-blue-200 text-sm mt-2 ml-6">
+                      <p className="text-blue-200 text-sm mt-1 ml-6 font-poppins">
                         Your identity will be completely protected and not shared with anyone.
                       </p>
                     </div>
@@ -431,12 +420,12 @@ const DrugReportSubmission = () => {
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
-                        className="space-y-4"
+                        className="space-y-3"
                       >
-                        <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center gap-2 mb-3">
                           <button
                             onClick={() => setShowReporterDetails(!showReporterDetails)}
-                            className="flex items-center gap-2 text-white hover:text-red-200 transition-colors"
+                            className="flex items-center gap-2 text-white hover:text-red-200 transition-colors font-poppins"
                           >
                             {showReporterDetails ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             {showReporterDetails ? 'Hide' : 'Show'} contact details
@@ -444,30 +433,30 @@ const DrugReportSubmission = () => {
                         </div>
 
                         {showReporterDetails && (
-                          <div className="space-y-4">
+                          <div className="space-y-3">
                             <div>
-                              <label className="block text-white font-semibold mb-2">Full Name *</label>
+                              <label className="block text-white font-semibold mb-1 font-poppins">Full Name *</label>
                               <Input
                                 value={formData.reporterName}
                                 onChange={(e) => handleInputChange('reporterName', e.target.value)}
                                 placeholder="Enter your full name"
-                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
+                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
                               />
                             </div>
 
                             <div>
-                              <label className="block text-white font-semibold mb-2">Email Address *</label>
+                              <label className="block text-white font-semibold mb-1 font-poppins">Email Address *</label>
                               <Input
                                 type="email"
                                 value={formData.reporterEmail}
                                 onChange={(e) => handleInputChange('reporterEmail', e.target.value)}
                                 placeholder="Enter your email address"
-                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
+                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
                               />
                             </div>
 
                             <div>
-                              <label className="block text-white font-semibold mb-2">
+                              <label className="block text-white font-semibold mb-1 font-poppins">
                                 Phone Number <span className="text-sm text-white/70">(Optional)</span>
                               </label>
                               <Input
@@ -475,7 +464,7 @@ const DrugReportSubmission = () => {
                                 value={formData.reporterPhone}
                                 onChange={(e) => handleInputChange('reporterPhone', e.target.value)}
                                 placeholder="Enter your phone number"
-                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50"
+                                className="bg-white/10 border-white/30 text-white placeholder:text-white/50 font-poppins"
                               />
                             </div>
                           </div>
@@ -483,12 +472,12 @@ const DrugReportSubmission = () => {
                       </motion.div>
                     )}
 
-                    <div className="bg-yellow-600/20 border border-yellow-500/30 rounded-lg p-4">
+                    <div className="bg-yellow-600/20 border border-yellow-500/30 rounded-lg p-3">
                       <div className="flex items-start gap-3">
                         <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5" />
                         <div>
-                          <p className="text-yellow-200 font-semibold mb-1">Important Notice</p>
-                          <p className="text-yellow-100 text-sm">
+                          <p className="text-yellow-200 font-semibold mb-1 font-poppins">Important Notice</p>
+                          <p className="text-yellow-100 text-sm font-poppins">
                             All reports are taken seriously and will be investigated by appropriate authorities. 
                             False reporting is a criminal offense. Your data is encrypted and securely stored.
                           </p>
@@ -498,13 +487,17 @@ const DrugReportSubmission = () => {
                   </div>
 
                   <div className="flex justify-between">
-                    <Button onClick={prevSection} variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                    <Button 
+                      onClick={prevSection} 
+                      variant="outline" 
+                      className="border-white/30 text-white hover:bg-white/10 font-poppins"
+                    >
                       Previous
                     </Button>
                     <Button 
                       onClick={submitReport}
                       disabled={isSubmitting}
-                      className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 flex items-center gap-2"
+                      className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 flex items-center gap-2 font-poppins"
                     >
                       {isSubmitting ? (
                         <>
@@ -527,14 +520,14 @@ const DrugReportSubmission = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center space-y-6"
+                  className="text-center space-y-4"
                 >
-                  <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <motion.svg
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ delay: 0.3, duration: 0.6 }}
-                      className="w-10 h-10 text-white"
+                      className="w-8 h-8 text-white"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -548,14 +541,14 @@ const DrugReportSubmission = () => {
                     </motion.svg>
                   </div>
 
-                  <h2 className="text-3xl font-bold text-white mb-4">Report Submitted Successfully</h2>
-                  <p className="text-white/70 text-lg mb-6">
+                  <h2 className="text-2xl font-bold text-white mb-3 font-poppins">Report Submitted Successfully</h2>
+                  <p className="text-white/70 text-lg mb-4 font-poppins">
                     Thank you for helping make our community safer. Your report has been securely submitted to the Telangana Anti-Narcotics Bureau.
                   </p>
 
-                  <div className="bg-green-600/20 border border-green-500/30 rounded-lg p-6 mb-6">
-                    <h3 className="text-green-200 font-semibold mb-2">What happens next?</h3>
-                    <ul className="text-green-100 text-sm space-y-1 text-left">
+                  <div className="bg-green-600/20 border border-green-500/30 rounded-lg p-4 mb-4">
+                    <h3 className="text-green-200 font-semibold mb-2 font-poppins">What happens next?</h3>
+                    <ul className="text-green-100 text-sm space-y-1 text-left font-poppins">
                       <li>• Your report will be reviewed by trained investigators</li>
                       <li>• Appropriate action will be taken based on the information provided</li>
                       <li>• If you provided contact details, you may be contacted for additional information</li>
@@ -563,17 +556,17 @@ const DrugReportSubmission = () => {
                     </ul>
                   </div>
 
-                  <div className="flex gap-4 justify-center">
+                  <div className="flex gap-3 justify-center">
                     <Button 
                       onClick={() => navigate('/')}
-                      className="bg-white text-red-900 hover:bg-white/90 px-8 py-3"
+                      className="bg-white text-red-900 hover:bg-white/90 px-6 py-2 font-poppins"
                     >
                       Return Home
                     </Button>
                     <Button 
                       onClick={() => window.location.reload()}
                       variant="outline"
-                      className="border-white/30 text-white hover:bg-white/10 px-8 py-3"
+                      className="border-white/30 text-white hover:bg-white/10 px-6 py-2 font-poppins"
                     >
                       Submit Another Report
                     </Button>
@@ -586,8 +579,8 @@ const DrugReportSubmission = () => {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 bg-black/20 backdrop-blur-sm border-t border-white/10 p-4">
-        <div className="text-center text-white/60 text-sm">
+      <div className="relative z-10 bg-black/20 backdrop-blur-sm border-t border-white/10 p-3">
+        <div className="text-center text-white/60 text-sm font-poppins">
           <p>Telangana Anti-Narcotics Bureau • Government of Telangana • Secure & Confidential</p>
         </div>
       </div>

@@ -110,27 +110,27 @@ const Header = () => {
   return (
     <header className="bg-white dark:bg-gray-900 shadow-lg border-b border-blue-600 dark:border-blue-400 sticky top-0 z-50 font-poppins transition-colors">
       {/* Top Header - Compact */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-2 md:py-3">
+      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-1 md:py-2">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img 
               src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
               alt="Government of Telangana" 
-              className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-white/30"
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
             />
             <div className="h-6 w-px bg-white/30 hidden md:block"></div>
             <img 
               src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
               alt="TG ANB Logo" 
-              className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-white/30"
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
             />
           </div>
           
           <div className="text-center flex-1">
-            <h1 className="text-lg md:text-2xl font-bold font-poppins tracking-wide">
+            <h1 className="text-base md:text-xl font-bold font-poppins tracking-wide">
               TELANGANA ANTI NARCOTICS BUREAU (TGANB)
             </h1>
-            <p className="text-sm md:text-base text-blue-200 hidden md:block">Government of Telangana</p>
+            <p className="text-sm text-blue-200 hidden md:block">Government of Telangana</p>
           </div>
 
           {/* Desktop Contact Info */}
@@ -191,7 +191,7 @@ const Header = () => {
       </div>
 
       {/* Main Navigation - Compact */}
-      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 py-2">
+      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 py-1">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Mobile menu button */}
@@ -209,7 +209,7 @@ const Header = () => {
               {menuItems.map((item, index) => (
                 <div key={index} className="relative group">
                   <button 
-                    className={`text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
+                    className={`text-xs font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
                         ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold dark:text-blue-400 dark:bg-blue-900' 
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:bg-gray-800'
@@ -246,10 +246,10 @@ const Header = () => {
                 </div>
               ))}
               
-              {/* T-RISING.AI Button - renamed and connects to about-t-rising-ai page */}
+              {/* T-RISING.AI Button - now redirects to /about-rising-ai */}
               <button 
-                onClick={() => handleNavigation('/about-t-rising-ai')}
-                className="text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg"
+                onClick={() => handleNavigation('/about-rising-ai')}
+                className="text-xs font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg"
               >
                 T-RISING.AI
               </button>
@@ -296,9 +296,9 @@ const Header = () => {
                   </div>
                 ))}
                 
-                {/* T-RISING.AI Mobile Button */}
+                {/* T-RISING.AI Mobile Button - now redirects to /about-rising-ai */}
                 <button 
-                  onClick={() => { handleNavigation('/about-t-rising-ai'); setIsMenuOpen(false); }}
+                  onClick={() => { handleNavigation('/about-rising-ai'); setIsMenuOpen(false); }}
                   className="w-full text-left py-2 px-4 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600"
                 >
                   T-RISING.AI

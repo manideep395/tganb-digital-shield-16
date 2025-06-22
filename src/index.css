@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,6 +99,60 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-poppins;
+  }
+
+  /* Reduce excessive spacing globally */
+  .container {
+    @apply px-4 lg:px-6;
+  }
+
+  /* Reduce padding for sections */
+  section {
+    @apply py-8 lg:py-12;
+  }
+
+  /* Reduce margins for headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply mb-3 lg:mb-4;
+  }
+
+  /* Reduce paragraph spacing */
+  p {
+    @apply mb-3 lg:mb-4;
+  }
+
+  /* Reduce card padding */
+  .card {
+    @apply p-4 lg:p-6;
+  }
+
+  /* Optimize button spacing */
+  .btn {
+    @apply px-4 py-2 lg:px-6 lg:py-3;
+  }
+
+  /* Reduce form spacing */
+  .form-group {
+    @apply mb-3 lg:mb-4;
+  }
+
+  /* Reduce navigation spacing */
+  nav {
+    @apply py-2 lg:py-3;
+  }
+
+  /* Reduce hero section excessive spacing */
+  .hero {
+    @apply py-12 lg:py-16;
+  }
+
+  /* Optimize grid and flex gaps */
+  .grid {
+    @apply gap-4 lg:gap-6;
+  }
+
+  .flex {
+    @apply gap-2 lg:gap-4;
   }
 }
