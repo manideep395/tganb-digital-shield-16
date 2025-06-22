@@ -14,8 +14,8 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, 210, 297, 'F');
   
-  // Add outer border with TGANB green color
-  pdf.setDrawColor(34, 139, 34); // TGANB green
+  // Add outer border with 3D effect
+  pdf.setDrawColor(0, 100, 0);
   pdf.setLineWidth(4);
   pdf.rect(10, 10, 190, 277);
   
@@ -23,6 +23,13 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setLineWidth(2);
   pdf.setDrawColor(34, 139, 34);
   pdf.rect(15, 15, 180, 267);
+  
+  // Add decorative corner elements
+  pdf.setFillColor(34, 139, 34);
+  pdf.circle(25, 25, 8, 'F');
+  pdf.circle(185, 25, 8, 'F');
+  pdf.circle(25, 272, 8, 'F');
+  pdf.circle(185, 272, 8, 'F');
   
   // Three logos at top
   try {
@@ -41,10 +48,10 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     console.log('Error adding logos:', error);
   }
   
-  // Header text - TELANGANA ANTI NARCOTICS BUREAU in TGANB green
+  // Header text - TELANGANA ANTI NARCOTICS BUREAU in green
   pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(18);
-  pdf.setTextColor(34, 139, 34); // TGANB green
+  pdf.setTextColor(34, 139, 34);
   pdf.text('TELANGANA ANTI NARCOTICS BUREAU', 105, 70, { align: 'center' });
   
   // Certificate title with underline
@@ -71,74 +78,59 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     }
   }
   
-  // Certificate content with proper spacing
+  // Certificate content with updated text
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(12);
   pdf.setTextColor(0, 0, 0);
   
+  const content = [
+    `This is to proudly certify that ${formData.name}, a student of`,
+    `${formData.institutionName}, has been officially enrolled as an`,
+    'Anti-Narcotic Soldier under the initiative of the Telangana Anti',
+    `Narcotics Bureau on ${new Date().toLocaleDateString()}.`,
+    '',
+    'Through this enrollment, the student has pledged to actively participate',
+    'in building a drug-free society by promoting awareness about the harmful',
+    'effects of narcotics, encouraging healthy choices among peers, and',
+    'supporting community-driven anti-drug campaigns.',
+    '',
+    'As an Anti-Narcotic Soldier, the student commits to leading by example',
+    'and contributing to the vision of a safe, responsible, and addiction-free',
+    'nation.',
+    '',
+    'We appreciate and recognize this valuable step taken towards national',
+    'well-being and social responsibility. The enrollment of this individual',
+    'as an Anti-Narcotic Soldier symbolizes their dedication to making a',
+    'positive impact in society and inspiring others to follow the path of',
+    'awareness, strength, and integrity.'
+  ];
+  
   let yPosition = 165;
-  
-  // First paragraph
-  pdf.text(`This is to proudly certify that `, 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  
-  // Student name in TGANB green and bold
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(34, 139, 34);
-  pdf.text(formData.name, 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  
-  // Reset to normal text
-  pdf.setFont('helvetica', 'normal');
-  pdf.setTextColor(0, 0, 0);
-  pdf.text(`, a student of`, 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  
-  pdf.text(`${formData.institutionName}, has been officially enrolled as an`, 105, yPosition, { align: 'center' });
-  yPosition += 8;
-  
-  // Anti-Narcotic Soldier in bold and green
-  pdf.setFont('helvetica', 'bold');
-  pdf.setTextColor(34, 139, 34);
-  pdf.text('Anti-Narcotic Soldier', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  
-  // Reset to normal
-  pdf.setFont('helvetica', 'normal');
-  pdf.setTextColor(0, 0, 0);
-  pdf.text(`under the initiative of the Telangana Anti`, 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text(`Narcotics Bureau on ${new Date().toLocaleDateString()}.`, 105, yPosition, { align: 'center' });
-  yPosition += 10;
-  
-  // Second paragraph
-  pdf.text('Through this enrollment, the student has pledged to actively participate', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('in building a drug-free society by promoting awareness about the harmful', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('effects of narcotics, encouraging healthy choices among peers, and', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('supporting community-driven anti-drug campaigns.', 105, yPosition, { align: 'center' });
-  yPosition += 10;
-  
-  // Third paragraph
-  pdf.text('As an Anti-Narcotic Soldier, the student commits to leading by example', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('and contributing to the vision of a safe, responsible, and addiction-free', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('nation.', 105, yPosition, { align: 'center' });
-  yPosition += 10;
-  
-  // Fourth paragraph
-  pdf.text('We appreciate and recognize this valuable step taken towards national', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('well-being and social responsibility. The enrollment of this individual', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('as an Anti-Narcotic Soldier symbolizes their dedication to making a', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('positive impact in society and inspiring others to follow the path of', 105, yPosition, { align: 'center' });
-  yPosition += 6;
-  pdf.text('awareness, strength, and integrity.', 105, yPosition, { align: 'center' });
+  content.forEach((line) => {
+    if (line.includes(formData.name)) {
+      // Student name in green color
+      const parts = line.split(formData.name);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(parts[0], 105, yPosition, { align: 'center' });
+      pdf.setTextColor(34, 139, 34);
+      pdf.setFont('helvetica', 'bold');
+      const nameWidth = pdf.getTextWidth(formData.name);
+      const startX = 105 - (pdf.getTextWidth(line) / 2) + pdf.getTextWidth(parts[0]);
+      pdf.text(formData.name, startX, yPosition);
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(parts[1], startX + nameWidth, yPosition);
+    } else if (line.includes('Anti-Narcotic Soldier')) {
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(34, 139, 34);
+      pdf.text(line, 105, yPosition, { align: 'center' });
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(0, 0, 0);
+    } else {
+      pdf.text(line, 105, yPosition, { align: 'center' });
+    }
+    yPosition += 6;
+  });
   
   // Bottom section with 3D effect
   pdf.setFillColor(240, 240, 240);
