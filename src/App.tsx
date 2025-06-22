@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -42,6 +43,8 @@ import SahayAI from "./pages/SahayAI";
 import ShieldAI from "./pages/ShieldAI";
 import UdayAI from "./pages/UdayAI";
 import SahayAIChatbot from "./pages/SahayAIChatbot";
+import ShieldAIRiskAssessment from "./pages/ShieldAIRiskAssessment";
+import UdayAIRecoveryPlanner from "./pages/UdayAIRecoveryPlanner";
 
 const queryClient = new QueryClient();
 
@@ -68,7 +71,9 @@ const App = () => (
             <Route path="/sahay-ai" element={<SahayAI />} />
             <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
             <Route path="/shield-ai" element={<ShieldAI />} />
+            <Route path="/shield-ai-assessment" element={<ShieldAIRiskAssessment />} />
             <Route path="/uday-ai" element={<UdayAI />} />
+            <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
             <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
             <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
             <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />

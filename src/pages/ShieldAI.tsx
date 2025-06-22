@@ -1,7 +1,7 @@
-
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const ShieldAI = () => {
   return (
@@ -213,9 +213,11 @@ const ShieldAI = () => {
                 Developed entirely by the Telangana Anti-Narcotics Bureau (TG ANB), Shield.AI represents the next step in preventive public safety through AI technology. It combines law enforcement insight with machine learning to reach citizens before addiction begins.
               </p>
               <div className="text-center">
-                <Button className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-bold">
-                  🔗 Launch Shield.AI Questionnaire Now
-                </Button>
+                <Link to="/shield-ai-assessment">
+                  <Button className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-bold">
+                    🔗 Launch Shield.AI Questionnaire Now
+                  </Button>
+                </Link>
               </div>
             </div>
 
