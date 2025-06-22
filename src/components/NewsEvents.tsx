@@ -1,34 +1,9 @@
 
 import { Button } from '@/components/ui/button';
+import { newsData } from '../data/newsData';
+import { announcementData } from '../data/announcementData';
 
 const NewsEvents = () => {
-  const newsItems = [
-    {
-      date: "Dec 20, 2024",
-      title: "Major Drug Bust in Hyderabad",
-      description: "TG ANB seizes drugs worth ₹5 crores in joint operation",
-      category: "Operation"
-    },
-    {
-      date: "Dec 18, 2024",
-      title: "Anti-Drug Awareness Week Launched",
-      description: "State-wide campaign targeting educational institutions",
-      category: "Awareness"
-    },
-    {
-      date: "Dec 15, 2024",
-      title: "Celebrity Campaign Launch",
-      description: "Film stars join hands with TG ANB for awareness drive",
-      category: "Campaign"
-    }
-  ];
-
-  const announcements = [
-    "Registration open for Anti-Drug Awareness Certificate Program",
-    "New helpline numbers activated for drug crime reporting",
-    "Training workshops scheduled for educational institutions"
-  ];
-
   return (
     <section className="py-8 bg-gradient-to-br from-slate-50 to-gray-100 font-poppins">
       <div className="container mx-auto px-4">
@@ -43,7 +18,7 @@ const NewsEvents = () => {
               📰 Latest News
             </h3>
             <div className="space-y-4">
-              {newsItems.map((news, index) => (
+              {newsData.slice(0, 3).map((news, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden p-4"
@@ -52,18 +27,17 @@ const NewsEvents = () => {
                     <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                       {news.date}
                     </span>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      news.category === 'Operation' ? 'bg-red-100 text-red-600' :
-                      news.category === 'Awareness' ? 'bg-blue-100 text-blue-600' :
-                      'bg-green-100 text-green-600'
-                    }`}>
-                      {news.category}
+                    <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600">
+                      Breaking News
                     </span>
                   </div>
                   <h4 className="text-sm font-bold text-gray-800 mb-2 hover:text-blue-600 cursor-pointer transition-colors">
                     {news.title}
                   </h4>
-                  <p className="text-gray-600 text-xs leading-relaxed mb-2">
+                  {news.subtitle && (
+                    <p className="text-xs text-blue-600 font-semibold mb-2">{news.subtitle}</p>
+                  )}
+                  <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-2">
                     {news.description}
                   </p>
                   <Button 
@@ -84,20 +58,42 @@ const NewsEvents = () => {
               📢 Announcements
             </h3>
             <div className="space-y-4">
-              {announcements.map((announcement, index) => (
+              {announcementData.map((announcement, index) => (
                 <div
                   key={index}
                   className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300"
                 >
-                  <p className="text-sm text-gray-700 mb-2">
-                    {announcement}
-                  </p>
-                  <Button 
-                    size="sm"
-                    className="bg-yellow-600 hover:bg-yellow-700 rounded-full text-xs"
-                  >
-                    Learn More
-                  </Button>
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {announcement.date}
+                    </span>
+                  </div>
+                  <h4 className="text-sm font-bold text-gray-800 mb-2">
+                    {announcement.name}
+                  </h4>
+                  {announcement.description && (
+                    <p className="text-xs text-gray-700 mb-2">
+                      {announcement.description}
+                    </p>
+                  )}
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm"
+                      className="bg-yellow-600 hover:bg-yellow-700 rounded-full text-xs"
+                    >
+                      Learn More
+                    </Button>
+                    {announcement.attachmentLink && (
+                      <Button 
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full text-xs"
+                        onClick={() => window.open(announcement.attachmentLink, '_blank')}
+                      >
+                        Download
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

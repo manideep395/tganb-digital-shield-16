@@ -1,19 +1,27 @@
 
-export const announcementData = [
+export interface AnnouncementItem {
+  date: string;
+  name: string;
+  attachmentLink?: string;
+  description?: string;
+}
+
+export const announcementData: AnnouncementItem[] = [
   {
-    language: 'English',
-    text: '📢 If you have any information related to drugs, please call our toll-free number or submit it through the anonymous report section. Your personal details will never be disclosed.'
+    date: "Dec 20, 2024",
+    name: "Registration open for Anti-Drug Awareness Certificate Program",
+    attachmentLink: "https://drive.google.com/file/d/example1/view",
+    description: "Join our comprehensive certificate program to become an anti-drug awareness ambassador"
   },
   {
-    language: 'Telugu',
-    text: '📢 మీకు మాదకద్రవ్యాల గురించి ఏవైనా సమాచారాలు తెలిస్తే, దయచేసి మా టోల్ ఫ్రీ నంబర్‌కు కాల్ చేయండి లేదా అనామకంగా నివేదిక సెక్షన్ ద్వారా తెలియజేయండి. మీ వ్యక్తిగత వివరాలు ఎవరికి తెలియవు.'
+    date: "Dec 18, 2024",
+    name: "New helpline numbers activated for drug crime reporting",
+    description: "Enhanced 24/7 support system now available for anonymous reporting"
   },
   {
-    language: 'Hindi',
-    text: '📢 यदि आपको नशीली दवाओं से जुड़ी कोई जानकारी है, तो कृपया हमारे टोल-फ्री नंबर पर कॉल करें या गुमनाम रिपोर्ट अनुभाग के माध्यम से जानकारी साझा करें। आपकी व्यक्तिगत जानकारी किसी के साथ साझा नहीं की जाएगी।'
-  },
-  {
-    language: 'Urdu',
-    text: '📢 اگر آپ کے پاس منشیات سے متعلق کوئی معلومات ہیں تو براہ کرم ہمارے ٹول فری نمبر پر کال کریں یا گمنام رپورٹ سیکشن کے ذریعے ہمیں آگاہ کریں۔ آپ کی ذاتی معلومات کو ظاہر نہیں کیا جائے گا۔'
+    date: "Dec 15, 2024",
+    name: "Training workshops scheduled for educational institutions",
+    attachmentLink: "https://drive.google.com/file/d/example2/view",
+    description: "Specialized training sessions for teachers and counselors"
   }
 ];

@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { announcementData } from '../data/announcementData';
+import { announcementData } from '../data/scrollingData';
 
 const AnnouncementTicker = () => {
   return (
