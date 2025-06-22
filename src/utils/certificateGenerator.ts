@@ -14,12 +14,12 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, 210, 297, 'F');
   
-  // Add TGANB logo as watermark with 15% opacity
+  // Add TGANB logo as watermark with reduced opacity
   try {
     const tganbWatermark = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
-    pdf.setGState({ opacity: 0.15 });
+    // Create a new graphics state for transparency
+    const gState = new (pdf as any).GState({ opacity: 0.15 });
     pdf.addImage(tganbWatermark, 'PNG', 70, 110, 70, 70);
-    pdf.setGState({ opacity: 1 });
   } catch (error) {
     console.log('Error adding watermark:', error);
   }
@@ -51,16 +51,16 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
     console.log('Error adding logos:', error);
   }
   
-  // Use Times for more professional look (closest to TrueType)
-  pdf.setFont('times', 'bold');
+  // Use Arial for professional look (closer to TrueType)
+  pdf.setFont('helvetica', 'bold');
   
   // Header text - TELANGANA ANTI NARCOTICS BUREAU in police dark blue
-  pdf.setFontSize(14);
+  pdf.setFontSize(12); // Reduced from 14
   pdf.setTextColor(0, 51, 102);
   pdf.text('TELANGANA ANTI NARCOTICS BUREAU', 105, 65, { align: 'center' });
   
   // Certificate title
-  pdf.setFontSize(18);
+  pdf.setFontSize(16); // Reduced from 18
   pdf.setTextColor(0, 0, 0);
   pdf.text('Certificate of Enrollment', 105, 75, { align: 'center' });
   
@@ -89,14 +89,14 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   }
   
   // Certificate content with smaller font and proper spacing
-  pdf.setFont('times', 'normal');
-  pdf.setFontSize(10); // Reduced from 12
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(9); // Reduced from 10
   pdf.setTextColor(0, 0, 0);
   
   let yPosition = 145;
-  const lineHeight = 5; // Reduced line height
+  const lineHeight = 4; // Reduced line height
   
-  // Main certification text
+  // Main certification text with smaller font
   const line1Part1 = `This is to proudly certify that `;
   const line1Part2 = `${formData.name}`;
   const line1Part3 = `, a student of`;
@@ -109,12 +109,12 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   
   const nameStartX = startX + pdf.getTextWidth(line1Part1);
   pdf.setTextColor(0, 51, 102);
-  pdf.setFont('times', 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.text(line1Part2, nameStartX, yPosition);
   
   const part3StartX = nameStartX + pdf.getTextWidth(line1Part2);
   pdf.setTextColor(0, 0, 0);
-  pdf.setFont('times', 'normal');
+  pdf.setFont('helvetica', 'normal');
   pdf.text(line1Part3, part3StartX, yPosition);
   yPosition += lineHeight;
   
@@ -123,20 +123,20 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   yPosition += lineHeight + 1;
   
   // Anti-Narcotic Soldier in blue
-  pdf.setFont('times', 'bold');
+  pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(0, 51, 102);
   pdf.text('Anti-Narcotic Soldier', 105, yPosition, { align: 'center' });
   yPosition += lineHeight + 1;
   
   // Remaining text in black with smaller font
-  pdf.setFont('times', 'normal');
-  pdf.setFontSize(9); // Even smaller for details
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(8); // Even smaller for details
   pdf.setTextColor(0, 0, 0);
   pdf.text('under the initiative of the Telangana Anti', 105, yPosition, { align: 'center' });
   yPosition += lineHeight;
   
   pdf.text(`Narcotics Bureau on ${new Date().toLocaleDateString()}.`, 105, yPosition, { align: 'center' });
-  yPosition += lineHeight + 4;
+  yPosition += lineHeight + 3;
   
   // Concise content with smaller font
   const contentLines = [
@@ -160,35 +160,35 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   });
   
   // Bottom section with attractive design
-  yPosition = 250;
+  yPosition = 255; // Adjusted position
   pdf.setFillColor(240, 245, 255);
-  pdf.roundedRect(25, yPosition, 160, 25, 3, 3, 'F');
+  pdf.roundedRect(25, yPosition, 160, 20, 3, 3, 'F'); // Reduced height
   pdf.setDrawColor(0, 51, 102);
   pdf.setLineWidth(1);
-  pdf.roundedRect(25, yPosition, 160, 25, 3, 3, 'S');
+  pdf.roundedRect(25, yPosition, 160, 20, 3, 3, 'S');
   
   // Generate QR code with verification URL
   const verificationUrl = `${window.location.origin}/certificate-verification?id=${certificateId}`;
   try {
-    const qrCodeDataURL = await QRCode.toDataURL(verificationUrl, { width: 60 });
-    pdf.addImage(qrCodeDataURL, 'PNG', 30, yPosition + 5, 15, 15);
+    const qrCodeDataURL = await QRCode.toDataURL(verificationUrl, { width: 50 });
+    pdf.addImage(qrCodeDataURL, 'PNG', 30, yPosition + 3, 12, 12); // Smaller QR code
   } catch (error) {
     console.error('Error generating QR code:', error);
   }
   
   // Certificate information with smaller font
-  pdf.setFontSize(7); // Smaller font for certificate info
+  pdf.setFontSize(6); // Smaller font for certificate info
   pdf.setTextColor(0, 51, 102);
-  pdf.setFont('times', 'bold');
-  pdf.text('Certificate Information', 50, yPosition + 8);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Certificate Information', 47, yPosition + 6);
   
-  pdf.setFont('times', 'normal');
+  pdf.setFont('helvetica', 'normal');
   pdf.setTextColor(0, 0, 0);
-  pdf.text(`ID: ${certificateId}`, 50, yPosition + 12);
-  pdf.text('Digitally Verified', 50, yPosition + 16);
+  pdf.text(`ID: ${certificateId}`, 47, yPosition + 10);
+  pdf.text('Digitally Verified', 47, yPosition + 13);
   
-  pdf.text('Authorized by TGANB', 140, yPosition + 12);
-  pdf.text('Government of Telangana', 140, yPosition + 16);
+  pdf.text('Authorized by TGANB', 130, yPosition + 10);
+  pdf.text('Government of Telangana', 130, yPosition + 13);
   
   // Download the PDF
   pdf.save(`ADS_Certificate_${formData.name.replace(/\s+/g, '_')}.pdf`);

@@ -29,9 +29,9 @@ const Header = () => {
         { title: 'TGANB GO 27', href: '/tganb-go-27' },
         { title: 'TGANB Structure', href: '/tganb-structure' },
         { title: 'About T-RISING.AI', href: '/about-rising-ai' },
-        { title: 'Sahay AI', href: '/sahay-ai', gradient: 'from-green-500 to-emerald-500' },
-        { title: 'Shield AI', href: '/shield-ai', gradient: 'from-blue-500 to-indigo-500' },
-        { title: 'Uday AI', href: '/uday-ai', gradient: 'from-purple-500 to-pink-500' }
+        { title: 'Sahay AI', href: '/sahay-ai-chat', gradient: 'from-green-500 to-emerald-500' },
+        { title: 'Shield AI', href: '/shield-ai-assessment', gradient: 'from-blue-500 to-indigo-500' },
+        { title: 'Uday AI', href: '/uday-ai-planner', gradient: 'from-purple-500 to-pink-500' }
       ]
     },
     { 
@@ -250,59 +250,106 @@ const Header = () => {
                     T-RISING.AI
                   </button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl">
+                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    <DialogTitle className="text-4xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
                       T-RISING.AI
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-6">
-                    <p className="text-center text-gray-600 dark:text-gray-300">
-                      Telangana's Revolutionary Intelligence System for Integrated Narcotics Governance using AI
-                    </p>
+                  <div className="space-y-8">
+                    <div className="text-center">
+                      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+                        Telangana's Revolutionary Intelligence System for Integrated Narcotics Governance using AI
+                      </h2>
+                      <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
+                        A comprehensive AI-powered ecosystem designed to combat drug abuse through three specialized AI models, 
+                        each serving a unique purpose in prevention, support, and recovery.
+                      </p>
+                    </div>
                     
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <div className="text-center p-6 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800">
-                        <div className="text-4xl mb-4">🤝</div>
-                        <h3 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">Sahay AI</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                          Your compassionate AI counselor providing 24/7 support, guidance, and resources for addiction recovery.
-                        </p>
-                        <Button 
-                          onClick={() => { handleNavigation('/sahay-ai'); setIsRisingAIOpen(false); }}
-                          className="bg-green-600 hover:bg-green-700 text-white"
-                        >
-                          Try Sahay AI
-                        </Button>
+                    <div className="grid lg:grid-cols-3 gap-8">
+                      <div className="group hover:scale-105 transition-transform duration-300">
+                        <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 shadow-lg">
+                          <div className="text-center">
+                            <div className="text-6xl mb-6">🤝</div>
+                            <h3 className="text-2xl font-bold text-green-700 dark:text-green-400 mb-4">Sahay AI</h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                              Your compassionate AI counselor providing 24/7 multilingual support, guidance, and resources for addiction recovery. 
+                              Available in English, Telugu, and Hindi.
+                            </p>
+                            <div className="space-y-2 text-sm text-gray-500 mb-6">
+                              <div>✓ 24/7 Availability</div>
+                              <div>✓ Multilingual Support</div>
+                              <div>✓ Anonymous & Secure</div>
+                              <div>✓ Crisis Intervention</div>
+                            </div>
+                            <Button 
+                              onClick={() => { handleNavigation('/sahay-ai-chat'); setIsRisingAIOpen(false); }}
+                              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3"
+                            >
+                              💬 Chat with Sahay AI
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                       
-                      <div className="text-center p-6 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800">
-                        <div className="text-4xl mb-4">🛡️</div>
-                        <h3 className="text-xl font-bold text-blue-700 dark:text-blue-400 mb-2">Shield AI</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                          Advanced risk assessment tool to identify vulnerability factors and provide personalized prevention strategies.
-                        </p>
-                        <Button 
-                          onClick={() => { handleNavigation('/shield-ai'); setIsRisingAIOpen(false); }}
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          Try Shield AI
-                        </Button>
+                      <div className="group hover:scale-105 transition-transform duration-300">
+                        <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-200 dark:border-blue-800 shadow-lg">
+                          <div className="text-center">
+                            <div className="text-6xl mb-6">🛡️</div>
+                            <h3 className="text-2xl font-bold text-blue-700 dark:text-blue-400 mb-4">Shield AI</h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                              Advanced risk assessment tool using behavioral analysis to identify vulnerability factors and 
+                              provide personalized prevention strategies before problems begin.
+                            </p>
+                            <div className="space-y-2 text-sm text-gray-500 mb-6">
+                              <div>✓ Risk Analysis</div>
+                              <div>✓ Personalized Tips</div>
+                              <div>✓ Early Detection</div>
+                              <div>✓ PDF Reports</div>
+                            </div>
+                            <Button 
+                              onClick={() => { handleNavigation('/shield-ai-assessment'); setIsRisingAIOpen(false); }}
+                              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3"
+                            >
+                              🔍 Take Risk Assessment
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                       
-                      <div className="text-center p-6 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800">
-                        <div className="text-4xl mb-4">🌅</div>
-                        <h3 className="text-xl font-bold text-purple-700 dark:text-purple-400 mb-2">Uday AI</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                          Personalized recovery planner creating daily schedules and motivation plans for individuals in recovery.
-                        </p>
-                        <Button 
-                          onClick={() => { handleNavigation('/uday-ai'); setIsRisingAIOpen(false); }}
-                          className="bg-purple-600 hover:bg-purple-700 text-white"
-                        >
-                          Try Uday AI
-                        </Button>
+                      <div className="group hover:scale-105 transition-transform duration-300">
+                        <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800 shadow-lg">
+                          <div className="text-center">
+                            <div className="text-6xl mb-6">🌅</div>
+                            <h3 className="text-2xl font-bold text-purple-700 dark:text-purple-400 mb-4">Uday AI</h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                              Personalized recovery planner creating dynamic daily schedules, motivation plans, and progress tracking 
+                              for individuals in their recovery journey.
+                            </p>
+                            <div className="space-y-2 text-sm text-gray-500 mb-6">
+                              <div>✓ Daily Planning</div>
+                              <div>✓ Progress Tracking</div>
+                              <div>✓ Motivational Content</div>
+                              <div>✓ Personalized Schedules</div>
+                            </div>
+                            <Button 
+                              onClick={() => { handleNavigation('/uday-ai-planner'); setIsRisingAIOpen(false); }}
+                              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3"
+                            >
+                              🌅 Start Recovery Plan
+                            </Button>
+                          </div>
+                        </div>
                       </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-8 text-center">
+                      <h3 className="text-2xl font-bold mb-4">Powered by Telangana Anti-Narcotics Bureau</h3>
+                      <p className="text-lg opacity-90">
+                        Together, these AI tools create a comprehensive ecosystem for drug prevention, support, and recovery - 
+                        making Telangana a pioneer in AI-driven public safety and citizen welfare.
+                      </p>
                     </div>
                   </div>
                 </DialogContent>
