@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MessageCircle, Shield, Sunrise, Heart, Brain, Users, Lock, Target, Lightbulb } from 'lucide-react';
+import { Heart, Brain, Users, Lock, Target, Lightbulb } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -76,7 +76,7 @@ const AboutTRisingAI = () => {
                     <span><strong>N</strong>urturing</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Sunrise className="w-6 h-6 text-blue-400" />
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-500 rounded flex items-center justify-center text-xs font-bold">🌅</div>
                     <span><strong>G</strong>rowth</span>
                   </div>
                 </div>
@@ -97,13 +97,13 @@ const AboutTRisingAI = () => {
           >
             <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-8">
               <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center">
+                <h2 className="text-4xl font-bold mb-6 flex items-center text-white">
                   <span className="mr-4">🌐</span> Introduction
                 </h2>
-                <p className="text-lg leading-relaxed mb-6">
+                <p className="text-lg leading-relaxed mb-6 text-white">
                   T-RISING.AI is an advanced, AI-powered digital initiative developed by the Telangana Anti-Narcotics Bureau (TG ANB) to create a safer, healthier, and drug-free society through the responsible use of Artificial Intelligence. This intelligent platform is designed to serve the citizens of Telangana—especially youth and vulnerable individuals—by offering 24x7 AI support, personalized prevention strategies, and structured recovery plans.
                 </p>
-                <p className="text-lg leading-relaxed">
+                <p className="text-lg leading-relaxed text-white">
                   This initiative reflects TG ANB's commitment to technological innovation in public safety and citizen well-being.
                 </p>
               </CardContent>
@@ -111,10 +111,10 @@ const AboutTRisingAI = () => {
 
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center">
+                <h2 className="text-4xl font-bold mb-6 flex items-center text-white">
                   <span className="mr-4">🎯</span> Mission of T-RISING.AI
                 </h2>
-                <p className="text-lg leading-relaxed">
+                <p className="text-lg leading-relaxed text-white">
                   To empower society with intelligent digital tools that provide real-time support in combating drug abuse, enabling timely prevention, and facilitating guided recovery journeys—strengthening the collective fight against narcotics in Telangana.
                 </p>
               </CardContent>
@@ -132,7 +132,7 @@ const AboutTRisingAI = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl font-bold mb-8">
+            <h2 className="text-5xl font-bold mb-8 text-white">
               🤖 The 3 Pillars of T-RISING.AI
             </h2>
             <p className="text-xl text-blue-200 max-w-4xl mx-auto">
@@ -151,20 +151,20 @@ const AboutTRisingAI = () => {
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
                     <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <MessageCircle className="w-10 h-10 text-white" />
+                      <span className="text-3xl">🤝</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-blue-300 mb-2">Sahay.AI</h3>
-                    <p className="text-lg font-semibold text-blue-200">The AI Chat Companion</p>
-                    <p className="text-sm italic text-blue-100">Your digital friend, always ready to help.</p>
+                    <h3 className="text-3xl font-bold text-white mb-2">Sahay.AI</h3>
+                    <p className="text-lg font-semibold text-white">The AI Chat Companion</p>
+                    <p className="text-sm italic text-white">Your digital friend, always ready to help.</p>
                   </div>
                   
-                  <p className="text-gray-200 mb-6">
+                  <p className="text-white mb-6">
                     Sahay.AI is an empathetic, multilingual AI chatbot built to provide instant support, information, and guidance on drug-related queries, awareness tips, and rehabilitation options.
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-blue-300">🔹 Key Features:</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4 className="font-bold text-white">🔹 Key Features:</h4>
+                    <ul className="space-y-2 text-sm text-white">
                       <li>• 24x7 anonymous assistance</li>
                       <li>• Conversational interface supporting English, Telugu, and Hindi</li>
                       <li>• Explains drug effects, legal consequences, and coping strategies</li>
@@ -193,20 +193,20 @@ const AboutTRisingAI = () => {
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
                     <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Shield className="w-10 h-10 text-white" />
+                      <span className="text-3xl">🛡️</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-blue-300 mb-2">Shield.AI</h3>
-                    <p className="text-lg font-semibold text-blue-200">AI-Based Drug Prevention Engine</p>
-                    <p className="text-sm italic text-blue-100">Stopping it before it starts.</p>
+                    <h3 className="text-3xl font-bold text-white mb-2">Shield.AI</h3>
+                    <p className="text-lg font-semibold text-white">AI-Based Drug Prevention Engine</p>
+                    <p className="text-sm italic text-white">Stopping it before it starts.</p>
                   </div>
                   
-                  <p className="text-gray-200 mb-6">
+                  <p className="text-white mb-6">
                     Shield.AI is a questionnaire-based prevention system powered by intelligent algorithms. It detects behavioral, environmental, and psychological risk factors to provide customized drug prevention tips.
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-blue-300">🔹 Key Features:</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4 className="font-bold text-white">🔹 Key Features:</h4>
+                    <ul className="space-y-2 text-sm text-white">
                       <li>• Anonymous survey for students, youth, and at-risk individuals</li>
                       <li>• AI-generated prevention tips based on risk profile</li>
                       <li>• Early intervention flagging for parents or counselors (optional)</li>
@@ -234,20 +234,20 @@ const AboutTRisingAI = () => {
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
                     <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Sunrise className="w-10 h-10 text-white" />
+                      <span className="text-3xl">🌅</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-blue-300 mb-2">Uday.AI</h3>
-                    <p className="text-lg font-semibold text-blue-200">Personalized Recovery Planner</p>
-                    <p className="text-sm italic text-blue-100">A new dawn begins with every step.</p>
+                    <h3 className="text-3xl font-bold text-white mb-2">Uday.AI</h3>
+                    <p className="text-lg font-semibold text-white">Personalized Recovery Planner</p>
+                    <p className="text-sm italic text-white">A new dawn begins with every step.</p>
                   </div>
                   
-                  <p className="text-gray-200 mb-6">
+                  <p className="text-white mb-6">
                     Uday.AI supports individuals already in recovery or rehabilitation. By collecting daily self-assessments and inputs, it generates a personalized daily schedule, mental health check-ins, and motivational support.
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-blue-300">🔹 Key Features:</h4>
-                    <ul className="space-y-2 text-sm">
+                    <h4 className="font-bold text-white">🔹 Key Features:</h4>
+                    <ul className="space-y-2 text-sm text-white">
                       <li>• Daily planning for nutrition, hydration, therapy, and rest</li>
                       <li>• Personalized recovery tasks with reminders</li>
                       <li>• Emotional support content and mental tracking</li>
@@ -274,11 +274,11 @@ const AboutTRisingAI = () => {
           <div className="max-w-6xl mx-auto space-y-8">
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center">
+                <h2 className="text-4xl font-bold mb-6 flex items-center text-white">
                   <Lock className="mr-4 text-blue-400" />
                   Privacy & Data Ethics
                 </h2>
-                <p className="text-lg leading-relaxed">
+                <p className="text-lg leading-relaxed text-white">
                   All tools under T-RISING.AI are designed with data privacy, user anonymity, and safety as top priorities. No user-identifiable information is stored without explicit consent. TG ANB ensures secure, encrypted handling of all AI interactions.
                 </p>
               </CardContent>
@@ -286,10 +286,10 @@ const AboutTRisingAI = () => {
 
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center">
+                <h2 className="text-4xl font-bold mb-6 flex items-center text-white">
                   <span className="mr-4">🛠️</span> Developed By
                 </h2>
-                <p className="text-lg leading-relaxed">
+                <p className="text-lg leading-relaxed text-white">
                   T-RISING.AI is proudly developed by the Telangana Anti-Narcotics Bureau (TG ANB), in collaboration with young technologists, student innovators, and social welfare departments—representing a synergy of technology, public service, and citizen engagement.
                 </p>
               </CardContent>
@@ -297,10 +297,10 @@ const AboutTRisingAI = () => {
 
             <Card className="bg-white/10 backdrop-blur-md border-white/20">
               <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center">
+                <h2 className="text-4xl font-bold mb-6 flex items-center text-white">
                   <span className="mr-4">📍</span> Impact Goals
                 </h2>
-                <div className="grid md:grid-cols-2 gap-6 text-lg">
+                <div className="grid md:grid-cols-2 gap-6 text-lg text-white">
                   <div className="flex items-start space-x-3">
                     <span className="text-2xl">🌱</span>
                     <span>Reduce youth exposure to drugs through awareness & tech</span>
@@ -331,19 +331,19 @@ const AboutTRisingAI = () => {
           >
             <Card className="bg-gradient-to-r from-blue-600/20 to-blue-600/20 backdrop-blur-md border-blue-400/30">
               <CardContent className="p-12">
-                <h2 className="text-5xl font-bold mb-8 flex items-center justify-center">
+                <h2 className="text-5xl font-bold mb-8 flex items-center justify-center text-white">
                   <span className="mr-4">🌟</span> Join the Mission
                 </h2>
-                <div className="space-y-4 text-2xl font-bold mb-8">
+                <div className="space-y-4 text-2xl font-bold mb-8 text-white">
                   <p>Together, let's rise above drugs.</p>
                   <p>Together, let's rise with T-RISING.AI.</p>
                 </div>
                 
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8">
-                  <p className="text-2xl italic mb-4">
+                  <p className="text-2xl italic mb-4 text-white">
                     "Technology for Prevention. Intelligence for Recovery. Support for All."
                   </p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-lg font-semibold text-white">
                     — Telangana Anti-Narcotics Bureau
                   </p>
                 </div>
