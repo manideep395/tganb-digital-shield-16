@@ -147,15 +147,15 @@ const AboutTRisingAI = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <Card className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-md border-green-400/30 h-full">
+              <Card className="bg-gradient-to-br from-green-800/30 to-green-900/30 backdrop-blur-md border-green-600/30 h-full">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-20 h-20 bg-gradient-to-r from-green-700 to-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
                       <MessageCircle className="w-10 h-10 text-white" />
                     </div>
-                    <h3 className="text-3xl font-bold text-green-400 mb-2">1️⃣ Sahay.AI</h3>
-                    <p className="text-lg font-semibold text-green-300">The AI Chat Companion</p>
-                    <p className="text-sm italic text-green-200">Your digital friend, always ready to help.</p>
+                    <h3 className="text-3xl font-bold text-green-300 mb-2">Sahay.AI</h3>
+                    <p className="text-lg font-semibold text-green-200">The AI Chat Companion</p>
+                    <p className="text-sm italic text-green-100">Your digital friend, always ready to help.</p>
                   </div>
                   
                   <p className="text-gray-200 mb-6">
@@ -163,7 +163,7 @@ const AboutTRisingAI = () => {
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-green-400">🔹 Key Features:</h4>
+                    <h4 className="font-bold text-green-300">🔹 Key Features:</h4>
                     <ul className="space-y-2 text-sm">
                       <li>• 24x7 anonymous assistance</li>
                       <li>• Conversational interface supporting English, Telugu, and Hindi</li>
@@ -175,7 +175,7 @@ const AboutTRisingAI = () => {
 
                   <Button 
                     onClick={() => navigate('/sahay-ai-chat')}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                    className="w-full bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900"
                   >
                     Try Sahay.AI
                   </Button>
@@ -189,15 +189,15 @@ const AboutTRisingAI = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <Card className="bg-gradient-to-br from-blue-500/20 to-indigo-600/20 backdrop-blur-md border-blue-400/30 h-full">
+              <Card className="bg-gradient-to-br from-blue-800/30 to-blue-900/30 backdrop-blur-md border-blue-600/30 h-full">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Shield className="w-10 h-10 text-white" />
                     </div>
-                    <h3 className="text-3xl font-bold text-blue-400 mb-2">2️⃣ Shield.AI</h3>
-                    <p className="text-lg font-semibold text-blue-300">AI-Based Drug Prevention Engine</p>
-                    <p className="text-sm italic text-blue-200">Stopping it before it starts.</p>
+                    <h3 className="text-3xl font-bold text-blue-300 mb-2">Shield.AI</h3>
+                    <p className="text-lg font-semibold text-blue-200">AI-Based Drug Prevention Engine</p>
+                    <p className="text-sm italic text-blue-100">Stopping it before it starts.</p>
                   </div>
                   
                   <p className="text-gray-200 mb-6">
@@ -205,7 +205,7 @@ const AboutTRisingAI = () => {
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-blue-400">🔹 Key Features:</h4>
+                    <h4 className="font-bold text-blue-300">🔹 Key Features:</h4>
                     <ul className="space-y-2 text-sm">
                       <li>• Anonymous survey for students, youth, and at-risk individuals</li>
                       <li>• AI-generated prevention tips based on risk profile</li>
@@ -216,7 +216,7 @@ const AboutTRisingAI = () => {
 
                   <Button 
                     onClick={() => navigate('/shield-ai-assessment')}
-                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                    className="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900"
                   >
                     Try Shield.AI
                   </Button>
@@ -230,15 +230,15 @@ const AboutTRisingAI = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <Card className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 backdrop-blur-md border-purple-400/30 h-full">
+              <Card className="bg-gradient-to-br from-purple-800/30 to-purple-900/30 backdrop-blur-md border-purple-600/30 h-full">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-20 h-20 bg-gradient-to-r from-purple-700 to-purple-800 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Sunrise className="w-10 h-10 text-white" />
                     </div>
-                    <h3 className="text-3xl font-bold text-purple-400 mb-2">3️⃣ Uday.AI</h3>
-                    <p className="text-lg font-semibold text-purple-300">Personalized Recovery Planner</p>
-                    <p className="text-sm italic text-purple-200">A new dawn begins with every step.</p>
+                    <h3 className="text-3xl font-bold text-purple-300 mb-2">Uday.AI</h3>
+                    <p className="text-lg font-semibold text-purple-200">Personalized Recovery Planner</p>
+                    <p className="text-sm italic text-purple-100">A new dawn begins with every step.</p>
                   </div>
                   
                   <p className="text-gray-200 mb-6">
@@ -246,7 +246,7 @@ const AboutTRisingAI = () => {
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-purple-400">🔹 Key Features:</h4>
+                    <h4 className="font-bold text-purple-300">🔹 Key Features:</h4>
                     <ul className="space-y-2 text-sm">
                       <li>• Daily planning for nutrition, hydration, therapy, and rest</li>
                       <li>• Personalized recovery tasks with reminders</li>
@@ -257,7 +257,7 @@ const AboutTRisingAI = () => {
 
                   <Button 
                     onClick={() => navigate('/uday-ai-planner')}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700"
+                    className="w-full bg-gradient-to-r from-purple-700 to-purple-800 hover:from-purple-800 hover:to-purple-900"
                   >
                     Try Uday.AI
                   </Button>

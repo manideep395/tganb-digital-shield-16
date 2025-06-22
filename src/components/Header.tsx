@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,7 @@ const Header = () => {
       href: '#',
       dropdown: [
         { title: 'Narcotic Police Stations', href: '/narcotic-police-stations' },
-        { title: 'Regional Narcotic Police Stations', href: '/regional-narcotic-police-stations' },
+        { title: 'Regional Narcotic Control Cells', href: '/regional-narcotic-police-stations' },
         { title: 'Rehabilitation Centers', href: '/rehabilitation-centers' }
       ]
     },
@@ -211,7 +210,6 @@ const Header = () => {
                     }`}
                     onClick={() => handleNavigation(item.href)}
                     onMouseEnter={() => item.dropdown && setActiveDropdown(item.title)}
-                    onMouseLeave={() => setActiveDropdown(null)}
                   >
                     {item.title}
                     {item.dropdown && <ChevronDown className="w-3 h-3" />}
@@ -219,16 +217,16 @@ const Header = () => {
                   
                   {item.dropdown && activeDropdown === item.title && (
                     <div 
-                      className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-48 z-50"
+                      className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-48 z-[60] py-2"
                       onMouseEnter={() => setActiveDropdown(item.title)}
                       onMouseLeave={() => setActiveDropdown(null)}
                     >
                       {item.dropdown.map((dropdownItem, dropdownIndex) => (
                         <button
                           key={dropdownIndex}
-                          className={`w-full text-left py-2 px-4 text-sm font-medium first:rounded-t-lg last:rounded-b-lg ${
+                          className={`w-full text-left py-2 px-4 text-sm font-medium transition-colors ${
                             dropdownItem.gradient 
-                              ? `text-white bg-gradient-to-r ${dropdownItem.gradient} hover:opacity-90`
+                              ? `text-white bg-gradient-to-r ${dropdownItem.gradient} hover:opacity-90 mx-2 rounded-md`
                               : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
                           }`}
                           onClick={() => handleNavigation(dropdownItem.href)}

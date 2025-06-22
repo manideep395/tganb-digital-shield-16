@@ -15,7 +15,7 @@ const RegionalNarcoticPoliceStations = () => {
     {
       sno: "2", 
       cell: "RNCC, Mahabubnagar",
-      jurisdiction: ["1. Mahabubnagar", "2. Jogulamba Gadwal", "4. Narayanapet", "5. Nagar kurnool"],
+      jurisdiction: ["1. Mahabubnagar", "2. Jogulamba Gadwal", "3. Wanaparthy", "4. Narayanapet", "5. Nagar kurnool"],
       officer: "DSP RNCC",
       contact: "8712661706"
     },
