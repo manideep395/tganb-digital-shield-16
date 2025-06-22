@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,10 +16,21 @@ const Header = () => {
       dropdown: [
         { title: 'About TGANB', href: '/about-tganb' },
         { title: 'Vision & Mission', href: '/vision-mission' },
-        { title: 'Anti-Drug Committees', href: '/anti-drug-committees' }
+        { title: 'Anti-Drug Committees', href: '/anti-drug-committees' },
+        { title: 'About Logo', href: '/about-logo' },
+        { title: "Director's Note", href: '/directors-note' },
+        { title: 'Officers Directory', href: '/officers-directory' }
       ]
     },
-    { title: 'Know NPS', href: '/know-nps' },
+    { 
+      title: 'Support Centers', 
+      href: '#',
+      dropdown: [
+        { title: 'Narcotic Police Stations', href: '/narcotic-police-stations' },
+        { title: 'Regional Narcotic Police Stations', href: '/regional-narcotic-police-stations' },
+        { title: 'Rehabilitation Centers', href: '/rehabilitation-centers' }
+      ]
+    },
     { title: 'Awareness', href: '/awareness' },
     { title: 'Trainings', href: '/trainings' },
     { title: 'Statistics', href: '/statistics' },
@@ -28,9 +38,7 @@ const Header = () => {
     { title: 'Initiatives', href: '/initiatives' },
     { title: 'News', href: '/news' },
     { title: 'Certifications', href: '/certifications' },
-    { title: 'Contact', href: '/contact' },
-    { title: "Director's Note", href: '/directors-note' },
-    { title: 'Officers Directory', href: '/officers-directory' }
+    { title: 'Contact', href: '/contact' }
   ];
 
   const handleNavigation = (href: string) => {
