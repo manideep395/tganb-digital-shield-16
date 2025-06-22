@@ -9,7 +9,84 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      anti_drug_soldiers: {
+        Row: {
+          address: string
+          certificate_id: string
+          class_course_designation: string | null
+          created_at: string
+          district: string
+          email: string
+          enrollment_date: string
+          gender: string
+          id: string
+          institution_name: string
+          institution_type: string
+          mobile_number: string
+          name: string
+          parent_guardian_name: string
+          photo_url: string | null
+          remarks: string | null
+        }
+        Insert: {
+          address: string
+          certificate_id: string
+          class_course_designation?: string | null
+          created_at?: string
+          district: string
+          email: string
+          enrollment_date?: string
+          gender: string
+          id?: string
+          institution_name: string
+          institution_type: string
+          mobile_number: string
+          name: string
+          parent_guardian_name: string
+          photo_url?: string | null
+          remarks?: string | null
+        }
+        Update: {
+          address?: string
+          certificate_id?: string
+          class_course_designation?: string | null
+          created_at?: string
+          district?: string
+          email?: string
+          enrollment_date?: string
+          gender?: string
+          id?: string
+          institution_name?: string
+          institution_type?: string
+          mobile_number?: string
+          name?: string
+          parent_guardian_name?: string
+          photo_url?: string | null
+          remarks?: string | null
+        }
+        Relationships: []
+      }
+      certificate_verification: {
+        Row: {
+          certificate_id: string
+          created_at: string
+          id: string
+          student_name: string
+        }
+        Insert: {
+          certificate_id: string
+          created_at?: string
+          id?: string
+          student_name: string
+        }
+        Update: {
+          certificate_id?: string
+          created_at?: string
+          id?: string
+          student_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

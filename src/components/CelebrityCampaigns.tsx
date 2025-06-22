@@ -1,155 +1,103 @@
 
-import { useState, useEffect, useRef } from 'react';
-import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { Play, Pause, Volume2, X } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { celebrityVideos } from '../data/celebrityVideos';
+import { celebrityVideos } from '@/data/celebrityVideos';
 
 const CelebrityCampaigns = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-        if (!entry.isIntersecting && playingVideo) {
-          setPlayingVideo(null);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [playingVideo]);
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % celebrityVideos.length);
-    setPlayingVideo(null);
+  const handleVideoPlay = (videoId: string) => {
+    setSelectedVideo(videoId);
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + celebrityVideos.length) % celebrityVideos.length);
-    setPlayingVideo(null);
-  };
-
-  const toggleVideo = (videoId: string) => {
-    if (playingVideo === videoId) {
-      setPlayingVideo(null);
-    } else {
-      setPlayingVideo(videoId);
-    }
-  };
-
-  const getYouTubeId = (url: string) => {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]+)/);
-    return match ? match[1] : '';
+  const closeModal = () => {
+    setSelectedVideo(null);
   };
 
   return (
-    <section ref={sectionRef} className="py-12 bg-gradient-to-r from-purple-50 to-pink-50">
+    <section className="py-8 bg-gradient-to-br from-purple-50 to-pink-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Celebrity Video Campaigns</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Influential voices joining our mission against drug abuse
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
+            Celebrity Video Campaigns
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto text-sm">
+            Prominent personalities join hands with TGANB to spread awareness about the dangers of drug abuse.
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto relative">
-          <div className="overflow-hidden rounded-2xl shadow-xl">
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {celebrityVideos.map((celebrity, index) => {
-                const videoId = getYouTubeId(celebrity.videoUrl);
-                const isPlaying = playingVideo === videoId;
-                
-                return (
-                  <div key={index} className="w-full flex-shrink-0">
-                    <div className="bg-white rounded-2xl overflow-hidden">
-                      <div className="aspect-video relative">
-                        {isPlaying ? (
-                          <iframe
-                            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`}
-                            title={`${celebrity.name} - Anti Drug Campaign`}
-                            className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <>
-                            <img 
-                              src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-                              alt={`${celebrity.name} Campaign Thumbnail`}
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <Button
-                                size="lg"
-                                onClick={() => toggleVideo(videoId)}
-                                className="bg-red-600 hover:bg-red-700 rounded-full w-16 h-16 shadow-2xl transform hover:scale-110 transition-all duration-300"
-                              >
-                                <Play className="w-6 h-6 ml-1" />
-                              </Button>
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                              <h3 className="text-xl font-bold mb-1">{celebrity.name}</h3>
-                              <p className="text-sm opacity-90">{celebrity.designation}</p>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          {celebrityVideos.slice(0, 3).map((video) => (
+            <Card key={video.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+              <div className="relative">
+                <img 
+                  src={video.thumbnail} 
+                  alt={video.title}
+                  className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    size="sm"
+                    className="bg-red-600 hover:bg-red-700 text-white rounded-full p-2"
+                    onClick={() => handleVideoPlay(video.id)}
+                  >
+                    <Play className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs">
+                  {video.duration}
+                </div>
+              </div>
+              <CardContent className="p-3">
+                <h3 className="font-semibold text-sm text-gray-800 mb-1 line-clamp-2">
+                  {video.title}
+                </h3>
+                <p className="text-xs text-gray-600 mb-2">
+                  {video.celebrity}
+                </p>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>{video.views} views</span>
+                  <span>{video.date}</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Video Modal */}
+        {selectedVideo && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+            <div className="relative bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-2 right-2 z-10 bg-white hover:bg-gray-100 rounded-full"
+                onClick={closeModal}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+              <div className="aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                  title="Celebrity Campaign Video"
+                  className="w-full h-full"
+                  allowFullScreen
+                />
+              </div>
             </div>
           </div>
+        )}
 
-          {/* Navigation Buttons */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 bg-white shadow-lg hover:shadow-xl rounded-full w-10 h-10"
-            onClick={prevSlide}
+        <div className="text-center mt-6">
+          <Button 
+            variant="outline" 
+            className="border-purple-300 text-purple-700 hover:bg-purple-50"
+            onClick={() => window.open('https://www.youtube.com/@TG_ANB', '_blank')}
           >
-            <ChevronLeft className="w-5 h-5" />
+            View More Videos
           </Button>
-          
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-12 bg-white shadow-lg hover:shadow-xl rounded-full w-10 h-10"
-            onClick={nextSlide}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </Button>
-
-          {/* Slide Indicators */}
-          <div className="flex justify-center mt-6 space-x-2">
-            {celebrityVideos.map((_, index) => (
-              <button
-                key={index}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentSlide 
-                    ? 'bg-purple-600 w-6 h-2' 
-                    : 'bg-gray-300 w-2 h-2 hover:bg-gray-400'
-                }`}
-                onClick={() => {
-                  setCurrentSlide(index);
-                  setPlayingVideo(null);
-                }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </section>

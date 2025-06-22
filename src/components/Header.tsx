@@ -1,13 +1,15 @@
 
 import { useState } from 'react';
-import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const menuItems = [
     { title: 'Home', href: '/', active: true },
@@ -55,6 +57,14 @@ const Header = () => {
         { title: 'FAQs', href: '/faqs' }
       ]
     },
+    { 
+      title: 'Certifications', 
+      href: '#',
+      dropdown: [
+        { title: 'Anti Drug Soldier Enrollment', href: '/anti-drug-soldier-enrollment' },
+        { title: 'Verification Center', href: '/certificate-verification' }
+      ]
+    },
     { title: 'Trainings', href: '/trainings' },
     { title: 'Statistics', href: '/statistics' },
     { 
@@ -89,45 +99,46 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-lg border-b border-blue-600 sticky top-0 z-50 font-poppins">
-      {/* Top Header - Increased height */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-4">
+    <header className="bg-white dark:bg-gray-900 shadow-lg border-b border-blue-600 dark:border-blue-400 sticky top-0 z-50 font-poppins transition-colors">
+      {/* Top Header - Compact */}
+      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-2 md:py-3">
         <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <img 
               src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
               alt="Government of Telangana" 
-              className="h-12 w-12 rounded-full border border-white/30"
+              className="h-8 w-8 md:h-10 md:w-10 rounded-full border border-white/30"
             />
-            <div className="h-8 w-px bg-white/30"></div>
+            <div className="h-6 w-px bg-white/30 hidden md:block"></div>
             <img 
               src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
               alt="TG ANB Logo" 
-              className="h-12 w-12 rounded-full border border-white/30"
+              className="h-8 w-8 md:h-10 md:w-10 rounded-full border border-white/30"
             />
           </div>
           
           <div className="text-center flex-1">
-            <h1 className="text-lg md:text-xl font-bold font-poppins tracking-wide">
+            <h1 className="text-sm md:text-lg font-bold font-poppins tracking-wide">
               TELANGANA ANTI NARCOTICS BUREAU (TGANB)
             </h1>
-            <p className="text-sm text-blue-200">Government of Telangana</p>
+            <p className="text-xs text-blue-200 hidden md:block">Government of Telangana</p>
           </div>
 
-          <div className="flex flex-col items-end space-y-2">
-            <div className="flex items-center space-x-3">
+          {/* Desktop Contact Info */}
+          <div className="hidden md:flex flex-col items-end space-y-1">
+            <div className="flex items-center space-x-2">
               <div 
-                className="flex items-center space-x-2 bg-red-600 px-3 py-1 rounded-full text-sm font-bold cursor-pointer hover:bg-red-700 transition-colors"
+                className="flex items-center space-x-1 bg-red-600 px-2 py-1 rounded-full text-xs font-bold cursor-pointer hover:bg-red-700 transition-colors"
                 onClick={() => handleCall('1908')}
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-3 h-3" />
                 <span>1908</span>
               </div>
               <div 
-                className="flex items-center space-x-2 bg-blue-600 px-3 py-1 rounded-full text-xs font-medium cursor-pointer hover:bg-blue-700 transition-colors"
+                className="flex items-center space-x-1 bg-blue-600 px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:bg-blue-700 transition-colors"
                 onClick={() => handleCall('8712671111')}
               >
-                <Phone className="w-3 h-3" />
+                <Phone className="w-2 h-2" />
                 <span>8712671111</span>
               </div>
             </div>
@@ -135,63 +146,64 @@ const Header = () => {
               className="flex items-center space-x-1 text-xs text-blue-200 cursor-pointer hover:text-white transition-colors"
               onClick={handleEmail}
             >
-              <Mail className="w-3 h-3" />
+              <Mail className="w-2 h-2" />
               <span>tsnabho-hyd@tspolice.gov.in</span>
             </div>
             
             {/* Social Media Links */}
-            <div className="flex space-x-2">
+            <div className="flex space-x-1">
               <button 
                 onClick={() => handleSocialMedia('https://www.instagram.com/telanganaantinarcoticsbureau/')}
-                className="w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
+                className="w-5 h-5 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
               >
-                <Instagram className="w-3 h-3" />
+                <Instagram className="w-2 h-2" />
               </button>
               <button 
                 onClick={() => handleSocialMedia('https://x.com/tg_anb?lang=en')}
-                className="w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-900 transition-colors"
+                className="w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-900 transition-colors"
               >
-                <Twitter className="w-3 h-3" />
+                <Twitter className="w-2 h-2" />
               </button>
               <button 
                 onClick={() => handleSocialMedia('https://www.facebook.com/telanganaantinarcoticsbureau/')}
-                className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+                className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
               >
-                <Facebook className="w-3 h-3" />
+                <Facebook className="w-2 h-2" />
               </button>
               <button 
                 onClick={() => handleSocialMedia('https://www.youtube.com/@TG_ANB')}
-                className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
+                className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
               >
-                <Youtube className="w-3 h-3" />
+                <Youtube className="w-2 h-2" />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation - Increased padding */}
-      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-3">
+      {/* Main Navigation - Compact */}
+      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 py-2">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center lg:justify-between">
+          <div className="flex items-center justify-between">
             {/* Mobile menu button */}
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden absolute left-4"
+              className="lg:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </Button>
 
-            <div className="hidden lg:flex space-x-2 justify-center w-full">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex space-x-1 justify-center flex-1">
               {menuItems.map((item, index) => (
                 <div key={index} className="relative group">
                   <button 
-                    className={`text-xs font-medium transition-all duration-200 py-2 px-3 rounded whitespace-nowrap flex items-center gap-1 ${
+                    className={`text-xs font-medium transition-all duration-200 py-2 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
-                        ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold' 
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                        ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold dark:text-blue-400 dark:bg-blue-900' 
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:bg-gray-800'
                     }`}
                     onClick={() => handleNavigation(item.href)}
                     onMouseEnter={() => item.dropdown && setActiveDropdown(item.title)}
@@ -203,14 +215,14 @@ const Header = () => {
                   
                   {item.dropdown && activeDropdown === item.title && (
                     <div 
-                      className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-48 z-50"
+                      className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 min-w-48 z-50"
                       onMouseEnter={() => setActiveDropdown(item.title)}
                       onMouseLeave={() => setActiveDropdown(null)}
                     >
                       {item.dropdown.map((dropdownItem, dropdownIndex) => (
                         <button
                           key={dropdownIndex}
-                          className="w-full text-left py-2 px-4 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 first:rounded-t-lg last:rounded-b-lg"
+                          className="w-full text-left py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 first:rounded-t-lg last:rounded-b-lg"
                           onClick={() => handleNavigation(dropdownItem.href)}
                         >
                           {dropdownItem.title}
@@ -222,16 +234,26 @@ const Header = () => {
               ))}
             </div>
 
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              className="ml-2"
+            >
+              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            </Button>
+
             {/* Mobile menu */}
             {isMenuOpen && (
-              <div className="lg:hidden absolute left-4 right-4 top-full mt-2 bg-white rounded-lg shadow-lg border max-h-64 overflow-y-auto z-50">
+              <div className="lg:hidden absolute left-4 right-4 top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 max-h-64 overflow-y-auto z-50">
                 {menuItems.map((item, index) => (
                   <div key={index}>
                     <button 
                       className={`w-full text-left py-2 px-4 text-sm font-medium ${
                         item.href === '/' 
-                          ? 'text-blue-600 bg-blue-50 font-bold' 
-                          : 'text-gray-700 hover:bg-blue-50'
+                          ? 'text-blue-600 bg-blue-50 font-bold dark:text-blue-400 dark:bg-blue-900' 
+                          : 'text-gray-700 hover:bg-blue-50 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                       onClick={() => handleNavigation(item.href)}
                     >
@@ -240,7 +262,7 @@ const Header = () => {
                     {item.dropdown && item.dropdown.map((dropdownItem, dropdownIndex) => (
                       <button
                         key={dropdownIndex}
-                        className="w-full text-left py-2 px-8 text-sm text-gray-600 hover:bg-blue-50"
+                        className="w-full text-left py-2 px-8 text-sm text-gray-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:bg-gray-700"
                         onClick={() => handleNavigation(dropdownItem.href)}
                       >
                         {dropdownItem.title}
@@ -248,6 +270,47 @@ const Header = () => {
                     ))}
                   </div>
                 ))}
+                
+                {/* Mobile Contact Info */}
+                <div className="border-t dark:border-gray-700 p-4 space-y-2">
+                  <div className="flex space-x-2">
+                    <button 
+                      onClick={() => handleCall('1908')}
+                      className="flex items-center space-x-1 bg-red-600 px-2 py-1 rounded text-white text-xs"
+                    >
+                      <Phone className="w-3 h-3" />
+                      <span>1908</span>
+                    </button>
+                    <button 
+                      onClick={() => handleCall('8712671111')}
+                      className="flex items-center space-x-1 bg-blue-600 px-2 py-1 rounded text-white text-xs"
+                    >
+                      <Phone className="w-3 h-3" />
+                      <span>8712671111</span>
+                    </button>
+                  </div>
+                  <button 
+                    onClick={handleEmail}
+                    className="flex items-center space-x-1 text-xs text-blue-600 dark:text-blue-400"
+                  >
+                    <Mail className="w-3 h-3" />
+                    <span>tsnabho-hyd@tspolice.gov.in</span>
+                  </button>
+                  <div className="flex space-x-2">
+                    <button onClick={() => handleSocialMedia('https://www.instagram.com/telanganaantinarcoticsbureau/')}>
+                      <Instagram className="w-5 h-5 text-pink-600" />
+                    </button>
+                    <button onClick={() => handleSocialMedia('https://x.com/tg_anb?lang=en')}>
+                      <Twitter className="w-5 h-5 text-gray-800 dark:text-gray-400" />
+                    </button>
+                    <button onClick={() => handleSocialMedia('https://www.facebook.com/telanganaantinarcoticsbureau/')}>
+                      <Facebook className="w-5 h-5 text-blue-600" />
+                    </button>
+                    <button onClick={() => handleSocialMedia('https://www.youtube.com/@TG_ANB')}>
+                      <Youtube className="w-5 h-5 text-red-600" />
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
