@@ -64,14 +64,13 @@ const RehabilitationSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 onClick={() => navigate('/rehabilitation-centers')}
-                className="bg-white text-purple-600 hover:bg-gray-100 font-bold px-8 py-3 rounded-full text-lg"
+                className="bg-white text-purple-600 hover:bg-gray-100 font-bold px-8 py-3 rounded-full text-lg border-0"
               >
                 Find Rehabilitation Centers
               </Button>
               <Button 
                 onClick={() => window.location.href = 'tel:1908'}
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-purple-600 font-bold px-8 py-3 rounded-full text-lg"
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-purple-600 font-bold px-8 py-3 rounded-full text-lg"
               >
                 Emergency Support: 1908
               </Button>

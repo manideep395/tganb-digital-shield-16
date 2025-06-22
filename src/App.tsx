@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -49,6 +48,7 @@ import ShieldAIRiskAssessment from "./pages/ShieldAIRiskAssessment";
 import UdayAIRecoveryPlanner from "./pages/UdayAIRecoveryPlanner";
 import Rehabilitation from "./pages/Rehabilitation";
 import DrugTypes from "./pages/DrugTypes";
+import Trainings from "./pages/Trainings";
 
 const queryClient = new QueryClient();
 
@@ -90,20 +90,10 @@ const App = () => (
             <Route path="/anti-drug-soldier-enrollment" element={<AntiDrugSoldierEnrollment />} />
             <Route path="/certificate-verification" element={<CertificateVerification />} />
             <Route path="/drug-report-submission" element={<DrugReportSubmission />} />
-            <Route path="/trainings" element={<LearningResources />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/achievements" element={<Achievements />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/news/:id" element={<News />} />
-            <Route path="/about-rising-ai" element={<AboutRisingAI />} />
-            <Route path="/sahay-ai" element={<SahayAI />} />
-            <Route path="/shield-ai" element={<ShieldAI />} />
-            <Route path="/uday-ai" element={<UdayAI />} />
-            <Route path="/sahay-ai-chatbot" element={<SahayAIChatbot />} />
-            <Route path="/shield-ai-risk-assessment" element={<ShieldAIRiskAssessment />} />
-            <Route path="/uday-ai-recovery-planner" element={<UdayAIRecoveryPlanner />} />
-            <Route path="/rehabilitation" element={<Rehabilitation />} />
-            <Route path="/drug-types" element={<DrugTypes />} />
+            <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
+            <Route path="/shield-ai-assessment" element={<ShieldAIRiskAssessment />} />
+            <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
+            <Route path="/trainings" element={<Trainings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

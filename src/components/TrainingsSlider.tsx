@@ -2,44 +2,15 @@
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, BookOpen, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { trainingData } from '../data/trainingData';
 
 const TrainingsSlider = () => {
   const navigate = useNavigate();
 
-  const trainings = [
-    {
-      title: "Drug Identification Workshop",
-      date: "Jan 15, 2024",
-      duration: "4 hours",
-      participants: "50+",
-      description: "Comprehensive training on identifying various types of narcotics and synthetic drugs",
-      status: "Upcoming"
-    },
-    {
-      title: "Community Awareness Training",
-      date: "Jan 10, 2024",
-      duration: "6 hours",
-      participants: "100+",
-      description: "Training community leaders on drug prevention and awareness strategies",
-      status: "Completed"
-    },
-    {
-      title: "Law Enforcement Advanced Course",
-      date: "Jan 20, 2024",
-      duration: "8 hours",
-      participants: "30+",
-      description: "Advanced techniques for drug detection and investigation procedures",
-      status: "Registration Open"
-    },
-    {
-      title: "Youth Counseling Certification",
-      date: "Jan 25, 2024",
-      duration: "12 hours",
-      participants: "75+",
-      description: "Specialized training for counseling youth affected by substance abuse",
-      status: "Upcoming"
-    }
-  ];
+  // Get latest 4 trainings sorted by date
+  const latestTrainings = [...trainingData]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 4);
 
   return (
     <section className="py-16 bg-gradient-to-br from-indigo-50 to-purple-50">
@@ -52,7 +23,7 @@ const TrainingsSlider = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {trainings.map((training, index) => (
+          {latestTrainings.map((training, index) => (
             <div
               key={index}
               className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
