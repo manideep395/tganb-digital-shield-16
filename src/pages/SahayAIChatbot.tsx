@@ -117,7 +117,7 @@ const SahayAIChatbot = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
             <img 
-              src="/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
+              src="/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
               alt="TG ANB Logo" 
               className="h-16 w-16 mr-4 rounded-full border-2 border-white"
             />
@@ -141,7 +141,7 @@ const SahayAIChatbot = () => {
               <div className="flex items-center space-x-3">
                 <div className="relative">
                   <img 
-                    src="/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
+                    src="/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
                     alt="Sahay.AI" 
                     className="h-10 w-10 rounded-full border-2 border-white"
                   />
@@ -234,12 +234,12 @@ const SahayAIChatbot = () => {
             <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200/50 dark:border-gray-700/50">
               <div className="flex items-center justify-center mb-3">
                 <img 
-                  src="/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
+                  src="/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
                   alt="TG ANB" 
                   className="h-8 w-8 rounded-full mr-3"
                 />
                 <img 
-                  src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
+                  src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
                   alt="Telangana" 
                   className="h-8 w-8 rounded-full"
                 />

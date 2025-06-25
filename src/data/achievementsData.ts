@@ -13,7 +13,7 @@ export interface Achievement {
 export const achievementsData: Achievement[] = [
   {
     title: "Major International Drug Bust",
-    description: "TSNAB along with Panjagutta Police on credible information apprehended (1) International #drugpeddler #nigerian who was in possession of Various #NarcoticDrugs in Hyderabad. Seized (557) Grams Cocaine, (902) Ecstasy Pills Weighing 390 Grams, (105) LSD Blots, (215) Grams Charas, (21) Grams Heroine, (7) Grams of Amphetamine, (45) Grams of OG Weed and (190) Grams of Ganja and (3) Cell Phones and cash of Rs 5.4 lakhs all W/Rs. 8 Crores from his possession.",
+    description: "TGANB along with Panjagutta Police on credible information apprehended (1) International #drugpeddler #nigerian who was in possession of Various #NarcoticDrugs in Hyderabad. Seized (557) Grams Cocaine, (902) Ecstasy Pills Weighing 390 Grams, (105) LSD Blots, (215) Grams Charas, (21) Grams Heroine, (7) Grams of Amphetamine, (45) Grams of OG Weed and (190) Grams of Ganja and (3) Cell Phones and cash of Rs 5.4 lakhs all W/Rs. 8 Crores from his possession.",
     crNumber: "Cr.No.131/2024 U/s 8c,r/w 20(b)(ii)(A),21(b),21(c),22(b),22(c),29 NDPS Act-1985 of PS Panja gutta",
     offenders: [
       {
@@ -24,7 +24,7 @@ export const achievementsData: Achievement[] = [
   },
   {
     title: "Drug Manufacturing Lab Busted",
-    description: "On 07.12.2023, the sleuths of TSNAB under the supervision of SP, East along with Jinnaram Police, Sangareddy District apprehended the following accused persons and Seized 14 KGs Nordazepam drug and entire manufacturing lab along with equipment used in manufacturing & Mobile Phones from their possession. All worth Rs. 3 Crores.",
+    description: "On 07.12.2023, the sleuths of TGANB under the supervision of SP, East along with Jinnaram Police, Sangareddy District apprehended the following accused persons and Seized 14 KGs Nordazepam drug and entire manufacturing lab along with equipment used in manufacturing & Mobile Phones from their possession. All worth Rs. 3 Crores.",
     crNumber: "Cr.No.118/2023 U/Sec 8(c) r/w 21(c), 22(c), 29 of NDPS Act-1985 of Jinnaram PS (Sangareddy)",
     offenders: [
       {

@@ -1,10 +1,8 @@
-
-import { useEffect, useState } from 'react';
 import { announcementData } from '../data/scrollingData';
 
 const AnnouncementTicker = () => {
   return (
-    <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-2 overflow-hidden">
+    <div className="fixed bottom-0 left-0 w-full z-50 bg-gradient-to-r from-red-600 to-red-700 text-white py-2 overflow-hidden">
       <div className="relative">
         <div className="animate-scroll whitespace-nowrap">
           <span className="inline-block px-4 text-xs md:text-sm font-medium">

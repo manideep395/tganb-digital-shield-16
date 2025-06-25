@@ -27,15 +27,15 @@ export const generateCertificatePDF = async (formData: FormData, certificateId: 
   // Three logos at top - properly positioned
   try {
     // Telangana Government Logo (left)
-    const telanganaGovImg = '/lovable-uploads/dc5b1429-5d0c-4d96-a676-6979624c1570.png';
+    const telanganaGovImg = '/uploads/dc5b1429-5d0c-4d96-a676-6979624c1570.png';
     pdf.addImage(telanganaGovImg, 'PNG', 35, 30, 25, 25);
     
     // TGANB Logo (center) 
-    const tganbImg = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
+    const tganbImg = '/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
     pdf.addImage(tganbImg, 'PNG', 92.5, 30, 25, 25);
     
     // Telangana Police Logo (right)
-    const policeImg = '/lovable-uploads/686dd008-b6ba-4b5c-8342-6bd71c98b2a8.png';
+    const policeImg = '/uploads/686dd008-b6ba-4b5c-8342-6bd71c98b2a8.png';
     pdf.addImage(policeImg, 'PNG', 150, 30, 25, 25);
   } catch (error) {
     console.log('Error adding logos:', error);

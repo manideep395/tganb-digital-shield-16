@@ -16,9 +16,8 @@ const Header = () => {
       dropdown: [
         { title: 'About TGANB', href: '/about-tganb' },
         { title: 'Vision & Mission', href: '/vision-mission' },
-        { title: 'Anti-Drug Committees', href: '/anti-drug-committees' },
-        { title: 'About Logo', href: '/about-logo' },
         { title: "Director's Note", href: '/directors-note' },
+        { title: 'About Logo', href: '/about-logo' },
         { title: 'Officers Directory', href: '/officers-directory' },
         { title: 'Central Co-ordination', href: '/central-coordination' },
         { title: 'State Co-ordination', href: '/state-coordination' },
@@ -40,23 +39,18 @@ const Header = () => {
       ]
     },
     { 
-      title: 'Initiatives', 
+      title: 'Awareness', 
       href: '#',
       dropdown: [
         { title: 'Mission Parivartana', href: '/mission-parivartana' },
         { title: 'Operation Sankalp', href: '/operation-sankalp' },
-        { title: 'Prahari Clubs', href: '/prahari-clubs' }
-      ]
-    },
-    { 
-      title: 'Awareness', 
-      href: '#',
-      dropdown: [
+        { title: 'Prahari Clubs', href: '/prahari-clubs' },
+        { title: 'Anti-Drug Committees', href: '/anti-drug-committees' },
         { title: 'Events & Campaigns', href: '/events-campaigns' },
         { title: 'Testing Kits & Detection Methods', href: '/testing-kits' },
         { title: 'Education', href: '/education' },
         { title: 'Myths & Facts', href: '/myths-facts' },
-        { title: 'FAQs', href: '/faqs' }
+        { title: 'FAQs', href: '/faqs' },
       ]
     },
     { 
@@ -67,7 +61,7 @@ const Header = () => {
         { title: 'Verification Center', href: '/certificate-verification' }
       ]
     },
-    { title: 'Reports', href: '/drug-report-submission' },
+    { title: 'Report Drug', href: '/drug-report-submission' },
     { title: 'Trainings', href: '/trainings' },
     { title: 'Statistics', href: '/statistics' },
     { 
@@ -78,7 +72,7 @@ const Header = () => {
         { title: 'News', href: '/news' }
       ]
     },
-    { title: 'Contact', href: '/contact' }
+    { title: 'Contacts', href: '/contact' }
   ];
 
   const handleNavigation = (href: string) => {
@@ -102,29 +96,30 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-lg border-b border-blue-600 sticky top-0 z-50 font-poppins">
+    <header className="bg-white shadow-lg border-b border-darkslategrey-600 sticky top-0 z-50 font-poppins">
       {/* Top Header - Compact */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white py-1 md:py-2">
+      <div className="bg-gradient-to-r from-green-900 via-darkslategrey-900 to-blue-900 text-white py-1 md:py-2">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img 
-              src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
-              alt="Government of Telangana" 
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
+              src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+              alt="TG ANB Logo" 
+              className="h-15 w-15 md:h-16 md:w-16 rounded-full border border-white/30"
             />
             <div className="h-6 w-px bg-white/30 hidden md:block"></div>
             <img 
-              src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
-              alt="TG ANB Logo" 
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/30"
+              src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
+              alt="Government of Telangana" 
+              className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-white/30"
             />
+            
           </div>
           
           <div className="text-center flex-1">
-            <h1 className="text-base md:text-xl font-bold font-poppins tracking-wide">
+            <h1 className="text-base md:text-3xl font-bold font-poppins tracking-wide">
               TELANGANA ANTI NARCOTICS BUREAU (TGANB)
             </h1>
-            <p className="text-sm text-blue-200 hidden md:block">Government of Telangana</p>
+            <p className="text-xl3 text-blue-200 hidden md:block">Government of Telangana</p>
           </div>
 
           {/* Desktop Contact Info */}
@@ -146,7 +141,7 @@ const Header = () => {
               </div>
             </div>
             <div 
-              className="flex items-center space-x-1 text-xs text-blue-200 cursor-pointer hover:text-white transition-colors"
+              className="flex items-center space-x-1 text-xs text-darkslategrey-200 cursor-pointer hover:text-white transition-colors"
               onClick={handleEmail}
             >
               <Mail className="w-2 h-2" />
@@ -203,7 +198,7 @@ const Header = () => {
               {menuItems.map((item, index) => (
                 <div key={index} className="relative group">
                   <button 
-                    className={`text-xs font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
+                    className={`text-s font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
                         ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold' 
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'

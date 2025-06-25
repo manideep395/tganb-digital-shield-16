@@ -35,7 +35,7 @@ const AboutLogo = () => {
                 <div className="relative mb-8">
                   <div className="w-40 h-40 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border-4 border-white/30">
                     <img 
-                      src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                      src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                       alt="TGANB Logo" 
                       className="w-32 h-32 object-contain"
                     />

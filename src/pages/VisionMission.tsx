@@ -31,7 +31,7 @@ const VisionMission = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 font-poppins">Our Vision</h2>
               <div className="max-w-4xl mx-auto text-center">
                 <p className="text-xl md:text-2xl leading-relaxed font-medium">
-                  TSNAB envisions a <span className="font-bold text-yellow-300">Drug-free, Healthier and Productive</span> Telangana State 
+                  TGNAB envisions a <span className="font-bold text-yellow-300">Drug-free, Healthier and Productive</span> Telangana State 
                   through enhanced coordination of drug trafficking control efforts among Central, State and local agencies.
                 </p>
               </div>
@@ -133,7 +133,7 @@ const VisionMission = () => {
             
             <div className="text-center mt-12">
               <p className="text-xl text-yellow-300 font-bold">
-                "On these three pillars, the work and mandate of TSNAB are based."
+                "On these three pillars, the work and mandate of TGNAB are based."
               </p>
             </div>
           </div>

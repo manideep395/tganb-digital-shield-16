@@ -555,12 +555,12 @@ const UdayAIRecoveryPlanner = () => {
           <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Developed & Trusted By</h3>
           <div className="flex items-center justify-center space-x-6 mb-4">
             <img 
-              src="/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
+              src="/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png" 
               alt="TG ANB" 
               className="h-16 w-16 rounded-full"
             />
             <img 
-              src="/lovable-uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
+              src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
               alt="T-RISING.AI" 
               className="h-16 w-16 rounded-full"
             />

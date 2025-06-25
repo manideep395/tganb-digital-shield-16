@@ -183,7 +183,7 @@ const ShieldAIRiskAssessment = () => {
                   <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center relative">
                     <Shield className="w-12 h-12 text-white" />
                     <img 
-                      src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                      src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                       alt="TG ANB Logo" 
                       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full"
                     />
@@ -285,7 +285,7 @@ const ShieldAIRiskAssessment = () => {
                     <div className="relative mr-2">
                       <Shield className="w-6 h-6" />
                       <img 
-                        src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                        src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                         alt="TG ANB Logo" 
                         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
                       />

@@ -29,7 +29,7 @@ export const generateAIPDF = async (config: PDFConfig) => {
   
   // Add TGANB watermark
   try {
-    const tganbWatermark = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
+    const tganbWatermark = '/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
     pdf.setGState(new (pdf as any).GState({ opacity: 0.1 }));
     pdf.addImage(tganbWatermark, 'PNG', 60, 120, 90, 90);
     pdf.setGState(new (pdf as any).GState({ opacity: 1 }));
@@ -42,11 +42,11 @@ export const generateAIPDF = async (config: PDFConfig) => {
   // Header with logos and title
   try {
     // Telangana Government Logo
-    const telanganaGovImg = '/lovable-uploads/dc5b1429-5d0c-4d96-a676-6979624c1570.png';
+    const telanganaGovImg = '/uploads/dc5b1429-5d0c-4d96-a676-6979624c1570.png';
     pdf.addImage(telanganaGovImg, 'PNG', margin, yPosition, 20, 20);
     
     // TGANB Logo
-    const tganbImg = '/lovable-uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
+    const tganbImg = '/uploads/3cc3a66f-c1e9-4a3e-ae78-665c190d4eb4.png';
     pdf.addImage(tganbImg, 'PNG', margin + 25, yPosition, 20, 20);
   } catch (error) {
     console.log('Error adding logos:', error);

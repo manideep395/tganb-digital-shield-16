@@ -74,7 +74,7 @@ const TGANBStructureSection = () => {
             <Button 
               onClick={() => navigate('/officers-directory')}
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-gray-800 font-bold px-8 py-3 rounded-full text-lg"
+              className="border-white text-black hover:bg-white hover:text-gray-800 font-bold px-8 py-3 rounded-full text-lg"
             >
               Officers Directory
             </Button>

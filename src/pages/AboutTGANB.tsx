@@ -71,14 +71,14 @@ const AboutTGANB = () => {
                 <div>
                   <h3 className="text-xl font-bold mb-4 text-yellow-400">Secretariat Function</h3>
                   <p className="leading-relaxed">
-                    The Telangana State Anti-Narcotics Bureau (TSNAB) serves as a 'Secretariat' for the state Anti-Narcotics Task force, 
+                    The Telangana State Anti-Narcotics Bureau (TGANB) serves as a 'Secretariat' for the state Anti-Narcotics Task force, 
                     exercising the powers of a Police Station within the meaning of section 2(s) of the Code of Criminal Procedure, 1973.
                   </p>
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-4 text-yellow-400">Investigation Powers</h3>
                   <p className="leading-relaxed">
-                    TSNAB has comprehensive powers to register, investigate and prosecute cases related to drug trafficking. 
+                    TGANB has comprehensive powers to register, investigate and prosecute cases related to drug trafficking. 
                     It can also take up investigations from other units on the instructions of the Director General of Police, Telangana State.
                   </p>
                 </div>
@@ -111,12 +111,12 @@ const AboutTGANB = () => {
           <div className="bg-white rounded-3xl shadow-xl p-8 border border-blue-100">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center font-poppins">Our Network & Coordination</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              Since its inception, TSNAB has generated grass root level intelligence, leading to the detection and disruption of organized drug trafficking groups. 
+              Since its inception, TGANB has generated grass root level intelligence, leading to the detection and disruption of organized drug trafficking groups. 
               It has been coordinating with Commissioners/Superintendents of Police of all the Commissionerate/Districts, including other stakeholders in the state.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
               As Telangana's nodal point with national bureaus including <span className="font-bold text-blue-600">NCB, CNB, IB, Customs</span>, 
-              TSNAB works to overcome future challenges in tackling the drug menace, following guidelines of the Ministry of Home Affairs (MHA), 
+              TGANB works to overcome future challenges in tackling the drug menace, following guidelines of the Ministry of Home Affairs (MHA), 
               the Narcotics Control Bureau (NCB), and the Government of Telangana.
             </p>
           </div>

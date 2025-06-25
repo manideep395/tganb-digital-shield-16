@@ -10,11 +10,25 @@ export interface TrainingSession {
   participants: string;
   description: string;
   duration: string;
-  status: 'Upcoming' | 'Completed' | 'Registration Open';
+  status: 'Upcoming' | 'Completed' | 'On Going';
   photo?: string;
 }
 
 export const trainingData: TrainingSession[] = [
+  {
+    id: 0,
+    name: 'Investingation Of NDPS Cases"',
+    title: 'Financial Investigation on NDPS Act Cases',
+    date: '24.06.2025 to 26.06.2025',
+    place: '(Offline) RBVRR Telangana Police Academy',
+    location: 'RBVRR Telangana Police Academy',
+    nominatedOfficers: 'All TGANB officers',
+    participants: 'All TGANB officers',
+    description: 'Comprehensive 3-day training on Common mistakes by IO while Incestingating the cases of NDPS & overall drug Control Management.',
+    duration: '3 days',
+    status: 'Upcoming',
+    photo: '/placeholder-training-1.jpg'
+  },
   {
     id: 1,
     name: '3-day course on "Financial Investigation on NDPS Act cases and Case Laws on Narcotics"',
@@ -22,11 +36,11 @@ export const trainingData: TrainingSession[] = [
     date: '14.09.2023 to 16.09.2023',
     place: '(Offline) Dr. MCR HRD Institute, Jubilee Hills, Hyderabad',
     location: 'Dr. MCR HRD Institute, Jubilee Hills, Hyderabad',
-    nominatedOfficers: 'All TSNAB officers',
-    participants: 'All TSNAB officers',
+    nominatedOfficers: 'All TGANB officers',
+    participants: 'All TGANB officers',
     description: 'Comprehensive 3-day training on financial investigation techniques for NDPS Act cases and understanding case laws related to narcotics.',
     duration: '3 days',
-    status: 'Completed',
+    status: 'On Going',
     photo: '/placeholder-training-1.jpg'
   },
   {
@@ -36,8 +50,8 @@ export const trainingData: TrainingSession[] = [
     date: '30.12.2023',
     place: 'Mini-Conference Hall, Ground Floor, Tower-D, TSPICCC, Hyd.',
     location: 'TSPICCC, Hyderabad',
-    nominatedOfficers: 'All TSNAB officers',
-    participants: 'All TSNAB officers',
+    nominatedOfficers: 'All TGANB officers',
+    participants: 'All TGANB officers',
     description: 'Training focused on proper FIR registration procedures for NDPS cases, confession-cum-seizure panchanama, and comprehensive overview of NDPS Act 1985.',
     duration: '1 day',
     status: 'Completed',

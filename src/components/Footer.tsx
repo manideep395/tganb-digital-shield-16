@@ -15,14 +15,14 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white">
+    <footer className="bg-gradient-to-r from-green-900 via-darkslategrey-900 to-blue-900 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <img 
-                src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                 alt="TGANB Logo" 
                 className="h-12 w-12 rounded-full"
               />
@@ -135,7 +135,7 @@ const Footer = () => {
             </div>
             <div className="text-center md:text-right">
               <p className="text-sm text-blue-200">
-                © 2024 Telangana Anti Narcotics Bureau. All rights reserved.
+                © 2025 Telangana Anti Narcotics Bureau. All rights reserved.
               </p>
               <p className="text-xs text-blue-300 mt-1">
                 Government of Telangana

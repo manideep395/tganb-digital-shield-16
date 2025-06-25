@@ -62,7 +62,7 @@ const NarcoticPoliceStations = () => {
               <h2 className="text-3xl font-bold text-center mb-8 font-poppins">PS Information & Jurisdiction</h2>
               <div className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm">
                 <p className="text-lg text-center leading-relaxed">
-                  Narcotics Police stations function under the <span className="font-bold text-yellow-300">overall supervision and administrative control of Director, TSNAB</span> and functional control of respective commissioners of Police, who shall extend all the necessary support to the Narcotics Police Stations.
+                  Narcotics Police stations function under the <span className="font-bold text-yellow-300">overall supervision and administrative control of Director, TGNAB</span> and functional control of respective commissioners of Police, who shall extend all the necessary support to the Narcotics Police Stations.
                 </p>
               </div>
             </div>

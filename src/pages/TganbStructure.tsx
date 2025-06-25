@@ -20,7 +20,7 @@ const TganbStructure = () => {
     {
       title: 'Administrative and Logistic Wing',
       icon: <Cog className="w-6 h-6" />,
-      description: 'This wing shall render administrative and logistical support, managing the issues of pay, allowances, procurement, maintenance of accounts, housekeeping, transportation and other duties assigned by the head of TSNAB. It will also be responsible for the supervision of narcotics maalkhanas.',
+      description: 'This wing shall render administrative and logistical support, managing the issues of pay, allowances, procurement, maintenance of accounts, housekeeping, transportation and other duties assigned by the head of TGANB. It will also be responsible for the supervision of narcotics maalkhanas.',
       color: 'purple'
     },
     {
@@ -122,14 +122,14 @@ const TganbStructure = () => {
             </p>
           </div>
 
-          {/* TSNAB Head Quarters */}
+          {/* TGANB Head Quarters */}
           <div className="mb-16">
             <div className="text-center mb-12">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
                 <Building className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                Functional Components of TSNAB Head Quarters
+                Functional Components of TGANB Head Quarters
               </h2>
             </div>
 

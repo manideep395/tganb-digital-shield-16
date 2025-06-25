@@ -27,7 +27,7 @@ const AboutRisingAI = () => {
           >
             <div className="flex items-center justify-center mb-6">
               <img 
-                src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                 alt="TG ANB Logo" 
                 className="h-16 w-16 rounded-full mr-4"
               />
@@ -36,13 +36,10 @@ const AboutRisingAI = () => {
                   T-<span className="text-yellow-400">RISING</span>.AI
                 </h1>
                 <p className="text-xl md:text-2xl text-blue-200">
-                  Telangana's AI Mission Against Drugs
+                  TGANB's AI Mission Against Drugs
                 </p>
               </div>
             </div>
-            <p className="text-lg text-blue-100 max-w-3xl mx-auto">
-              Powered by Telangana Anti-Narcotics Bureau (TG ANB)
-            </p>
           </motion.div>
 
           {/* Three AI Models Grid */}
@@ -151,7 +148,7 @@ const AboutRisingAI = () => {
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
               <div className="flex items-center justify-center mb-3">
                 <img 
-                  src="/lovable-uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                  src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                   alt="TG ANB Logo" 
                   className="h-8 w-8 rounded-full mr-3"
                 />
