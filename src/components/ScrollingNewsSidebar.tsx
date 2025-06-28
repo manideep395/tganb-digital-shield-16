@@ -131,19 +131,21 @@ const ScrollingNewsSidebar = () => {
         ))}
       </div>
 
-      <style jsx>{`
-        @keyframes scroll-up {
-          0% {
-            transform: translateY(100%);
+      <style>
+        {`
+          @keyframes scroll-up {
+            0% {
+              transform: translateY(100%);
+            }
+            100% {
+              transform: translateY(-100%);
+            }
           }
-          100% {
-            transform: translateY(-100%);
+          .animate-scroll-up {
+            animation: scroll-up 60s linear infinite;
           }
-        }
-        .animate-scroll-up {
-          animation: scroll-up 60s linear infinite;
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
