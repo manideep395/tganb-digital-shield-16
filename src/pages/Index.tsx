@@ -5,7 +5,6 @@ import AboutTGANB from '../components/AboutTGANB';
 import TRisingAIHighlight from '../components/TRisingAIHighlight';
 import DirectorMessage from '../components/DirectorMessage';
 import InitiativesHighlight from '../components/InitiativesHighlight';
-import InitiativesSlider from '../components/InitiativesSlider';
 import AnimatedMetrics from '../components/AnimatedMetrics';
 import AntiDrugSoldierSection from '../components/AntiDrugSoldierSection';
 import TrainingsSlider from '../components/TrainingsSlider';
@@ -22,7 +21,6 @@ const Index = () => {
     <div className="min-h-screen">
       <Header />
       <HeroSection />
-      <AnnouncementTicker />
       <AboutTGANB />
       <TRisingAIHighlight />
       <DirectorMessage />
@@ -35,6 +33,7 @@ const Index = () => {
       <StationsInfoSection />
       <RehabilitationSection />
       <TGANBStructureSection />
+      <AnnouncementTicker />
       <Footer />
     </div>
   );

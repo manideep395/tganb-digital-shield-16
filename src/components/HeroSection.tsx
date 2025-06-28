@@ -16,7 +16,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-[75vh] flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins">
+    <section className="relative min-h-[60vh] flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins">
       {/* 3D Background Elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-black-400/30 to-transparent rounded-full blur-xl animate-pulse"></div>
@@ -25,10 +25,10 @@ const HeroSection = () => {
       </div>
 
       {/* Main Hero Content - 75% width */}
-      <div className="w-3/4 flex items-center justify-center text-white relative z-10 px-4">
+      <div className="w-3/4 flex items-center justify-center text-white relative z-10 px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-4 animate-fade-in text-center">
           {/* Three Logos Row */}
-          <div className="flex justify-center items-center space-x-12 mb-8">
+          <div className="flex justify-center items-center space-x-12 mb-6">
             {/* Telangana Emblem - Left */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-black-600/30 rounded-full blur-md animate-pulse"></div>
@@ -76,7 +76,7 @@ const HeroSection = () => {
           </p>
 
           {/* Feature Icons */}
-          <div className="flex justify-center items-center space-x-8 my-6">
+          <div className="flex justify-center items-center space-x-8 my-4">
             <div className="text-center transform hover:scale-110 transition-transform duration-300">
               <div className="w-12 h-12 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-yellow-400/30">
                 <Shield className="w-6 h-6 text-yellow-400" />

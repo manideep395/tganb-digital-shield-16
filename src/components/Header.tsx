@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -148,8 +149,8 @@ const Header = () => {
               <span>tsnabho-hyd@tspolice.gov.in</span>
             </div>
             
-            {/* Social Media Links */}
-            <div className="flex space-x-1">
+            {/* Social Media Links + Admin Login */}
+            <div className="flex space-x-1 items-center">
               <button 
                 onClick={() => handleSocialMedia('https://www.instagram.com/telanganaantinarcoticsbureau/')}
                 className="w-5 h-5 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
@@ -173,6 +174,15 @@ const Header = () => {
                 className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
               >
                 <Youtube className="w-2 h-2" />
+              </button>
+              <div className="w-px h-4 bg-white/30 mx-1"></div>
+              <button 
+                onClick={() => navigate('/admin/login')}
+                className="flex items-center space-x-1 bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-xs font-medium transition-colors"
+                title="Admin Login"
+              >
+                <Shield className="w-3 h-3" />
+                <span>Admin</span>
               </button>
             </div>
           </div>
@@ -280,6 +290,14 @@ const Header = () => {
                   className="w-full text-left py-2 px-4 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600"
                 >
                   T-RISING.AI
+                </button>
+                
+                {/* Admin Login Mobile Button */}
+                <button 
+                  onClick={() => { navigate('/admin/login'); setIsMenuOpen(false); }}
+                  className="w-full text-left py-2 px-4 text-sm font-medium text-gray-700 hover:bg-blue-50 border-t"
+                >
+                  🛡️ Admin Login
                 </button>
                 
                 {/* Mobile Contact Info */}
