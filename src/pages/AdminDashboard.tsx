@@ -1,3 +1,4 @@
+
 import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -15,7 +16,8 @@ import {
   TrendingUp,
   Trophy,
   Video,
-  HelpCircle
+  HelpCircle,
+  Scroll
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -28,7 +30,8 @@ const AdminDashboard = () => {
     achievementsData,
     celebrityVideos,
     faqsData,
-    drugReports
+    drugReports,
+    scrollingData
   } = useAdmin();
   const navigate = useNavigate();
 
@@ -96,6 +99,13 @@ const AdminDashboard = () => {
       icon: HelpCircle,
       color: 'text-indigo-600',
       bgColor: 'bg-indigo-100'
+    },
+    {
+      title: 'Scrolling Content',
+      value: scrollingData.length,
+      icon: Scroll,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
     }
   ];
 
@@ -110,7 +120,7 @@ const AdminDashboard = () => {
     },
     {
       title: 'Manage News',
-      description: 'Add, edit, or remove news articles',
+      description: 'Add, edit, or remove news articles with images & links',
       icon: FileText,
       action: () => navigate('/admin/news'),
       color: 'bg-gradient-to-r from-green-500 to-green-600',
@@ -118,7 +128,7 @@ const AdminDashboard = () => {
     },
     {
       title: 'Manage Announcements',
-      description: 'Add, edit, or remove announcements',
+      description: 'Add, edit, or remove announcements with attachments',
       icon: Megaphone,
       action: () => navigate('/admin/announcements'),
       color: 'bg-gradient-to-r from-orange-500 to-orange-600',
@@ -157,12 +167,12 @@ const AdminDashboard = () => {
       count: faqsData.length
     },
     {
-      title: 'Update Scrolling Data',
-      description: 'Update scrolling news and announcements',
-      icon: TrendingUp,
-      action: () => navigate('/admin/scrolling-data'),
+      title: 'Manage Scrolling Content',
+      description: 'Edit scrolling text content at bottom of website',
+      icon: Scroll,
+      action: () => navigate('/admin/scrolling-content'),
       color: 'bg-gradient-to-r from-blue-500 to-blue-600',
-      count: null
+      count: scrollingData.length
     }
   ];
 
@@ -180,7 +190,7 @@ const AdminDashboard = () => {
               />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">TGANB Admin Portal</h1>
-                <p className="text-sm text-gray-500">Content Management System</p>
+                <p className="text-sm text-gray-500">Live Content Management System</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -201,7 +211,7 @@ const AdminDashboard = () => {
         {/* Welcome Section */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Content Management Dashboard</h2>
-          <p className="text-gray-600">Manage all website content from this central dashboard</p>
+          <p className="text-gray-600">Manage all website content with real data integration</p>
         </div>
 
         {/* Stats Grid */}
@@ -300,9 +310,9 @@ const AdminDashboard = () => {
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">Live Content Management</h4>
                 <p className="text-sm text-gray-600">
-                  All changes made here will be immediately reflected on the website. 
-                  Content is automatically synchronized across all sections. 
-                  Please ensure accuracy before publishing new content.
+                  All changes made here are immediately reflected on the website. 
+                  Content is synchronized across all sections including scrolling sidebar. 
+                  Real data from data files is now fully integrated.
                 </p>
               </div>
             </div>

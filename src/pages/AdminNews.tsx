@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, Image, Link } from 'lucide-react';
 import { NewsItem } from '../data/newsData';
 
 const AdminNews = () => {
@@ -22,7 +22,8 @@ const AdminNews = () => {
     description: '',
     date: '',
     imageUrl: '',
-    newsType: 'Breaking News'
+    newsType: 'Breaking News',
+    link: ''
   });
 
   if (!isAuthenticated) {
@@ -38,6 +39,7 @@ const AdminNews = () => {
       addNews(formData);
     }
     resetForm();
+    alert('News article saved successfully!');
   };
 
   const resetForm = () => {
@@ -47,7 +49,8 @@ const AdminNews = () => {
       description: '',
       date: '',
       imageUrl: '',
-      newsType: 'Breaking News'
+      newsType: 'Breaking News',
+      link: ''
     });
     setIsEditing(false);
     setEditingIndex(null);
@@ -106,22 +109,49 @@ const AdminNews = () => {
                     <Textarea
                       value={formData.description}
                       onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      rows={4}
                       required
                     />
                   </div>
                   <div>
                     <Label>Date</Label>
                     <Input
+                      type="date"
                       value={formData.date || ''}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
                     />
                   </div>
                   <div>
-                    <Label>Image URL</Label>
+                    <Label className="flex items-center space-x-2">
+                      <Image className="w-4 h-4" />
+                      <span>Image URL</span>
+                    </Label>
                     <Input
                       value={formData.imageUrl}
                       onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                      placeholder="https://example.com/image.jpg or /uploads/image.jpg"
                       required
+                    />
+                    {formData.imageUrl && (
+                      <img 
+                        src={formData.imageUrl} 
+                        alt="Preview" 
+                        className="mt-2 w-full max-w-xs h-32 object-cover rounded border"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <Label className="flex items-center space-x-2">
+                      <Link className="w-4 h-4" />
+                      <span>Article Link (Optional)</span>
+                    </Label>
+                    <Input
+                      value={formData.link || ''}
+                      onChange={(e) => setFormData({...formData, link: e.target.value})}
+                      placeholder="/news-detail/1 or https://example.com/news"
                     />
                   </div>
                   <div>
@@ -160,10 +190,31 @@ const AdminNews = () => {
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className={`text-xs px-2 py-1 rounded font-bold ${
+                          news.newsType === 'Breaking News' ? 'bg-red-100 text-red-600' :
+                          news.newsType === 'Achievement' ? 'bg-green-100 text-green-600' :
+                          'bg-blue-100 text-blue-600'
+                        }`}>
+                          {news.newsType}
+                        </span>
+                        {news.link && (
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded flex items-center">
+                            <Link className="w-3 h-3 mr-1" />
+                            Linked
+                          </span>
+                        )}
+                      </div>
                       <h3 className="font-semibold">{news.title}</h3>
                       <p className="text-sm text-gray-600 mb-2">{news.description.substring(0, 100)}...</p>
-                      <div className="text-xs text-gray-500">
-                        <span>{news.date}</span> • <span>{news.newsType}</span>
+                      <div className="text-xs text-gray-500 flex items-center space-x-4">
+                        <span>{news.date}</span>
+                        {news.imageUrl && (
+                          <span className="flex items-center">
+                            <Image className="w-3 h-3 mr-1" />
+                            Image
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex space-x-2 ml-4">

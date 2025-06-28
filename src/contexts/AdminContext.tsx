@@ -1,14 +1,12 @@
 
 import React, { createContext, useState, useContext } from 'react';
-import { NewsItem } from '../data/newsData';
+import { NewsItem, newsData as initialNewsData } from '../data/newsData';
 import { Achievement } from '../data/achievementsData';
-import { TrainingSession } from '../data/trainingData';
+import { TrainingSession, trainingData as initialTrainingData } from '../data/trainingData';
 import { drugReportsData, DrugReport } from '../data/drugReportsData';
-
-interface Announcement {
-  name: string;
-  date: string;
-}
+import { faqsData as initialFaqsData } from '../data/faqsData';
+import { announcementData as initialAnnouncementData, AnnouncementItem } from '../data/announcementData';
+import { announcementData as initialScrollingData } from '../data/scrollingData';
 
 interface CelebrityVideo {
   name: string;
@@ -30,9 +28,9 @@ interface AdminContextType {
   addNews: (news: NewsItem) => void;
   updateNews: (index: number, news: NewsItem) => void;
   deleteNews: (index: number) => void;
-  announcementData: Announcement[];
-  addAnnouncement: (announcement: Announcement) => void;
-  updateAnnouncement: (index: number, announcement: Announcement) => void;
+  announcementData: AnnouncementItem[];
+  addAnnouncement: (announcement: AnnouncementItem) => void;
+  updateAnnouncement: (index: number, announcement: AnnouncementItem) => void;
   deleteAnnouncement: (index: number) => void;
   trainingData: TrainingSession[];
   addTraining: (training: TrainingSession) => void;
@@ -100,25 +98,19 @@ export const useAdmin = () => useContext(AdminContext);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [newsData, setNewsData] = useState<NewsItem[]>([
-    {
-      title: 'TGANB Conducts Raids on Illegal Drug Dens',
-      subtitle: 'Several arrests made in Hyderabad',
-      description: 'The Telangana Anti-Narcotics Bureau (TGANB) conducted a series of raids on illegal drug dens in Hyderabad, resulting in the arrest of several individuals involved in drug trafficking and consumption.',
-      imageUrl: '/uploads/naga-vamsi-yeduguru-N2tjpn9eqOc-unsplash.jpg',
-      date: '2024-01-20',
-      newsType: 'Breaking News',
-    },
-  ]);
-  const [announcementData, setAnnouncementData] = useState<Announcement[]>([
-    { name: 'New Toll-Free Helpline Launched', date: '2024-01-22' },
-    { name: 'Upcoming Anti-Drug Awareness Event', date: '2024-01-25' },
-  ]);
-  const [trainingData, setTrainingData] = useState<TrainingSession[]>([]);
+  
+  // Initialize with actual data from data files
+  const [newsData, setNewsData] = useState<NewsItem[]>(initialNewsData);
+  const [announcementData, setAnnouncementData] = useState<AnnouncementItem[]>(initialAnnouncementData);
+  const [trainingData, setTrainingData] = useState<TrainingSession[]>(initialTrainingData);
   const [achievementsData, setAchievementsData] = useState<Achievement[]>([]);
   const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>([]);
-  const [faqsData, setFaqsData] = useState<FAQItem[]>([]);
-  const [scrollingData, setScrollingData] = useState<any[]>([]);
+  const [faqsData, setFaqsData] = useState<FAQItem[]>(initialFaqsData.map(faq => ({
+    question: faq.question,
+    answer: faq.answer,
+    category: 'General'
+  })));
+  const [scrollingData, setScrollingData] = useState<any[]>(initialScrollingData);
   const [totalReports, setTotalReports] = useState(100);
   const [drugReports, setDrugReports] = useState<DrugReport[]>(drugReportsData);
 
@@ -150,11 +142,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setNewsData(prev => prev.filter((_, i) => i !== index));
   };
 
-  const addAnnouncement = (announcement: Announcement) => {
+  const addAnnouncement = (announcement: AnnouncementItem) => {
     setAnnouncementData(prev => [announcement, ...prev]);
   };
 
-  const updateAnnouncement = (index: number, announcement: Announcement) => {
+  const updateAnnouncement = (index: number, announcement: AnnouncementItem) => {
     setAnnouncementData(prev => {
       const newData = [...prev];
       newData[index] = announcement;
