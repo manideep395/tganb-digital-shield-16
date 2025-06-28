@@ -1,10 +1,32 @@
+import React, { createContext, useState, useContext } from 'react';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { newsData as initialNewsData, NewsItem } from '../data/newsData';
-import { announcementData as initialAnnouncementData, AnnouncementItem } from '../data/announcementData';
-import { trainingData as initialTrainingData, TrainingSession } from '../data/trainingData';
-import { achievementsData as initialAchievementsData, Achievement } from '../data/achievementsData';
-import { celebrityVideos as initialCelebrityVideos } from '../data/celebrityVideos';
+interface NewsItem {
+  title: string;
+  subtitle?: string;
+  description: string;
+  imageUrl: string;
+  date: string;
+  newsType: string;
+}
+
+interface Announcement {
+  name: string;
+  date: string;
+}
+
+interface Training {
+  title: string;
+  description: string;
+  imageUrl: string;
+  date: string;
+}
+
+interface Achievement {
+  title: string;
+  description: string;
+  imageUrl: string;
+  date: string;
+}
 
 interface CelebrityVideo {
   name: string;
@@ -18,92 +40,154 @@ interface FAQItem {
   category: string;
 }
 
+import { drugReportsData, DrugReport } from '../data/drugReportsData';
+
 interface AdminContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
+  login: (password: string) => boolean;
   logout: () => void;
   newsData: NewsItem[];
-  announcementData: AnnouncementItem[];
-  trainingData: TrainingSession[];
-  achievementsData: Achievement[];
-  celebrityVideos: CelebrityVideo[];
-  faqsData: FAQItem[];
-  scrollingData: any[];
-  totalReports: number;
-  // News management
   addNews: (news: NewsItem) => void;
   updateNews: (index: number, news: NewsItem) => void;
   deleteNews: (index: number) => void;
-  // Announcement management
-  addAnnouncement: (announcement: AnnouncementItem) => void;
-  updateAnnouncement: (index: number, announcement: AnnouncementItem) => void;
+  announcementData: Announcement[];
+  addAnnouncement: (announcement: Announcement) => void;
+  updateAnnouncement: (index: number, announcement: Announcement) => void;
   deleteAnnouncement: (index: number) => void;
-  // Training management
-  addTraining: (training: TrainingSession) => void;
-  updateTraining: (index: number, training: TrainingSession) => void;
+  trainingData: Training[];
+  addTraining: (training: Training) => void;
+  updateTraining: (index: number, training: Training) => void;
   deleteTraining: (index: number) => void;
-  // Achievement management
+  achievementsData: Achievement[];
   addAchievement: (achievement: Achievement) => void;
   updateAchievement: (index: number, achievement: Achievement) => void;
   deleteAchievement: (index: number) => void;
-  // Celebrity video management
+  celebrityVideos: CelebrityVideo[];
   addCelebrityVideo: (video: CelebrityVideo) => void;
   updateCelebrityVideo: (index: number, video: CelebrityVideo) => void;
   deleteCelebrityVideo: (index: number) => void;
-  // FAQ management
+  faqsData: FAQItem[];
   addFAQ: (faq: FAQItem) => void;
   updateFAQ: (index: number, faq: FAQItem) => void;
   deleteFAQ: (index: number) => void;
-  // Scrolling data management
-  updateScrollingData: (data: any[]) => void;
+  scrollingData: { news: NewsItem[]; announcements: Announcement[] };
+  updateScrollingData: (data: { news: NewsItem[]; announcements: Announcement[] }) => void;
+  totalReports: number;
+  drugReports: DrugReport[];
+  addDrugReport: (report: Omit<DrugReport, 'id' | 'submittedAt' | 'evidenceFileName'>) => void;
+  updateDrugReportStatus: (id: string, status: DrugReport['status']) => void;
+  deleteDrugReport: (id: string) => void;
 }
 
-const AdminContext = createContext<AdminContextType | undefined>(undefined);
+const AdminContext = createContext<AdminContextType>({
+  isAuthenticated: false,
+  login: () => false,
+  logout: () => {},
+  newsData: [],
+  addNews: () => {},
+  updateNews: () => {},
+  deleteNews: () => {},
+  announcementData: [],
+  addAnnouncement: () => {},
+  updateAnnouncement: () => {},
+  deleteAnnouncement: () => {},
+  trainingData: [],
+  addTraining: () => {},
+  updateTraining: () => {},
+  deleteTraining: () => {},
+  achievementsData: [],
+  addAchievement: () => {},
+  updateAchievement: () => {},
+  deleteAchievement: () => {},
+  celebrityVideos: [],
+  addCelebrityVideo: () => {},
+  updateCelebrityVideo: () => {},
+  deleteCelebrityVideo: () => {},
+  faqsData: [],
+  addFAQ: () => {},
+  updateFAQ: () => {},
+  deleteFAQ: () => {},
+  scrollingData: { news: [], announcements: [] },
+  updateScrollingData: () => {},
+  totalReports: 100,
+  drugReports: [],
+  addDrugReport: () => {},
+  updateDrugReportStatus: () => {},
+  deleteDrugReport: () => {},
+});
 
-export const useAdmin = () => {
-  const context = useContext(AdminContext);
-  if (!context) {
-    throw new Error('useAdmin must be used within AdminProvider');
-  }
-  return context;
-};
+export const useAdmin = () => useContext(AdminContext);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [newsData, setNewsData] = useState<NewsItem[]>(initialNewsData);
-  const [announcementData, setAnnouncementData] = useState<AnnouncementItem[]>(initialAnnouncementData);
-  const [trainingData, setTrainingData] = useState<TrainingSession[]>(initialTrainingData);
-  const [achievementsData, setAchievementsData] = useState<Achievement[]>(initialAchievementsData);
-  const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>(initialCelebrityVideos);
-  const [faqsData, setFaqsData] = useState<FAQItem[]>([]);
-  const [scrollingData, setScrollingData] = useState<any[]>([]);
-  const [totalReports, setTotalReports] = useState(0);
+  const [newsData, setNewsData] = useState<NewsItem[]>([
+    {
+      title: 'TGANB Conducts Raids on Illegal Drug Dens',
+      subtitle: 'Several arrests made in Hyderabad',
+      description: 'The Telangana Anti-Narcotics Bureau (TGANB) conducted a series of raids on illegal drug dens in Hyderabad, resulting in the arrest of several individuals involved in drug trafficking and consumption.',
+      imageUrl: '/uploads/naga-vamsi-yeduguru-N2tjpn9eqOc-unsplash.jpg',
+      date: '2024-01-20',
+      newsType: 'Breaking News',
+    },
+    {
+      title: 'Awareness Campaign Launched in Schools',
+      description: 'TGANB has launched an awareness campaign in schools across Telangana to educate students about the dangers of drug abuse and promote a healthy lifestyle.',
+      imageUrl: '/uploads/pexels-pixabay-267885.jpg',
+      date: '2024-01-18',
+      newsType: 'Important Update',
+    },
+    {
+      title: 'TGANB Receives National Award for Excellence',
+      description: 'The Telangana Anti-Narcotics Bureau (TGANB) has been awarded the National Award for Excellence in combating drug trafficking and substance abuse.',
+      imageUrl: '/uploads/pexels-rodnae-productions-7368244.jpg',
+      date: '2024-01-15',
+      newsType: 'Achievement',
+    },
+  ]);
+  const [announcementData, setAnnouncementData] = useState<Announcement[]>([
+    { name: 'New Toll-Free Helpline Launched', date: '2024-01-22' },
+    { name: 'Upcoming Anti-Drug Awareness Event', date: '2024-01-25' },
+  ]);
+  const [trainingData, setTrainingData] = useState<Training[]>([
+    {
+      title: 'Advanced Drug Interdiction Techniques',
+      description: 'A comprehensive training program for law enforcement officers on advanced drug interdiction techniques.',
+      imageUrl: '/uploads/pexels-august-de-richelieu-4262415.jpg',
+      date: '2024-02-01',
+    },
+  ]);
+  const [achievementsData, setAchievementsData] = useState<Achievement[]>([
+    {
+      title: 'Record Seizure of Cocaine',
+      description: 'TGANB seizes a record amount of cocaine in a single operation, disrupting a major drug trafficking network.',
+      imageUrl: '/uploads/pexels-pixabay-164693.jpg',
+      date: '2024-01-28',
+    },
+  ]);
+  const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>([
+    {
+      name: 'Samantha Akkineni',
+      designation: 'Actor',
+      videoUrl: 'https://www.youtube.com/watch?v=Y3qj5n69Ghk',
+    },
+  ]);
+  const [faqsData, setFaqsData] = useState<FAQItem[]>([
+    {
+      question: 'What is the role of TGANB?',
+      answer: 'The Telangana Anti-Narcotics Bureau (TGANB) is responsible for combating drug trafficking and substance abuse in Telangana.',
+      category: 'General',
+    },
+  ]);
+  const [scrollingData, setScrollingData] = useState<{ news: NewsItem[]; announcements: Announcement[] }>({
+    news: newsData,
+    announcements: announcementData,
+  });
+  const [totalReports, setTotalReports] = useState(100);
+  const [drugReports, setDrugReports] = useState<DrugReport[]>(drugReportsData);
 
-  // Load data from localStorage on mount
-  useEffect(() => {
-    const storedAuth = localStorage.getItem('admin-auth');
-    const storedNews = localStorage.getItem('admin-news');
-    const storedAnnouncements = localStorage.getItem('admin-announcements');
-    const storedTrainings = localStorage.getItem('admin-trainings');
-    const storedAchievements = localStorage.getItem('admin-achievements');
-    const storedCelebrityVideos = localStorage.getItem('admin-celebrity-videos');
-    const storedFAQs = localStorage.getItem('admin-faqs');
-    const storedReports = localStorage.getItem('admin-reports');
-
-    if (storedAuth) setIsAuthenticated(JSON.parse(storedAuth));
-    if (storedNews) setNewsData(JSON.parse(storedNews));
-    if (storedAnnouncements) setAnnouncementData(JSON.parse(storedAnnouncements));
-    if (storedTrainings) setTrainingData(JSON.parse(storedTrainings));
-    if (storedAchievements) setAchievementsData(JSON.parse(storedAchievements));
-    if (storedCelebrityVideos) setCelebrityVideos(JSON.parse(storedCelebrityVideos));
-    if (storedFAQs) setFaqsData(JSON.parse(storedFAQs));
-    if (storedReports) setTotalReports(JSON.parse(storedReports));
-  }, []);
-
-  const login = (username: string, password: string): boolean => {
-    if (username === 'admin' && password === 'tganb@2024') {
+  const login = (password: string) => {
+    if (password === 'admin123') {
       setIsAuthenticated(true);
-      localStorage.setItem('admin-auth', 'true');
       return true;
     }
     return false;
@@ -111,131 +195,125 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const logout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('admin-auth');
   };
 
-  // News management functions
   const addNews = (news: NewsItem) => {
-    const updatedNews = [...newsData, news];
-    setNewsData(updatedNews);
-    localStorage.setItem('admin-news', JSON.stringify(updatedNews));
+    setNewsData(prev => [news, ...prev]);
   };
 
   const updateNews = (index: number, news: NewsItem) => {
-    const updatedNews = [...newsData];
-    updatedNews[index] = news;
-    setNewsData(updatedNews);
-    localStorage.setItem('admin-news', JSON.stringify(updatedNews));
+    setNewsData(prev => {
+      const newData = [...prev];
+      newData[index] = news;
+      return newData;
+    });
   };
 
   const deleteNews = (index: number) => {
-    const updatedNews = newsData.filter((_, i) => i !== index);
-    setNewsData(updatedNews);
-    localStorage.setItem('admin-news', JSON.stringify(updatedNews));
+    setNewsData(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Announcement management functions
-  const addAnnouncement = (announcement: AnnouncementItem) => {
-    const updatedAnnouncements = [...announcementData, announcement];
-    setAnnouncementData(updatedAnnouncements);
-    localStorage.setItem('admin-announcements', JSON.stringify(updatedAnnouncements));
+  const addAnnouncement = (announcement: Announcement) => {
+    setAnnouncementData(prev => [announcement, ...prev]);
   };
 
-  const updateAnnouncement = (index: number, announcement: AnnouncementItem) => {
-    const updatedAnnouncements = [...announcementData];
-    updatedAnnouncements[index] = announcement;
-    setAnnouncementData(updatedAnnouncements);
-    localStorage.setItem('admin-announcements', JSON.stringify(updatedAnnouncements));
+  const updateAnnouncement = (index: number, announcement: Announcement) => {
+    setAnnouncementData(prev => {
+      const newData = [...prev];
+      newData[index] = announcement;
+      return newData;
+    });
   };
 
   const deleteAnnouncement = (index: number) => {
-    const updatedAnnouncements = announcementData.filter((_, i) => i !== index);
-    setAnnouncementData(updatedAnnouncements);
-    localStorage.setItem('admin-announcements', JSON.stringify(updatedAnnouncements));
+    setAnnouncementData(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Training management functions
-  const addTraining = (training: TrainingSession) => {
-    const updatedTrainings = [...trainingData, { ...training, id: Date.now() }];
-    setTrainingData(updatedTrainings);
-    localStorage.setItem('admin-trainings', JSON.stringify(updatedTrainings));
+  const addTraining = (training: Training) => {
+    setTrainingData(prev => [training, ...prev]);
   };
 
-  const updateTraining = (index: number, training: TrainingSession) => {
-    const updatedTrainings = [...trainingData];
-    updatedTrainings[index] = training;
-    setTrainingData(updatedTrainings);
-    localStorage.setItem('admin-trainings', JSON.stringify(updatedTrainings));
+  const updateTraining = (index: number, training: Training) => {
+    setTrainingData(prev => {
+      const newData = [...prev];
+      newData[index] = training;
+      return newData;
+    });
   };
 
   const deleteTraining = (index: number) => {
-    const updatedTrainings = trainingData.filter((_, i) => i !== index);
-    setTrainingData(updatedTrainings);
-    localStorage.setItem('admin-trainings', JSON.stringify(updatedTrainings));
+    setTrainingData(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Achievement management functions
   const addAchievement = (achievement: Achievement) => {
-    const updatedAchievements = [...achievementsData, achievement];
-    setAchievementsData(updatedAchievements);
-    localStorage.setItem('admin-achievements', JSON.stringify(updatedAchievements));
+    setAchievementsData(prev => [achievement, ...prev]);
   };
 
   const updateAchievement = (index: number, achievement: Achievement) => {
-    const updatedAchievements = [...achievementsData];
-    updatedAchievements[index] = achievement;
-    setAchievementsData(updatedAchievements);
-    localStorage.setItem('admin-achievements', JSON.stringify(updatedAchievements));
+    setAchievementsData(prev => {
+      const newData = [...prev];
+      newData[index] = achievement;
+      return newData;
+    });
   };
 
   const deleteAchievement = (index: number) => {
-    const updatedAchievements = achievementsData.filter((_, i) => i !== index);
-    setAchievementsData(updatedAchievements);
-    localStorage.setItem('admin-achievements', JSON.stringify(updatedAchievements));
+    setAchievementsData(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Celebrity video management functions
   const addCelebrityVideo = (video: CelebrityVideo) => {
-    const updatedVideos = [...celebrityVideos, video];
-    setCelebrityVideos(updatedVideos);
-    localStorage.setItem('admin-celebrity-videos', JSON.stringify(updatedVideos));
+    setCelebrityVideos(prev => [video, ...prev]);
   };
 
   const updateCelebrityVideo = (index: number, video: CelebrityVideo) => {
-    const updatedVideos = [...celebrityVideos];
-    updatedVideos[index] = video;
-    setCelebrityVideos(updatedVideos);
-    localStorage.setItem('admin-celebrity-videos', JSON.stringify(updatedVideos));
+    setCelebrityVideos(prev => {
+      const newData = [...prev];
+      newData[index] = video;
+      return newData;
+    });
   };
 
   const deleteCelebrityVideo = (index: number) => {
-    const updatedVideos = celebrityVideos.filter((_, i) => i !== index);
-    setCelebrityVideos(updatedVideos);
-    localStorage.setItem('admin-celebrity-videos', JSON.stringify(updatedVideos));
+    setCelebrityVideos(prev => prev.filter((_, i) => i !== index));
   };
 
-  // FAQ management functions
   const addFAQ = (faq: FAQItem) => {
-    const updatedFAQs = [...faqsData, faq];
-    setFaqsData(updatedFAQs);
-    localStorage.setItem('admin-faqs', JSON.stringify(updatedFAQs));
+    setFaqsData(prev => [faq, ...prev]);
   };
 
   const updateFAQ = (index: number, faq: FAQItem) => {
-    const updatedFAQs = [...faqsData];
-    updatedFAQs[index] = faq;
-    setFaqsData(updatedFAQs);
-    localStorage.setItem('admin-faqs', JSON.stringify(updatedFAQs));
+    setFaqsData(prev => {
+      const newData = [...prev];
+      newData[index] = faq;
+      return newData;
+    });
   };
 
   const deleteFAQ = (index: number) => {
-    const updatedFAQs = faqsData.filter((_, i) => i !== index);
-    setFaqsData(updatedFAQs);
-    localStorage.setItem('admin-faqs', JSON.stringify(updatedFAQs));
+    setFaqsData(prev => prev.filter((_, i) => i !== index));
   };
 
-  const updateScrollingData = (data: any[]) => {
+  const updateScrollingData = (data: { news: NewsItem[]; announcements: Announcement[] }) => {
     setScrollingData(data);
+  };
+
+  const addDrugReport = (report: Omit<DrugReport, 'id' | 'submittedAt' | 'evidenceFileName'>) => {
+    const newReport: DrugReport = {
+      ...report,
+      id: Date.now().toString(),
+      submittedAt: new Date().toISOString()
+    };
+    setDrugReports(prev => [newReport, ...prev]);
+  };
+
+  const updateDrugReportStatus = (id: string, status: DrugReport['status']) => {
+    setDrugReports(prev => prev.map(report => 
+      report.id === id ? { ...report, status } : report
+    ));
+  };
+
+  const deleteDrugReport = (id: string) => {
+    setDrugReports(prev => prev.filter(report => report.id !== id));
   };
 
   const value = {
@@ -243,37 +321,37 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     login,
     logout,
     newsData,
-    announcementData,
-    trainingData,
-    achievementsData,
-    celebrityVideos,
-    faqsData,
-    scrollingData,
-    totalReports,
     addNews,
     updateNews,
     deleteNews,
+    announcementData,
     addAnnouncement,
     updateAnnouncement,
     deleteAnnouncement,
+    trainingData,
     addTraining,
     updateTraining,
     deleteTraining,
+    achievementsData,
     addAchievement,
     updateAchievement,
     deleteAchievement,
+    celebrityVideos,
     addCelebrityVideo,
     updateCelebrityVideo,
     deleteCelebrityVideo,
+    faqsData,
     addFAQ,
     updateFAQ,
     deleteFAQ,
-    updateScrollingData
+    scrollingData,
+    updateScrollingData,
+    totalReports,
+    drugReports,
+    addDrugReport,
+    updateDrugReportStatus,
+    deleteDrugReport,
   };
 
-  return (
-    <AdminContext.Provider value={value}>
-      {children}
-    </AdminContext.Provider>
-  );
+  return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
 };

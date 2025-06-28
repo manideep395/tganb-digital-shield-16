@@ -1,4 +1,3 @@
-
 import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -29,7 +28,7 @@ const AdminDashboard = () => {
     achievementsData,
     celebrityVideos,
     faqsData,
-    totalReports 
+    drugReports
   } = useAdmin();
   const navigate = useNavigate();
 
@@ -50,11 +49,11 @@ const AdminDashboard = () => {
 
   const statsData = [
     {
-      title: 'Total Reports',
-      value: totalReports,
+      title: 'Drug Reports',
+      value: drugReports.length,
       icon: FileText,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
+      color: 'text-red-600',
+      bgColor: 'bg-red-100'
     },
     {
       title: 'News Articles',
@@ -101,6 +100,14 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
+    {
+      title: 'Manage Drug Reports',
+      description: 'View and manage submitted drug reports',
+      icon: FileText,
+      action: () => navigate('/admin/drug-reports'),
+      color: 'bg-gradient-to-r from-red-500 to-red-600',
+      count: drugReports.length
+    },
     {
       title: 'Manage News',
       description: 'Add, edit, or remove news articles',

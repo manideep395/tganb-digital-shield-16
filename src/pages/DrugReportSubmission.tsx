@@ -9,11 +9,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { useAdmin } from '@/contexts/AdminContext';
 import { telanganaDistricts } from '@/data/districts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Shield, FileText, AlertTriangle, Phone } from 'lucide-react';
+import { Shield, FileText, AlertTriangle, Phone, MapPin } from 'lucide-react';
 
 const DrugReportSubmission = () => {
   const [isAnonymous, setIsAnonymous] = useState(true);
@@ -21,6 +21,7 @@ const DrugReportSubmission = () => {
   const [dateUnknown, setDateUnknown] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { addDrugReport } = useAdmin();
 
   const [formData, setFormData] = useState({
     reporterName: '',
@@ -39,6 +40,12 @@ const DrugReportSubmission = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setFormData(prev => ({ ...prev, evidenceFile: file }));
+  };
+
+  const handleMapRedirect = () => {
+    const query = formData.locationIncident || 'Telangana, India';
+    const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(query)}`;
+    window.open(mapUrl, '_blank');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,33 +73,20 @@ const DrugReportSubmission = () => {
 
     try {
       const reportData = {
-        report_type: reportType,
-        is_anonymous: isAnonymous,
-        reporter_name: isAnonymous ? null : formData.reporterName,
-        reporter_email: isAnonymous ? null : formData.reporterEmail,
-        reporter_phone: isAnonymous ? null : formData.reporterPhone,
-        location_incident: formData.locationIncident,
-        incident_date_time: dateUnknown ? null : (formData.incidentDateTime || null),
-        date_unknown: dateUnknown,
-        detailed_description: formData.detailedDescription,
-        evidence_file_name: formData.evidenceFile?.name || null,
-        evidence_file_size: formData.evidenceFile?.size || null,
-        status: 'pending'
+        reportType,
+        isAnonymous,
+        reporterName: isAnonymous ? undefined : formData.reporterName,
+        reporterEmail: isAnonymous ? undefined : formData.reporterEmail,
+        reporterPhone: isAnonymous ? undefined : formData.reporterPhone,
+        locationIncident: formData.locationIncident,
+        incidentDateTime: dateUnknown ? undefined : formData.incidentDateTime,
+        dateUnknown,
+        detailedDescription: formData.detailedDescription,
+        evidenceFileName: formData.evidenceFile?.name,
+        status: 'pending' as const
       };
 
-      console.log('Submitting report data:', reportData);
-
-      const { data, error } = await supabase
-        .from('drug_reports')
-        .insert([reportData])
-        .select();
-
-      if (error) {
-        console.error('Database error:', error);
-        throw error;
-      }
-
-      console.log('Report submitted successfully:', data);
+      addDrugReport(reportData);
 
       toast({
         title: "Success!",
@@ -117,7 +111,7 @@ const DrugReportSubmission = () => {
       console.error('Submission error:', error);
       toast({
         title: "Submission Failed",
-        description: "Failed to submit report. Please check your internet connection and try again.",
+        description: "Failed to submit report. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -251,18 +245,28 @@ const DrugReportSubmission = () => {
                   <Label htmlFor="location" className="text-base font-semibold text-gray-700 mb-2 block">
                     Location of Incident <span className="text-red-500">*</span>
                   </Label>
-                  <Select value={formData.locationIncident} onValueChange={(value) => handleInputChange('locationIncident', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select district where incident occurred" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {telanganaDistricts.map((district) => (
-                        <SelectItem key={district} value={district}>
-                          {district}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex gap-2">
+                    <Select value={formData.locationIncident} onValueChange={(value) => handleInputChange('locationIncident', value)}>
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Select district where incident occurred" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {telanganaDistricts.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleMapRedirect}
+                      className="px-3"
+                    >
+                      <MapPin className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Date and Time */}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Index from './pages/Index';
@@ -46,6 +45,7 @@ import AdminAchievements from './pages/AdminAchievements';
 import AdminCelebrityVideos from './pages/AdminCelebrityVideos';
 import AdminFAQs from './pages/AdminFAQs';
 import AdminScrollingData from './pages/AdminScrollingData';
+import AdminDrugReports from './pages/AdminDrugReports';
 import { AdminProvider } from './contexts/AdminContext';
 
 const queryClient = new QueryClient();
@@ -102,6 +102,7 @@ function App() {
             <Route path="/admin/celebrity-videos" element={<AdminCelebrityVideos />} />
             <Route path="/admin/faqs" element={<AdminFAQs />} />
             <Route path="/admin/scrolling-data" element={<AdminScrollingData />} />
+            <Route path="/admin/drug-reports" element={<AdminDrugReports />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
