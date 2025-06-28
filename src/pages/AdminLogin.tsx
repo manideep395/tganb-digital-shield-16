@@ -58,6 +58,10 @@ const AdminLogin = () => {
             Telangana Anti-Narcotics Bureau
             <br />
             Secure Administrator Access
+            <br />
+            <span className="text-sm text-blue-600 mt-2 block">
+              Username: admin | Password: admin123
+            </span>
           </CardDescription>
         </CardHeader>
         
