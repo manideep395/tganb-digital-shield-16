@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -69,6 +68,12 @@ const AntiDrugSoldierForm = () => {
     return `ADS/${timestamp}${random}`.toUpperCase();
   };
 
+  const validateInput = (input: string) => {
+    return input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -79,13 +84,15 @@ const AntiDrugSoldierForm = () => {
       // Upload photo if provided
       if (formData.photo) {
         const fileExt = formData.photo.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
+        const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
         
-        const { error: uploadError } = await supabase.storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
           .from('soldier-photos')
           .upload(fileName, formData.photo);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          throw uploadError;
+        }
 
         const { data: { publicUrl } } = supabase.storage
           .from('soldier-photos')
@@ -96,33 +103,35 @@ const AntiDrugSoldierForm = () => {
 
       const certificateId = generateCertificateId();
 
-      // Insert into database
+      // Insert into anti_drug_soldiers table with input validation
       const { error: insertError } = await supabase
         .from('anti_drug_soldiers')
         .insert({
-          name: formData.name,
-          parent_guardian_name: formData.parentGuardianName,
+          name: validateInput(formData.name),
+          parent_guardian_name: validateInput(formData.parentGuardianName),
           gender: formData.gender,
-          mobile_number: formData.mobileNumber,
-          email: formData.email,
-          address: formData.address,
+          mobile_number: validateInput(formData.mobileNumber),
+          email: validateInput(formData.email),
+          address: validateInput(formData.address),
           district: formData.district,
-          institution_name: formData.institutionName,
+          institution_name: validateInput(formData.institutionName),
           institution_type: formData.institutionType,
-          class_course_designation: formData.classCourseDesignation,
+          class_course_designation: validateInput(formData.classCourseDesignation),
           photo_url: photoUrl,
-          remarks: formData.remarks,
+          remarks: validateInput(formData.remarks || ''),
           certificate_id: certificateId
         });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        throw insertError;
+      }
 
-      // Insert into verification table
+      // Insert into certificate_verification table
       await supabase
         .from('certificate_verification')
         .insert({
           certificate_id: certificateId,
-          student_name: formData.name
+          student_name: validateInput(formData.name)
         });
 
       // Generate and download certificate

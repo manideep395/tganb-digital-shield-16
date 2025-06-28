@@ -36,8 +36,14 @@ const CertificateVerification = () => {
     }
   }, [searchParams]);
 
+  const validateInput = (input: string) => {
+    return input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '');
+  };
+
   const handleVerification = async (certificateId?: string) => {
-    const searchValue = certificateId || searchTerm;
+    const searchValue = validateInput(certificateId || searchTerm);
     if (!searchValue.trim()) {
       toast({
         title: "Error",
