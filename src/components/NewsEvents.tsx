@@ -1,146 +1,108 @@
 
-import { Button } from '@/components/ui/button';
-import { newsData } from '../data/newsData';
-import { announcementData } from '../data/announcementData';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Calendar, ExternalLink, ArrowRight } from 'lucide-react';
+import { useAdmin } from '../contexts/AdminContext';
 
 const NewsEvents = () => {
-  const navigate = useNavigate();
+  const { newsData } = useAdmin();
+  const [visibleCount, setVisibleCount] = useState(6);
 
-  const getNewsTypeColor = (newsType: string) => {
-    switch (newsType) {
-      case 'Breaking News':
-        return 'bg-red-100 text-red-600';
-      case 'Shocking News':
-        return 'bg-orange-100 text-orange-600';
-      case 'Important Update':
-        return 'bg-blue-100 text-blue-600';
-      case 'Achievement':
-        return 'bg-green-100 text-green-600';
-      case 'Alert':
-        return 'bg-yellow-100 text-yellow-600';
-      default:
-        return 'bg-blue-100 text-blue-600';
-    }
+  const loadMore = () => {
+    setVisibleCount(prev => prev + 6);
   };
 
-  const handleReadMore = (index: number) => {
-    navigate(`/news/${index}`);
-  };
-
-  const handleLearnMore = () => {
-    navigate('/news');
-  };
+  const visibleNews = newsData.slice(0, visibleCount);
 
   return (
-    <section className="py-8 bg-gradient-to-br from-slate-50 to-gray-100 font-poppins">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Latest News & Announcements</h2>
+    <section className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Latest News & Updates
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Stay informed about our ongoing efforts, achievements, and important developments in the fight against drug abuse
+          </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Latest News Section - Show latest 3 news */}
-          <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-              📰 Latest News
-            </h3>
-            <div className="space-y-4">
-              {newsData.slice(0, 3).map((news, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden p-4 h-64"
-                >
-                  <div className="flex items-start gap-4 h-full">
-                    <img 
-                      src={news.imageUrl} 
-                      alt={news.title}
-                      className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
-                    />
-                    <div className="flex-1 flex flex-col">
-                      <div className="flex items-start justify-between mb-2">
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                          {news.date}
-                        </span>
-                        <span className={`text-xs px-2 py-1 rounded-full ${getNewsTypeColor(news.newsType)}`}>
-                          {news.newsType}
-                        </span>
-                      </div>
-                      <h4 className="text-sm font-bold text-gray-800 mb-2 hover:text-blue-600 cursor-pointer transition-colors line-clamp-2">
-                        {news.title}
-                      </h4>
-                      {news.subtitle && (
-                        <p className="text-xs text-blue-600 font-semibold mb-2 line-clamp-1">{news.subtitle}</p>
-                      )}
-                      <div className="mt-auto">
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          className="text-blue-600 hover:text-blue-700 p-0 text-xs"
-                          onClick={() => handleReadMore(index)}
-                        >
-                          Read Full Article →
-                        </Button>
-                      </div>
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {visibleNews.map((news, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              {news.imageUrl && (
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={news.imageUrl} 
+                    alt={news.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              )}
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    news.newsType === 'Breaking News' ? 'bg-red-100 text-red-800' :
+                    news.newsType === 'Achievement' ? 'bg-green-100 text-green-800' :
+                    news.newsType === 'Event' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {news.newsType}
+                  </span>
+                  <div className="flex items-center text-gray-500 text-sm">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    {news.date}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Latest Announcements Section */}
-          <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-              📢 Latest Announcements
-            </h3>
-            <div className="space-y-4">
-              {announcementData.slice(0, 1).map((announcement, index) => (
-                <div
-                  key={index}
-                  className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300 h-64 flex flex-col"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                      {announcement.date}
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-gray-800 mb-2 line-clamp-2">
-                    {announcement.name}
-                  </h4>
-                  <div className="mt-auto">
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm"
-                        className="bg-yellow-600 hover:bg-yellow-700 rounded-full text-xs"
-                        onClick={handleLearnMore}
-                      >
-                        Learn More
-                      </Button>
-                      {announcement.attachmentLink && (
-                        <Button 
-                          size="sm"
-                          variant="outline"
-                          className="rounded-full text-xs"
-                          onClick={() => window.open(announcement.attachmentLink, '_blank')}
-                        >
-                          Download
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                  {news.title}
+                </h3>
+                <p className="text-gray-600 mb-4 line-clamp-3">
+                  {news.description}
+                </p>
+                <div className="flex items-center justify-between">
+                  {news.link && (
+                    <a 
+                      href={news.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Read More
+                      <ExternalLink className="w-4 h-4 ml-1" />
+                    </a>
+                  )}
+                  <Link 
+                    to={`/news/${encodeURIComponent(news.title)}`}
+                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    View Details
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Link>
                 </div>
-              ))}
+              </div>
             </div>
+          ))}
+        </div>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl border-l-4 border-blue-500">
-              <h4 className="font-bold text-gray-800 mb-2 text-sm">🚨 Emergency Helpline</h4>
-              <p className="text-sm text-gray-700 mb-2">
-                Report drug-related crimes immediately on our 24/7 helpline
-              </p>
-              <div className="text-2xl font-bold text-red-600">1908</div>
-            </div>
+        {visibleCount < newsData.length && (
+          <div className="text-center">
+            <button 
+              onClick={loadMore}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-300"
+            >
+              Load More News
+            </button>
           </div>
+        )}
+
+        <div className="text-center mt-8">
+          <Link 
+            to="/news"
+            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-lg"
+          >
+            View All News & Events
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Link>
         </div>
       </div>
     </section>

@@ -1,360 +1,350 @@
-
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { useAdmin } from '@/contexts/AdminContext';
-import { telanganaDistricts } from '@/data/districts';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Shield, FileText, AlertTriangle, Phone, MapPin } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Shield, AlertTriangle, FileText, Send, ArrowLeft } from 'lucide-react';
+import { useAdmin } from '../contexts/AdminContext';
 
 const DrugReportSubmission = () => {
-  const [isAnonymous, setIsAnonymous] = useState(true);
-  const [reportType, setReportType] = useState('');
-  const [dateUnknown, setDateUnknown] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const navigate = useNavigate();
   const { addDrugReport } = useAdmin();
-
+  
   const [formData, setFormData] = useState({
+    reportType: '',
+    isAnonymous: false,
     reporterName: '',
     reporterEmail: '',
     reporterPhone: '',
     locationIncident: '',
     incidentDateTime: '',
-    detailedDescription: '',
-    evidenceFile: null as File | null
+    dateUnknown: false,
+    detailedDescription: ''
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData(prev => ({ ...prev, evidenceFile: file }));
-  };
+  const districts = [
+    'Adilabad', 'Bhadradri Kothagudem', 'Hyderabad', 'Jagtial', 'Jangaon', 'Jayashankar',
+    'Jogulamba', 'Kamareddy', 'Karimnagar', 'Khammam', 'Komaram Bheem', 'Mahabubabad',
+    'Mahbubnagar', 'Mancherial', 'Medak', 'Medchal', 'Mulugu', 'Nagarkurnool', 'Nalgonda',
+    'Narayanpet', 'Nirmal', 'Nizamabad', 'Peddapalli', 'Rajanna Sircilla', 'Ranga Reddy',
+    'Sangareddy', 'Siddipet', 'Suryapet', 'Vikarabad', 'Wanaparthy', 'Warangal Rural',
+    'Warangal Urban', 'Yadadri Bhuvanagiri'
+  ];
 
-  const handleMapRedirect = () => {
-    const query = formData.locationIncident || 'Telangana, India';
-    const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(query)}`;
-    window.open(mapUrl, '_blank');
-  };
+  const reportTypes = [
+    { value: 'drug_trafficking', label: 'Drug Trafficking' },
+    { value: 'drug_possession', label: 'Drug Possession' },
+    { value: 'drug_manufacturing', label: 'Drug Manufacturing' },
+    { value: 'suspicious_activity', label: 'Suspicious Activity' },
+    { value: 'drug_abuse', label: 'Drug Abuse' },
+    { value: 'other', label: 'Other' }
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!reportType) {
-      toast({
-        title: "Error",
-        description: "Please select a report type.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!formData.locationIncident || !formData.detailedDescription) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
+      // Create the report object
       const reportData = {
-        reportType,
-        isAnonymous,
-        reporterName: isAnonymous ? undefined : formData.reporterName,
-        reporterEmail: isAnonymous ? undefined : formData.reporterEmail,
-        reporterPhone: isAnonymous ? undefined : formData.reporterPhone,
+        reportType: formData.reportType,
+        isAnonymous: formData.isAnonymous,
+        reporterName: formData.isAnonymous ? undefined : formData.reporterName,
+        reporterEmail: formData.isAnonymous ? undefined : formData.reporterEmail,
+        reporterPhone: formData.isAnonymous ? undefined : formData.reporterPhone,
         locationIncident: formData.locationIncident,
-        incidentDateTime: dateUnknown ? undefined : formData.incidentDateTime,
-        dateUnknown,
+        incidentDateTime: formData.dateUnknown ? undefined : formData.incidentDateTime,
+        dateUnknown: formData.dateUnknown,
         detailedDescription: formData.detailedDescription,
-        evidenceFileName: formData.evidenceFile?.name,
         status: 'pending' as const
       };
 
+      // Add the report using admin context
       addDrugReport(reportData);
-
-      toast({
-        title: "Success!",
-        description: "Your report has been submitted successfully. Thank you for helping make our community safer.",
-      });
-
-      // Reset form
-      setFormData({
-        reporterName: '',
-        reporterEmail: '',
-        reporterPhone: '',
-        locationIncident: '',
-        incidentDateTime: '',
-        detailedDescription: '',
-        evidenceFile: null
-      });
-      setReportType('');
-      setIsAnonymous(true);
-      setDateUnknown(false);
+      
+      setSubmitted(true);
+      console.log('Drug report submitted successfully:', reportData);
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setFormData({
+          reportType: '',
+          isAnonymous: false,
+          reporterName: '',
+          reporterEmail: '',
+          reporterPhone: '',
+          locationIncident: '',
+          incidentDateTime: '',
+          dateUnknown: false,
+          detailedDescription: ''
+        });
+        setSubmitted(false);
+      }, 3000);
 
     } catch (error) {
-      console.error('Submission error:', error);
-      toast({
-        title: "Submission Failed",
-        description: "Failed to submit report. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Error submitting report:', error);
+      alert('Error submitting report. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <Header />
-      
-      <main className="py-6">
-        <div className="container mx-auto px-4 max-w-4xl">
-          {/* Header Section */}
-          <div className="text-center mb-6">
-            <div className="flex items-center justify-center mb-4">
-              <Shield className="w-8 h-8 text-blue-600 mr-3" />
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 font-poppins">
-                Drug Crime Report Submission
-              </h1>
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Send className="w-8 h-8 text-green-600" />
             </div>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Help us combat drug-related crimes in our community. Your report will be handled confidentially by our specialized team.
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Report Submitted Successfully</h2>
+            <p className="text-gray-600 mb-6">
+              Thank you for your report. Our team will review it and take appropriate action.
+            </p>
+            <Button onClick={() => navigate('/')} className="w-full">
+              Return to Home
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <Button onClick={() => navigate('/')} variant="outline" className="mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-4">
+              <Shield className="w-12 h-12 text-blue-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Drug Report Submission</h1>
+            <p className="text-lg text-gray-600">
+              Help us combat drug-related activities by reporting incidents anonymously or with your details
             </p>
           </div>
+        </div>
 
-          {/* Emergency Contact */}
-          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-4 mb-6 text-center">
-            <div className="flex items-center justify-center mb-2">
-              <Phone className="w-6 h-6 mr-2" />
-              <h3 className="text-xl font-bold">Emergency Helpline</h3>
-            </div>
-            <p className="text-sm mb-2">For immediate assistance, call our 24/7 helpline</p>
-            <div className="text-2xl font-bold">1908</div>
-          </div>
-
-          <Card className="shadow-xl border-0">
-            <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-xl">
-              <CardTitle className="flex items-center text-xl">
-                <FileText className="w-6 h-6 mr-2" />
-                Submit Your Report
-              </CardTitle>
-            </CardHeader>
-            
-            <CardContent className="p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Report Type */}
-                <div>
-                  <Label className="text-base font-semibold text-gray-700 mb-3 block">
-                    Type of Report <span className="text-red-500">*</span>
-                  </Label>
-                  <RadioGroup value={reportType} onValueChange={setReportType} className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
-                      <RadioGroupItem value="drug_trafficking" id="trafficking" />
-                      <Label htmlFor="trafficking" className="cursor-pointer">Drug Trafficking</Label>
-                    </div>
-                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
-                      <RadioGroupItem value="drug_possession" id="possession" />
-                      <Label htmlFor="possession" className="cursor-pointer">Drug Possession</Label>
-                    </div>
-                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
-                      <RadioGroupItem value="drug_manufacturing" id="manufacturing" />
-                      <Label htmlFor="manufacturing" className="cursor-pointer">Drug Manufacturing</Label>
-                    </div>
-                    <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-blue-50 transition-colors">
-                      <RadioGroupItem value="suspicious_activity" id="suspicious" />
-                      <Label htmlFor="suspicious" className="cursor-pointer">Suspicious Activity</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                {/* Anonymous Reporting */}
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <div className="flex items-start space-x-2">
-                    <Checkbox 
-                      id="anonymous" 
-                      checked={isAnonymous} 
-                      onCheckedChange={(checked) => setIsAnonymous(checked === true)}
-                      className="mt-1"
-                    />
-                    <div>
-                      <Label htmlFor="anonymous" className="font-semibold text-gray-700 cursor-pointer">
-                        Submit Anonymously
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Your identity will be protected. We recommend anonymous reporting for your safety.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact Information - Only if not anonymous */}
-                {!isAnonymous && (
-                  <div className="grid md:grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
-                    <div>
-                      <Label htmlFor="name" className="text-sm font-medium text-gray-700">Full Name</Label>
-                      <Input
-                        id="name"
-                        value={formData.reporterName}
-                        onChange={(e) => handleInputChange('reporterName', e.target.value)}
-                        className="mt-1"
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.reporterEmail}
-                        onChange={(e) => handleInputChange('reporterEmail', e.target.value)}
-                        className="mt-1"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        value={formData.reporterPhone}
-                        onChange={(e) => handleInputChange('reporterPhone', e.target.value)}
-                        className="mt-1"
-                        placeholder="Your phone number"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Location */}
-                <div>
-                  <Label htmlFor="location" className="text-base font-semibold text-gray-700 mb-2 block">
-                    Location of Incident <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="flex gap-2">
-                    <Select value={formData.locationIncident} onValueChange={(value) => handleInputChange('locationIncident', value)}>
-                      <SelectTrigger className="flex-1">
-                        <SelectValue placeholder="Select district where incident occurred" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <FileText className="w-5 h-5 mr-2" />
+                  Report Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Report Type */}
+                  <div>
+                    <Label htmlFor="reportType">Report Type *</Label>
+                    <Select value={formData.reportType} onValueChange={(value) => setFormData({...formData, reportType: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the type of incident" />
                       </SelectTrigger>
                       <SelectContent>
-                        {telanganaDistricts.map((district) => (
-                          <SelectItem key={district} value={district}>
-                            {district}
+                        {reportTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={handleMapRedirect}
-                      className="px-3"
-                    >
-                      <MapPin className="w-4 h-4" />
-                    </Button>
                   </div>
-                </div>
 
-                {/* Date and Time */}
-                <div>
-                  <Label className="text-base font-semibold text-gray-700 mb-2 block">Incident Date & Time</Label>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
+                  {/* Anonymous Reporting */}
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="anonymous"
+                      checked={formData.isAnonymous}
+                      onCheckedChange={(checked) => setFormData({...formData, isAnonymous: !!checked})}
+                    />
+                    <Label htmlFor="anonymous" className="text-sm font-medium">
+                      Submit this report anonymously
+                    </Label>
+                  </div>
+
+                  {/* Reporter Information */}
+                  {!formData.isAnonymous && (
+                    <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
+                      <h3 className="font-semibold text-blue-900">Reporter Information</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="reporterName">Full Name *</Label>
+                          <Input
+                            id="reporterName"
+                            value={formData.reporterName}
+                            onChange={(e) => setFormData({...formData, reporterName: e.target.value})}
+                            placeholder="Enter your full name"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="reporterEmail">Email Address *</Label>
+                          <Input
+                            id="reporterEmail"
+                            type="email"
+                            value={formData.reporterEmail}
+                            onChange={(e) => setFormData({...formData, reporterEmail: e.target.value})}
+                            placeholder="Enter your email"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="reporterPhone">Phone Number *</Label>
+                        <Input
+                          id="reporterPhone"
+                          value={formData.reporterPhone}
+                          onChange={(e) => setFormData({...formData, reporterPhone: e.target.value})}
+                          placeholder="Enter your phone number"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Incident Details */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-gray-900">Incident Details</h3>
+                    
+                    <div>
+                      <Label htmlFor="location">Location/District of Incident *</Label>
+                      <Select value={formData.locationIncident} onValueChange={(value) => setFormData({...formData, locationIncident: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select district" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {districts.map((district) => (
+                            <SelectItem key={district} value={district}>
+                              {district}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center space-x-2 mb-4">
                       <Checkbox 
-                        id="dateUnknown" 
-                        checked={dateUnknown} 
-                        onCheckedChange={(checked) => setDateUnknown(checked === true)}
+                        id="dateUnknown"
+                        checked={formData.dateUnknown}
+                        onCheckedChange={(checked) => setFormData({...formData, dateUnknown: !!checked})}
                       />
-                      <Label htmlFor="dateUnknown" className="text-sm text-gray-600 cursor-pointer">
-                        Date/Time unknown
+                      <Label htmlFor="dateUnknown" className="text-sm">
+                        Date and time of incident is unknown
                       </Label>
                     </div>
-                    {!dateUnknown && (
-                      <Input
-                        type="datetime-local"
-                        value={formData.incidentDateTime}
-                        onChange={(e) => handleInputChange('incidentDateTime', e.target.value)}
-                        className="max-w-md"
-                      />
+
+                    {!formData.dateUnknown && (
+                      <div>
+                        <Label htmlFor="incidentDateTime">Date and Time of Incident</Label>
+                        <Input
+                          id="incidentDateTime"
+                          type="datetime-local"
+                          value={formData.incidentDateTime}
+                          onChange={(e) => setFormData({...formData, incidentDateTime: e.target.value})}
+                        />
+                      </div>
                     )}
-                  </div>
-                </div>
 
-                {/* Description */}
-                <div>
-                  <Label htmlFor="description" className="text-base font-semibold text-gray-700 mb-2 block">
-                    Detailed Description <span className="text-red-500">*</span>
-                  </Label>
-                  <Textarea
-                    id="description"
-                    value={formData.detailedDescription}
-                    onChange={(e) => handleInputChange('detailedDescription', e.target.value)}
-                    className="min-h-32"
-                    placeholder="Please provide as much detail as possible about the incident, including what you observed, people involved, vehicles, etc."
-                  />
-                </div>
-
-                {/* Evidence Upload */}
-                <div>
-                  <Label htmlFor="evidence" className="text-base font-semibold text-gray-700 mb-2 block">
-                    Evidence (Optional)
-                  </Label>
-                  <Input
-                    id="evidence"
-                    type="file"
-                    onChange={handleFileChange}
-                    accept="image/*,video/*,.pdf,.doc,.docx"
-                    className="cursor-pointer"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Accepted formats: Images, Videos, PDF, Word documents (Max 10MB)
-                  </p>
-                </div>
-
-                {/* Warning */}
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                  <div className="flex items-start space-x-2">
-                    <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-orange-800">Important Notice</h4>
-                      <p className="text-sm text-orange-700 mt-1">
-                        Filing a false report is a criminal offense. Please ensure all information provided is accurate and truthful.
-                      </p>
+                      <Label htmlFor="description">Detailed Description *</Label>
+                      <Textarea
+                        id="description"
+                        value={formData.detailedDescription}
+                        onChange={(e) => setFormData({...formData, detailedDescription: e.target.value})}
+                        placeholder="Provide detailed information about the incident, including location details, people involved, activities observed, etc."
+                        rows={6}
+                        required
+                      />
                     </div>
                   </div>
-                </div>
 
-                {/* Submit Button */}
-                <div className="pt-4">
                   <Button 
                     type="submit" 
+                    className="w-full" 
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 text-lg rounded-xl"
                   >
-                    {isSubmitting ? 'Submitting Report...' : 'Submit Report'}
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        Submitting Report...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        Submit Report
+                      </>
+                    )}
                   </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Information Sidebar */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-green-600">
+                  <Shield className="w-5 h-5 mr-2" />
+                  Your Security
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 text-sm text-gray-600">
+                  <li>• All reports are handled confidentially</li>
+                  <li>• Anonymous reports are fully protected</li>
+                  <li>• Your identity is never shared without consent</li>
+                  <li>• Reports are reviewed by authorized personnel only</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-amber-600">
+                  <AlertTriangle className="w-5 h-5 mr-2" />
+                  Important Notes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 text-sm text-gray-600">
+                  <li>• Provide as much detail as possible</li>
+                  <li>• Include specific locations and times</li>
+                  <li>• Do not approach suspected individuals</li>
+                  <li>• For emergencies, call 100 immediately</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 text-sm">
+                  <p><strong>Emergency:</strong> 100</p>
+                  <p><strong>Anti-Narcotics:</strong> 040-27852508</p>
+                  <p><strong>Email:</strong> contact@tganb.gov.in</p>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </main>
-      
-      <Footer />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,4 @@
-
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { NewsItem, newsData as initialNewsData } from '../data/newsData';
 import { Achievement } from '../data/achievementsData';
 import { TrainingSession, trainingData as initialTrainingData } from '../data/trainingData';
@@ -52,10 +51,31 @@ interface AdminContextType {
   updateScrollingData: (data: any[]) => void;
   totalReports: number;
   drugReports: DrugReport[];
-  addDrugReport: (report: Omit<DrugReport, 'id' | 'submittedAt' | 'evidenceFileName'>) => void;
+  addDrugReport: (report: Omit<DrugReport, 'id' | 'submittedAt'>) => void;
   updateDrugReportStatus: (id: string, status: DrugReport['status']) => void;
   deleteDrugReport: (id: string) => void;
+  syncDataToStorage: () => void;
 }
+
+// Create global data store
+const STORAGE_KEY = 'tganb_admin_data';
+
+const getStoredData = () => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
+const setStoredData = (data: any) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error('Failed to store data:', error);
+  }
+};
 
 const AdminContext = createContext<AdminContextType>({
   isAuthenticated: false,
@@ -92,6 +112,7 @@ const AdminContext = createContext<AdminContextType>({
   addDrugReport: () => {},
   updateDrugReportStatus: () => {},
   deleteDrugReport: () => {},
+  syncDataToStorage: () => {},
 });
 
 export const useAdmin = () => useContext(AdminContext);
@@ -99,20 +120,57 @@ export const useAdmin = () => useContext(AdminContext);
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  // Initialize with actual data from data files
-  const [newsData, setNewsData] = useState<NewsItem[]>(initialNewsData);
-  const [announcementData, setAnnouncementData] = useState<AnnouncementItem[]>(initialAnnouncementData);
-  const [trainingData, setTrainingData] = useState<TrainingSession[]>(initialTrainingData);
-  const [achievementsData, setAchievementsData] = useState<Achievement[]>([]);
-  const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>([]);
-  const [faqsData, setFaqsData] = useState<FAQItem[]>(initialFaqsData.map(faq => ({
-    question: faq.question,
-    answer: faq.answer,
-    category: 'General'
-  })));
-  const [scrollingData, setScrollingData] = useState<any[]>(initialScrollingData);
+  // Initialize with stored data or fallback to file data
+  const initializeData = () => {
+    const storedData = getStoredData();
+    return {
+      newsData: storedData?.newsData || initialNewsData,
+      announcementData: storedData?.announcementData || initialAnnouncementData,
+      trainingData: storedData?.trainingData || initialTrainingData,
+      achievementsData: storedData?.achievementsData || [],
+      celebrityVideos: storedData?.celebrityVideos || [],
+      faqsData: storedData?.faqsData || initialFaqsData.map(faq => ({
+        question: faq.question,
+        answer: faq.answer,
+        category: 'General'
+      })),
+      scrollingData: storedData?.scrollingData || initialScrollingData,
+      drugReports: storedData?.drugReports || drugReportsData,
+    };
+  };
+
+  const initialState = initializeData();
+  
+  const [newsData, setNewsData] = useState<NewsItem[]>(initialState.newsData);
+  const [announcementData, setAnnouncementData] = useState<AnnouncementItem[]>(initialState.announcementData);
+  const [trainingData, setTrainingData] = useState<TrainingSession[]>(initialState.trainingData);
+  const [achievementsData, setAchievementsData] = useState<Achievement[]>(initialState.achievementsData);
+  const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>(initialState.celebrityVideos);
+  const [faqsData, setFaqsData] = useState<FAQItem[]>(initialState.faqsData);
+  const [scrollingData, setScrollingData] = useState<any[]>(initialState.scrollingData);
+  const [drugReports, setDrugReports] = useState<DrugReport[]>(initialState.drugReports);
   const [totalReports, setTotalReports] = useState(100);
-  const [drugReports, setDrugReports] = useState<DrugReport[]>(drugReportsData);
+
+  // Sync data to localStorage whenever state changes
+  const syncDataToStorage = () => {
+    const dataToStore = {
+      newsData,
+      announcementData,
+      trainingData,
+      achievementsData,
+      celebrityVideos,
+      faqsData,
+      scrollingData,
+      drugReports,
+    };
+    setStoredData(dataToStore);
+    console.log('Data synced to storage');
+  };
+
+  // Auto-sync when data changes
+  useEffect(() => {
+    syncDataToStorage();
+  }, [newsData, announcementData, trainingData, achievementsData, celebrityVideos, faqsData, scrollingData, drugReports]);
 
   const login = (username: string, password: string) => {
     if (username === 'admin' && password === 'admin123') {
@@ -126,6 +184,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setIsAuthenticated(false);
   };
 
+  // News management
   const addNews = (news: NewsItem) => {
     setNewsData(prev => [news, ...prev]);
   };
@@ -142,6 +201,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setNewsData(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Announcement management
   const addAnnouncement = (announcement: AnnouncementItem) => {
     setAnnouncementData(prev => [announcement, ...prev]);
   };
@@ -158,6 +218,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setAnnouncementData(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Training management
   const addTraining = (training: TrainingSession) => {
     setTrainingData(prev => [training, ...prev]);
   };
@@ -174,6 +235,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTrainingData(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Achievement management
   const addAchievement = (achievement: Achievement) => {
     setAchievementsData(prev => [achievement, ...prev]);
   };
@@ -190,6 +252,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setAchievementsData(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Celebrity video management
   const addCelebrityVideo = (video: CelebrityVideo) => {
     setCelebrityVideos(prev => [video, ...prev]);
   };
@@ -206,6 +269,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setCelebrityVideos(prev => prev.filter((_, i) => i !== index));
   };
 
+  // FAQ management
   const addFAQ = (faq: FAQItem) => {
     setFaqsData(prev => [faq, ...prev]);
   };
@@ -222,17 +286,20 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setFaqsData(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Scrolling data management
   const updateScrollingData = (data: any[]) => {
     setScrollingData(data);
   };
 
-  const addDrugReport = (report: Omit<DrugReport, 'id' | 'submittedAt' | 'evidenceFileName'>) => {
+  // Drug report management with proper data persistence
+  const addDrugReport = (report: Omit<DrugReport, 'id' | 'submittedAt'>) => {
     const newReport: DrugReport = {
       ...report,
       id: Date.now().toString(),
       submittedAt: new Date().toISOString()
     };
     setDrugReports(prev => [newReport, ...prev]);
+    console.log('New drug report added:', newReport);
   };
 
   const updateDrugReportStatus = (id: string, status: DrugReport['status']) => {
@@ -280,6 +347,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     addDrugReport,
     updateDrugReportStatus,
     deleteDrugReport,
+    syncDataToStorage,
   };
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
