@@ -6,7 +6,6 @@ import TRisingAIHighlight from '../components/TRisingAIHighlight';
 import DirectorMessage from '../components/DirectorMessage';
 import InitiativesHighlight from '../components/InitiativesHighlight';
 import InitiativesSlider from '../components/InitiativesSlider';
-import NewsEvents from '../components/NewsEvents';
 import AnimatedMetrics from '../components/AnimatedMetrics';
 import AntiDrugSoldierSection from '../components/AntiDrugSoldierSection';
 import TrainingsSlider from '../components/TrainingsSlider';
@@ -28,7 +27,6 @@ const Index = () => {
       <TRisingAIHighlight />
       <DirectorMessage />
       <InitiativesHighlight />
-      <NewsEvents />
       <AnimatedMetrics />
       <AntiDrugSoldierSection />
       <TrainingsSlider />

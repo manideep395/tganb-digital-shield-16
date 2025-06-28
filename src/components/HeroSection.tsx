@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Shield, Users, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ScrollingNewsSidebar from './ScrollingNewsSidebar';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins">
+    <section className="relative min-h-[75vh] flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins">
       {/* 3D Background Elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-black-400/30 to-transparent rounded-full blur-xl animate-pulse"></div>
@@ -23,55 +24,44 @@ const HeroSection = () => {
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-lg animate-pulse delay-500"></div>
       </div>
 
-      {/* 3D Animated Borders */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-4 left-4 w-32 h-32 border-4 border-yellow-400/30 rounded-full animate-spin"></div>
-        <div className="absolute top-20 right-20 w-24 h-24 border-2 border-blue-400/40 rounded-lg animate-bounce"></div>
-        <div className="absolute bottom-16 left-16 w-20 h-20 border-3 border-white/20 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-32 right-32 w-16 h-16 border-2 border-yellow-300/30 rotate-45 animate-spin"></div>
-        
-        {/* Floating geometric shapes */}
-        <div className="absolute top-1/3 left-1/3 w-12 h-12 bg-gradient-to-r from-yellow-400/20 to-blue-400/20 rounded-lg animate-pulse transform rotate-12"></div>
-        <div className="absolute top-2/3 right-1/3 w-8 h-8 bg-gradient-to-r from-blue-400/30 to-purple-400/30 rounded-full animate-bounce delay-300"></div>
-      </div>
+      {/* Main Hero Content - 75% width */}
+      <div className="w-3/4 flex items-center justify-center text-white relative z-10 px-4">
+        <div className="max-w-4xl mx-auto space-y-4 animate-fade-in text-center">
+          {/* Three Logos Row */}
+          <div className="flex justify-center items-center space-x-12 mb-8">
+            {/* Telangana Emblem - Left */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-black-600/30 rounded-full blur-md animate-pulse"></div>
+              <img 
+                src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
+                alt="Telangana Emblem" 
+                className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-yellow-400 shadow-lg relative z-10"
+              />
+            </div>
+            
+            {/* TGANB Logo - Center (Main) */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-black-400 to-black-600 rounded-full blur-lg animate-pulse"></div>
+              <div className="absolute -inset-2 border-2 border-black-900/50 rounded-full animate-spin"></div>
+              <img 
+                src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
+                alt="TG ANB Logo" 
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-black-400 shadow-2xl relative z-10 hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            
+            {/* Telangana Police Logo - Right */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-blue-600/30 rounded-full blur-md animate-pulse delay-500"></div>
+              <img 
+                src="/uploads/db384303-58f4-497a-9043-3cb10d049cee.png" 
+                alt="Telangana Police Logo" 
+                className="w-16 h-16 md:w-20 md:h-20 shadow-lg relative z-10"
+              />
+            </div>
+          </div>
 
-      <div className="container mx-auto px-4 text-center text-white relative z-10">
-        {/* Three Logos Row */}
-        <div className="flex justify-center items-center space-x-12 mb-8 animate-fade-in">
-          {/* Telangana Emblem - Left */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-black-600/30 rounded-full blur-md animate-pulse"></div>
-            <img 
-              src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
-              alt="Telangana Emblem" 
-              className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-yellow-400 shadow-lg relative z-10"
-            />
-          </div>
-          
-          {/* TGANB Logo - Center (Main) */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-black-400 to-black-600 rounded-full blur-lg animate-pulse"></div>
-            <div className="absolute -inset-2 border-2 border-black-900/50 rounded-full animate-spin"></div>
-            <img 
-              src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
-              alt="TG ANB Logo" 
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-black-400 shadow-2xl relative z-10 hover:scale-110 transition-transform duration-300"
-            />
-          </div>
-          
-          {/* Telangana Police Logo - Right */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-blue-600/30 rounded-full blur-md animate-pulse delay-500"></div>
-            <img 
-              src="/uploads/db384303-58f4-497a-9043-3cb10d049cee.png" 
-              alt="Telangana Police Logo" 
-              className="w-16 h-16 md:w-20 md:h-20 shadow-lg relative z-10"
-            />
-          </div>
-        </div>
-
-        {/* Hero Content */}
-        <div className="max-w-4xl mx-auto space-y-4 animate-fade-in">
+          {/* Hero Content */}
           <h1 className="text-2xl md:text-4xl font-bold font-poppins leading-tight">
             <span className="block text-black text-lg md:text-4xl mb-2">
               TELANGANA ANTI-NARCOTICS BUREAU
@@ -125,6 +115,11 @@ const HeroSection = () => {
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Scrolling News Sidebar - 25% width */}
+      <div className="w-1/4 relative">
+        <ScrollingNewsSidebar />
       </div>
     </section>
   );
