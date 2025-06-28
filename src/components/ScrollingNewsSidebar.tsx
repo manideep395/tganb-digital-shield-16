@@ -1,10 +1,10 @@
 
-import { newsData } from '../data/newsData';
-import { announcementData } from '../data/announcementData';
+import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 const ScrollingNewsSidebar = () => {
+  const { newsData, announcementData } = useAdmin();
   const navigate = useNavigate();
   const [scrollPosition, setScrollPosition] = useState(0);
 

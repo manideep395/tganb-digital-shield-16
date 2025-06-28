@@ -16,7 +16,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-[60vh] flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins">
+    <section className="relative flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins py-12">
       {/* 3D Background Elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-black-400/30 to-transparent rounded-full blur-xl animate-pulse"></div>
@@ -25,7 +25,7 @@ const HeroSection = () => {
       </div>
 
       {/* Main Hero Content - 75% width */}
-      <div className="w-3/4 flex items-center justify-center text-white relative z-10 px-4 py-8">
+      <div className="w-3/4 flex items-center justify-center text-white relative z-10 px-4">
         <div className="max-w-4xl mx-auto space-y-4 animate-fade-in text-center">
           {/* Three Logos Row */}
           <div className="flex justify-center items-center space-x-12 mb-6">
