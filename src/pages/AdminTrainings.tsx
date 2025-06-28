@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react';
 import { TrainingSession } from '../data/trainingData';
 
@@ -49,7 +48,8 @@ const AdminTrainings = () => {
     e.preventDefault();
     const trainingWithStatus = {
       ...formData,
-      status: getTrainingStatus(formData.date)
+      status: getTrainingStatus(formData.date),
+      id: editingIndex !== null ? formData.id : Date.now()
     };
     
     if (editingIndex !== null) {

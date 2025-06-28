@@ -18,8 +18,8 @@ const AdminScrollingData = () => {
   const handleUpdateScrollingData = () => {
     // Combine news and announcements for scrolling data
     const combinedData = [
-      ...newsData.map(news => ({ ...news, type: 'news' })),
-      ...announcementData.map(announcement => ({ ...announcement, type: 'announcement' }))
+      ...newsData,
+      ...announcementData
     ];
     updateScrollingData(combinedData);
     alert('Scrolling data updated successfully!');

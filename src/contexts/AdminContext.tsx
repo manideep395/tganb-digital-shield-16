@@ -1,30 +1,12 @@
-import React, { createContext, useState, useContext } from 'react';
 
-interface NewsItem {
-  title: string;
-  subtitle?: string;
-  description: string;
-  imageUrl: string;
-  date: string;
-  newsType: string;
-}
+import React, { createContext, useState, useContext } from 'react';
+import { NewsItem } from '../data/newsData';
+import { Achievement } from '../data/achievementsData';
+import { TrainingSession } from '../data/trainingData';
+import { drugReportsData, DrugReport } from '../data/drugReportsData';
 
 interface Announcement {
   name: string;
-  date: string;
-}
-
-interface Training {
-  title: string;
-  description: string;
-  imageUrl: string;
-  date: string;
-}
-
-interface Achievement {
-  title: string;
-  description: string;
-  imageUrl: string;
   date: string;
 }
 
@@ -40,11 +22,9 @@ interface FAQItem {
   category: string;
 }
 
-import { drugReportsData, DrugReport } from '../data/drugReportsData';
-
 interface AdminContextType {
   isAuthenticated: boolean;
-  login: (password: string) => boolean;
+  login: (username: string, password: string) => boolean;
   logout: () => void;
   newsData: NewsItem[];
   addNews: (news: NewsItem) => void;
@@ -54,9 +34,9 @@ interface AdminContextType {
   addAnnouncement: (announcement: Announcement) => void;
   updateAnnouncement: (index: number, announcement: Announcement) => void;
   deleteAnnouncement: (index: number) => void;
-  trainingData: Training[];
-  addTraining: (training: Training) => void;
-  updateTraining: (index: number, training: Training) => void;
+  trainingData: TrainingSession[];
+  addTraining: (training: TrainingSession) => void;
+  updateTraining: (index: number, training: TrainingSession) => void;
   deleteTraining: (index: number) => void;
   achievementsData: Achievement[];
   addAchievement: (achievement: Achievement) => void;
@@ -70,8 +50,8 @@ interface AdminContextType {
   addFAQ: (faq: FAQItem) => void;
   updateFAQ: (index: number, faq: FAQItem) => void;
   deleteFAQ: (index: number) => void;
-  scrollingData: { news: NewsItem[]; announcements: Announcement[] };
-  updateScrollingData: (data: { news: NewsItem[]; announcements: Announcement[] }) => void;
+  scrollingData: any[];
+  updateScrollingData: (data: any[]) => void;
   totalReports: number;
   drugReports: DrugReport[];
   addDrugReport: (report: Omit<DrugReport, 'id' | 'submittedAt' | 'evidenceFileName'>) => void;
@@ -107,7 +87,7 @@ const AdminContext = createContext<AdminContextType>({
   addFAQ: () => {},
   updateFAQ: () => {},
   deleteFAQ: () => {},
-  scrollingData: { news: [], announcements: [] },
+  scrollingData: [],
   updateScrollingData: () => {},
   totalReports: 100,
   drugReports: [],
@@ -129,64 +109,21 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       date: '2024-01-20',
       newsType: 'Breaking News',
     },
-    {
-      title: 'Awareness Campaign Launched in Schools',
-      description: 'TGANB has launched an awareness campaign in schools across Telangana to educate students about the dangers of drug abuse and promote a healthy lifestyle.',
-      imageUrl: '/uploads/pexels-pixabay-267885.jpg',
-      date: '2024-01-18',
-      newsType: 'Important Update',
-    },
-    {
-      title: 'TGANB Receives National Award for Excellence',
-      description: 'The Telangana Anti-Narcotics Bureau (TGANB) has been awarded the National Award for Excellence in combating drug trafficking and substance abuse.',
-      imageUrl: '/uploads/pexels-rodnae-productions-7368244.jpg',
-      date: '2024-01-15',
-      newsType: 'Achievement',
-    },
   ]);
   const [announcementData, setAnnouncementData] = useState<Announcement[]>([
     { name: 'New Toll-Free Helpline Launched', date: '2024-01-22' },
     { name: 'Upcoming Anti-Drug Awareness Event', date: '2024-01-25' },
   ]);
-  const [trainingData, setTrainingData] = useState<Training[]>([
-    {
-      title: 'Advanced Drug Interdiction Techniques',
-      description: 'A comprehensive training program for law enforcement officers on advanced drug interdiction techniques.',
-      imageUrl: '/uploads/pexels-august-de-richelieu-4262415.jpg',
-      date: '2024-02-01',
-    },
-  ]);
-  const [achievementsData, setAchievementsData] = useState<Achievement[]>([
-    {
-      title: 'Record Seizure of Cocaine',
-      description: 'TGANB seizes a record amount of cocaine in a single operation, disrupting a major drug trafficking network.',
-      imageUrl: '/uploads/pexels-pixabay-164693.jpg',
-      date: '2024-01-28',
-    },
-  ]);
-  const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>([
-    {
-      name: 'Samantha Akkineni',
-      designation: 'Actor',
-      videoUrl: 'https://www.youtube.com/watch?v=Y3qj5n69Ghk',
-    },
-  ]);
-  const [faqsData, setFaqsData] = useState<FAQItem[]>([
-    {
-      question: 'What is the role of TGANB?',
-      answer: 'The Telangana Anti-Narcotics Bureau (TGANB) is responsible for combating drug trafficking and substance abuse in Telangana.',
-      category: 'General',
-    },
-  ]);
-  const [scrollingData, setScrollingData] = useState<{ news: NewsItem[]; announcements: Announcement[] }>({
-    news: newsData,
-    announcements: announcementData,
-  });
+  const [trainingData, setTrainingData] = useState<TrainingSession[]>([]);
+  const [achievementsData, setAchievementsData] = useState<Achievement[]>([]);
+  const [celebrityVideos, setCelebrityVideos] = useState<CelebrityVideo[]>([]);
+  const [faqsData, setFaqsData] = useState<FAQItem[]>([]);
+  const [scrollingData, setScrollingData] = useState<any[]>([]);
   const [totalReports, setTotalReports] = useState(100);
   const [drugReports, setDrugReports] = useState<DrugReport[]>(drugReportsData);
 
-  const login = (password: string) => {
-    if (password === 'admin123') {
+  const login = (username: string, password: string) => {
+    if (username === 'admin' && password === 'admin123') {
       setIsAuthenticated(true);
       return true;
     }
@@ -229,11 +166,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setAnnouncementData(prev => prev.filter((_, i) => i !== index));
   };
 
-  const addTraining = (training: Training) => {
+  const addTraining = (training: TrainingSession) => {
     setTrainingData(prev => [training, ...prev]);
   };
 
-  const updateTraining = (index: number, training: Training) => {
+  const updateTraining = (index: number, training: TrainingSession) => {
     setTrainingData(prev => {
       const newData = [...prev];
       newData[index] = training;
@@ -293,7 +230,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setFaqsData(prev => prev.filter((_, i) => i !== index));
   };
 
-  const updateScrollingData = (data: { news: NewsItem[]; announcements: Announcement[] }) => {
+  const updateScrollingData = (data: any[]) => {
     setScrollingData(data);
   };
 

@@ -96,7 +96,7 @@ const AdminNews = () => {
                   <div>
                     <Label>Subtitle</Label>
                     <Input
-                      value={formData.subtitle}
+                      value={formData.subtitle || ''}
                       onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
                       required
                     />
