@@ -5,7 +5,7 @@ export interface NewsItem {
   description: string;
   imageUrl: string;
   date?: string;
-  newsType: 'Breaking News' | 'Shocking News' | 'Important Update' | 'Achievement' | 'Alert';
+  newsType: 'Breaking News' | 'Shocking News' | 'Important Update' | 'Achievement' | 'Alert' | 'Event';
   link?: string;
 }
 
