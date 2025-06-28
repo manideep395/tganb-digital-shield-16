@@ -18,11 +18,11 @@ const AdminNews = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState<NewsItem>({
     title: '',
-    content: '',
+    subtitle: '',
+    description: '',
     date: '',
-    author: '',
     imageUrl: '',
-    newsType: 'General News'
+    newsType: 'Breaking News'
   });
 
   if (!isAuthenticated) {
@@ -43,11 +43,11 @@ const AdminNews = () => {
   const resetForm = () => {
     setFormData({
       title: '',
-      content: '',
+      subtitle: '',
+      description: '',
       date: '',
-      author: '',
       imageUrl: '',
-      newsType: 'General News'
+      newsType: 'Breaking News'
     });
     setIsEditing(false);
     setEditingIndex(null);
@@ -94,28 +94,26 @@ const AdminNews = () => {
                     />
                   </div>
                   <div>
-                    <Label>Content</Label>
+                    <Label>Subtitle</Label>
+                    <Input
+                      value={formData.subtitle}
+                      onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label>Description</Label>
                     <Textarea
-                      value={formData.content}
-                      onChange={(e) => setFormData({...formData, content: e.target.value})}
+                      value={formData.description}
+                      onChange={(e) => setFormData({...formData, description: e.target.value})}
                       required
                     />
                   </div>
                   <div>
                     <Label>Date</Label>
                     <Input
-                      type="date"
-                      value={formData.date}
+                      value={formData.date || ''}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label>Author</Label>
-                    <Input
-                      value={formData.author}
-                      onChange={(e) => setFormData({...formData, author: e.target.value})}
-                      required
                     />
                   </div>
                   <div>
@@ -134,8 +132,10 @@ const AdminNews = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Breaking News">Breaking News</SelectItem>
-                        <SelectItem value="General News">General News</SelectItem>
+                        <SelectItem value="Shocking News">Shocking News</SelectItem>
+                        <SelectItem value="Important Update">Important Update</SelectItem>
                         <SelectItem value="Achievement">Achievement</SelectItem>
+                        <SelectItem value="Alert">Alert</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -161,9 +161,9 @@ const AdminNews = () => {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h3 className="font-semibold">{news.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{news.content.substring(0, 100)}...</p>
+                      <p className="text-sm text-gray-600 mb-2">{news.description.substring(0, 100)}...</p>
                       <div className="text-xs text-gray-500">
-                        <span>{news.date}</span> • <span>{news.author}</span> • <span>{news.newsType}</span>
+                        <span>{news.date}</span> • <span>{news.newsType}</span>
                       </div>
                     </div>
                     <div className="flex space-x-2 ml-4">

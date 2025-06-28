@@ -18,12 +18,15 @@ const AdminTrainings = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState<TrainingSession>({
     id: 0,
+    name: '',
     title: '',
-    description: '',
     date: '',
-    duration: '',
-    participants: 0,
+    place: '',
     location: '',
+    nominatedOfficers: '',
+    participants: '',
+    description: '',
+    duration: '',
     status: 'Upcoming'
   });
 
@@ -60,12 +63,15 @@ const AdminTrainings = () => {
   const resetForm = () => {
     setFormData({
       id: 0,
+      name: '',
       title: '',
-      description: '',
       date: '',
-      duration: '',
-      participants: 0,
+      place: '',
       location: '',
+      nominatedOfficers: '',
+      participants: '',
+      description: '',
+      duration: '',
       status: 'Upcoming'
     });
     setIsEditing(false);
@@ -105,6 +111,14 @@ const AdminTrainings = () => {
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
+                    <Label>Name</Label>
+                    <Input
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
                     <Label>Title</Label>
                     <Input
                       value={formData.title}
@@ -123,9 +137,24 @@ const AdminTrainings = () => {
                   <div>
                     <Label>Date</Label>
                     <Input
-                      type="date"
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label>Place</Label>
+                    <Input
+                      value={formData.place}
+                      onChange={(e) => setFormData({...formData, place: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label>Location</Label>
+                    <Input
+                      value={formData.location}
+                      onChange={(e) => setFormData({...formData, location: e.target.value})}
                       required
                     />
                   </div>
@@ -139,19 +168,18 @@ const AdminTrainings = () => {
                     />
                   </div>
                   <div>
-                    <Label>Number of Participants</Label>
+                    <Label>Nominated Officers</Label>
                     <Input
-                      type="number"
-                      value={formData.participants}
-                      onChange={(e) => setFormData({...formData, participants: parseInt(e.target.value)})}
+                      value={formData.nominatedOfficers}
+                      onChange={(e) => setFormData({...formData, nominatedOfficers: e.target.value})}
                       required
                     />
                   </div>
                   <div>
-                    <Label>Location</Label>
+                    <Label>Participants</Label>
                     <Input
-                      value={formData.location}
-                      onChange={(e) => setFormData({...formData, location: e.target.value})}
+                      value={formData.participants}
+                      onChange={(e) => setFormData({...formData, participants: e.target.value})}
                       required
                     />
                   </div>
