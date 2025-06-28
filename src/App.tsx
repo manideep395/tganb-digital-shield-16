@@ -1,21 +1,22 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Index from './pages/Index';
 import AboutTGANB from './pages/AboutTGANB';
 import VisionMission from './pages/VisionMission';
-import DirectorMessage from './pages/DirectorMessage';
+import DirectorsNote from './pages/DirectorsNote';
 import AboutLogo from './pages/AboutLogo';
 import OfficersDirectory from './pages/OfficersDirectory';
 import CentralCoordination from './pages/CentralCoordination';
 import StateCoordination from './pages/StateCoordination';
-import TGANBGO27 from './pages/TGANBGO27';
-import TGANBStructure from './pages/TGANBStructure';
+import TganbGo27 from './pages/TganbGo27';
+import TganbStructure from './pages/TganbStructure';
 import AboutTRisingAI from './pages/AboutTRisingAI';
 import AboutSahayAI from './pages/AboutSahayAI';
 import AboutShieldAI from './pages/AboutShieldAI';
 import AboutUdayAI from './pages/AboutUdayAI';
 import NarcoticPoliceStations from './pages/NarcoticPoliceStations';
-import RegionalNarcoticControlCells from './pages/RegionalNarcoticControlCells';
+import RegionalNarcoticPoliceStations from './pages/RegionalNarcoticPoliceStations';
 import RehabilitationCenters from './pages/RehabilitationCenters';
 import MissionParivartana from './pages/MissionParivartana';
 import OperationSankalp from './pages/OperationSankalp';
@@ -34,8 +35,8 @@ import Statistics from './pages/Statistics';
 import Achievements from './pages/Achievements';
 import News from './pages/News';
 import Contact from './pages/Contact';
-import NewsDetail from './pages/NewsDetail';
-import { QueryClient } from 'react-query';
+import NewsDetail from './components/NewsDetail';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminNews from './pages/AdminNews';
@@ -47,28 +48,30 @@ import AdminFAQs from './pages/AdminFAQs';
 import AdminScrollingData from './pages/AdminScrollingData';
 import { AdminProvider } from './contexts/AdminContext';
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <AdminProvider>
-      <QueryClient>
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about-tganb" element={<AboutTGANB />} />
             <Route path="/vision-mission" element={<VisionMission />} />
-            <Route path="/directors-note" element={<DirectorMessage />} />
+            <Route path="/directors-note" element={<DirectorsNote />} />
             <Route path="/about-logo" element={<AboutLogo />} />
             <Route path="/officers-directory" element={<OfficersDirectory />} />
             <Route path="/central-coordination" element={<CentralCoordination />} />
             <Route path="/state-coordination" element={<StateCoordination />} />
-            <Route path="/tganb-go-27" element={<TGANBGO27 />} />
-            <Route path="/tganb-structure" element={<TGANBStructure />} />
+            <Route path="/tganb-go-27" element={<TganbGo27 />} />
+            <Route path="/tganb-structure" element={<TganbStructure />} />
             <Route path="/about-t-rising-ai" element={<AboutTRisingAI />} />
             <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
             <Route path="/about-shield-ai" element={<AboutShieldAI />} />
             <Route path="/about-uday-ai" element={<AboutUdayAI />} />
             <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
-            <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticControlCells />} />
+            <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
             <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
             <Route path="/mission-parivartana" element={<MissionParivartana />} />
             <Route path="/operation-sankalp" element={<OperationSankalp />} />
@@ -101,7 +104,7 @@ function App() {
             <Route path="/admin/scrolling-data" element={<AdminScrollingData />} />
           </Routes>
         </BrowserRouter>
-      </QueryClient>
+      </QueryClientProvider>
     </AdminProvider>
   );
 }
