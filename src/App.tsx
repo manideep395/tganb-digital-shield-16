@@ -16,6 +16,7 @@ import AdminAnnouncements from "./pages/AdminAnnouncements";
 import AdminAchievements from "./pages/AdminAchievements";
 import AdminCelebrityVideos from "./pages/AdminCelebrityVideos";
 import AdminScrollingContent from "./pages/AdminScrollingContent";
+import AdminScrollingData from "./pages/AdminScrollingData";
 import AdminFAQs from "./pages/AdminFAQs";
 import AdminTrainings from "./pages/AdminTrainings";
 import AdminDrugReports from "./pages/AdminDrugReports";
@@ -41,9 +42,29 @@ import CentralCoordination from "./pages/CentralCoordination";
 import StateCoordination from "./pages/StateCoordination";
 import TganbGo27 from "./pages/TganbGo27";
 import AboutRisingAI from "./pages/AboutRisingAI";
+import AboutTRisingAI from "./pages/AboutTRisingAI";
 import AboutSahayAI from "./pages/AboutSahayAI";
 import AboutShieldAI from "./pages/AboutShieldAI";
 import AboutUdayAI from "./pages/AboutUdayAI";
+import AntiDrugCommittees from "./pages/AntiDrugCommittees";
+import DrugTypes from "./pages/DrugTypes";
+import EventsCampaigns from "./pages/EventsCampaigns";
+import LearningResources from "./pages/LearningResources";
+import MissionParivartana from "./pages/MissionParivartana";
+import MythsFacts from "./pages/MythsFacts";
+import NarcoticPoliceStations from "./pages/NarcoticPoliceStations";
+import NotFound from "./pages/NotFound";
+import OperationSankalp from "./pages/OperationSankalp";
+import PrahariClubs from "./pages/PrahariClubs";
+import RegionalNarcoticPoliceStations from "./pages/RegionalNarcoticPoliceStations";
+import RehabilitationCenters from "./pages/RehabilitationCenters";
+import SahayAI from "./pages/SahayAI";
+import SahayAIChatbot from "./pages/SahayAIChatbot";
+import ShieldAI from "./pages/ShieldAI";
+import ShieldAIRiskAssessment from "./pages/ShieldAIRiskAssessment";
+import TestingKits from "./pages/TestingKits";
+import UdayAI from "./pages/UdayAI";
+import UdayAIRecoveryPlanner from "./pages/UdayAIRecoveryPlanner";
 
 const queryClient = new QueryClient();
 
@@ -66,7 +87,8 @@ const App = () => (
               <Route path="/state-coordination" element={<StateCoordination />} />
               <Route path="/tganb-go-27" element={<TganbGo27 />} />
               <Route path="/tganb-structure" element={<TganbStructure />} />
-              <Route path="/about-t-rising-ai" element={<AboutRisingAI />} />
+              <Route path="/about-rising-ai" element={<AboutRisingAI />} />
+              <Route path="/about-t-rising-ai" element={<AboutTRisingAI />} />
               <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
               <Route path="/about-shield-ai" element={<AboutShieldAI />} />
               <Route path="/about-uday-ai" element={<AboutUdayAI />} />
@@ -83,6 +105,24 @@ const App = () => (
               <Route path="/anti-drug-soldier" element={<AntiDrugSoldierEnrollment />} />
               <Route path="/certificate-verification" element={<CertificateVerification />} />
               <Route path="/report-drug-activity" element={<DrugReportSubmission />} />
+              <Route path="/anti-drug-committees" element={<AntiDrugCommittees />} />
+              <Route path="/drug-types" element={<DrugTypes />} />
+              <Route path="/events-campaigns" element={<EventsCampaigns />} />
+              <Route path="/learning-resources" element={<LearningResources />} />
+              <Route path="/mission-parivartana" element={<MissionParivartana />} />
+              <Route path="/myths-facts" element={<MythsFacts />} />
+              <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
+              <Route path="/operation-sankalp" element={<OperationSankalp />} />
+              <Route path="/prahari-clubs" element={<PrahariClubs />} />
+              <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
+              <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
+              <Route path="/sahay-ai" element={<SahayAI />} />
+              <Route path="/sahay-ai-chatbot" element={<SahayAIChatbot />} />
+              <Route path="/shield-ai" element={<ShieldAI />} />
+              <Route path="/shield-ai-risk-assessment" element={<ShieldAIRiskAssessment />} />
+              <Route path="/testing-kits" element={<TestingKits />} />
+              <Route path="/uday-ai" element={<UdayAI />} />
+              <Route path="/uday-ai-recovery-planner" element={<UdayAIRecoveryPlanner />} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<SecureAdminLogin />} />
@@ -116,6 +156,11 @@ const App = () => (
                   <AdminScrollingContent />
                 </ProtectedRoute>
               } />
+              <Route path="/admin/scrolling-data" element={
+                <ProtectedRoute>
+                  <AdminScrollingData />
+                </ProtectedRoute>
+              } />
               <Route path="/admin/faqs" element={
                 <ProtectedRoute>
                   <AdminFAQs />
@@ -131,6 +176,9 @@ const App = () => (
                   <AdminDrugReports />
                 </ProtectedRoute>
               } />
+              
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </DatabaseAdminProvider>
         </AuthProvider>
