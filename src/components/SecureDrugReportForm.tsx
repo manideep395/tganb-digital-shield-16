@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { FileInput } from "@/components/ui/file-input"
+import { supabase } from '@/integrations/supabase/client';
 
 interface FormData {
   reportType: string;
@@ -167,7 +169,7 @@ const SecureDrugReportForm = () => {
                 <Checkbox
                   id="isAnonymous"
                   checked={formData.isAnonymous}
-                  onCheckedChange={(checked) => setFormData({ ...formData, isAnonymous: checked || false })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, isAnonymous: checked === true })}
                 />
                 <span className="text-gray-700 text-sm font-medium">Report Anonymously</span>
               </Label>
@@ -241,7 +243,7 @@ const SecureDrugReportForm = () => {
                 <Checkbox
                   id="dateUnknown"
                   checked={formData.dateUnknown}
-                  onCheckedChange={(checked) => setFormData({ ...formData, dateUnknown: checked || false })}
+                  onCheckedChange={(checked) => setFormData({ ...formData, dateUnknown: checked === true })}
                 />
                 <span className="text-gray-700 text-sm font-medium">Date and Time Unknown</span>
               </Label>
