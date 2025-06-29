@@ -97,17 +97,28 @@ export const useContentData = () => {
       ]);
 
       if (newsResponse.data) {
+        const validNewsTypes = ['Breaking News', 'Shocking News', 'Important Update', 'Achievement', 'Alert', 'Event'];
         setNewsData(newsResponse.data.map(item => ({
-          ...item,
-          imageUrl: item.image_url,
-          newsType: item.news_type
+          id: item.id,
+          title: item.title,
+          subtitle: item.subtitle || undefined,
+          description: item.description,
+          image_url: item.image_url,
+          date: item.date || undefined,
+          news_type: validNewsTypes.includes(item.news_type) 
+            ? item.news_type as NewsItem['news_type']
+            : 'Important Update',
+          link: item.link || undefined
         })));
       }
 
       if (announcementsResponse.data) {
         setAnnouncementData(announcementsResponse.data.map(item => ({
-          ...item,
-          attachmentLink: item.attachment_link
+          id: item.id,
+          name: item.name,
+          date: item.date,
+          attachment_link: item.attachment_link || undefined,
+          description: item.description || undefined
         })));
       }
 
