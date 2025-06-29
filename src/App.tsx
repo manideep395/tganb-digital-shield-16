@@ -35,6 +35,15 @@ import Rehabilitation from "./pages/Rehabilitation";
 import AntiDrugSoldierEnrollment from "./pages/AntiDrugSoldierEnrollment";
 import CertificateVerification from "./pages/CertificateVerification";
 import DrugReportSubmission from "./pages/DrugReportSubmission";
+import AboutLogo from "./pages/AboutLogo";
+import OfficersDirectory from "./pages/OfficersDirectory";
+import CentralCoordination from "./pages/CentralCoordination";
+import StateCoordination from "./pages/StateCoordination";
+import TganbGo27 from "./pages/TganbGo27";
+import AboutRisingAI from "./pages/AboutRisingAI";
+import AboutSahayAI from "./pages/AboutSahayAI";
+import AboutShieldAI from "./pages/AboutShieldAI";
+import AboutUdayAI from "./pages/AboutUdayAI";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +60,16 @@ const App = () => (
               <Route path="/news" element={<News />} />
               <Route path="/news/:slug" element={<NewsDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/about-logo" element={<AboutLogo />} />
+              <Route path="/officers-directory" element={<OfficersDirectory />} />
+              <Route path="/central-coordination" element={<CentralCoordination />} />
+              <Route path="/state-coordination" element={<StateCoordination />} />
+              <Route path="/tganb-go-27" element={<TganbGo27 />} />
+              <Route path="/tganb-structure" element={<TganbStructure />} />
+              <Route path="/about-t-rising-ai" element={<AboutRisingAI />} />
+              <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
+              <Route path="/about-shield-ai" element={<AboutShieldAI />} />
+              <Route path="/about-uday-ai" element={<AboutUdayAI />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/trainings" element={<Trainings />} />
