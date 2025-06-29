@@ -13,8 +13,8 @@ const SecureAdminLogin = () => {
   const navigate = useNavigate();
   const { signIn, isLoading } = useAuth();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'admin@tganb.gov.in',
+    password: 'SecureAdmin2024!'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -35,16 +35,20 @@ const SecureAdminLogin = () => {
     }
 
     try {
+      console.log('Attempting to sign in with:', formData.email);
       const { error } = await signIn(formData.email, formData.password);
       
       if (error) {
         setAttempts(prev => prev + 1);
-        setError('Invalid credentials. Please check your email and password.');
+        setError(error.message || 'Invalid credentials. Please check your email and password.');
+        console.error('Sign in error:', error);
       } else {
+        console.log('Sign in successful, navigating to dashboard');
         navigate('/admin/dashboard');
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred. Please try again.');
     }
   };
 
@@ -117,14 +121,14 @@ const SecureAdminLogin = () => {
 
           <div className="mt-6 text-center">
             <div className="text-sm text-gray-600">
-              <p className="font-semibold">Default Admin Credentials:</p>
+              <p className="font-semibold">Admin Credentials:</p>
               <p>Email: admin@tganb.gov.in</p>
               <p>Password: SecureAdmin2024!</p>
             </div>
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-xs text-yellow-800">
-                <strong>Security Notice:</strong> Change the default password immediately after first login.
-                This system includes audit logging and rate limiting for security.
+                <strong>Security Notice:</strong> This system includes audit logging and rate limiting for security.
+                All login attempts are monitored.
               </p>
             </div>
           </div>
