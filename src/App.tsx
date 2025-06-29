@@ -17,8 +17,24 @@ import AdminAchievements from "./pages/AdminAchievements";
 import AdminCelebrityVideos from "./pages/AdminCelebrityVideos";
 import AdminScrollingContent from "./pages/AdminScrollingContent";
 import AdminFAQs from "./pages/AdminFAQs";
+import AdminTrainings from "./pages/AdminTrainings";
+import AdminDrugReports from "./pages/AdminDrugReports";
 import SecureAdminLogin from "./components/SecureAdminLogin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import About from "./pages/AboutTGANB";
+import Contact from "./pages/Contact";
+import Achievements from "./pages/Achievements";
+import Trainings from "./pages/Trainings";
+import FAQs from "./pages/FAQs";
+import Statistics from "./pages/Statistics";
+import DirectorsNote from "./pages/DirectorsNote";
+import VisionMission from "./pages/VisionMission";
+import TganbStructure from "./pages/TganbStructure";
+import Education from "./pages/Education";
+import Rehabilitation from "./pages/Rehabilitation";
+import AntiDrugSoldierEnrollment from "./pages/AntiDrugSoldierEnrollment";
+import CertificateVerification from "./pages/CertificateVerification";
+import DrugReportSubmission from "./pages/DrugReportSubmission";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +50,22 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/news" element={<News />} />
               <Route path="/news/:slug" element={<NewsDetail />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/achievements" element={<Achievements />} />
+              <Route path="/trainings" element={<Trainings />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/directors-note" element={<DirectorsNote />} />
+              <Route path="/vision-mission" element={<VisionMission />} />
+              <Route path="/structure" element={<TganbStructure />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/rehabilitation" element={<Rehabilitation />} />
+              <Route path="/anti-drug-soldier" element={<AntiDrugSoldierEnrollment />} />
+              <Route path="/certificate-verification" element={<CertificateVerification />} />
+              <Route path="/report-drug-activity" element={<DrugReportSubmission />} />
+              
+              {/* Admin Routes */}
               <Route path="/admin/login" element={<SecureAdminLogin />} />
               <Route path="/admin/dashboard" element={
                 <ProtectedRoute>
@@ -68,6 +100,16 @@ const App = () => (
               <Route path="/admin/faqs" element={
                 <ProtectedRoute>
                   <AdminFAQs />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/trainings" element={
+                <ProtectedRoute>
+                  <AdminTrainings />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/drug-reports" element={
+                <ProtectedRoute>
+                  <AdminDrugReports />
                 </ProtectedRoute>
               } />
             </Routes>

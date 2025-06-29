@@ -1,69 +1,80 @@
 
 import { useState } from 'react';
-import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, Edit, Trash2, RefreshCw } from 'lucide-react';
-
-interface ScrollingItem {
-  language: string;
-  text: string;
-}
+import { ArrowLeft, Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { useDatabaseAdmin } from '@/contexts/DatabaseAdminContext';
+import { ScrollingContentItem } from '@/hooks/useContentData';
 
 const AdminScrollingContent = () => {
-  const { isAuthenticated, scrollingData, updateScrollingData } = useAdmin();
+  const { scrollingData, addScrollingContent, updateScrollingContent, deleteScrollingContent } = useDatabaseAdmin();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [formData, setFormData] = useState<ScrollingItem>({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Omit<ScrollingContentItem, 'id'>>({
     language: '',
-    text: ''
+    text: '',
+    is_active: true
   });
 
-  if (!isAuthenticated) {
-    navigate('/admin/login');
-    return null;
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const currentData = [...scrollingData];
-    
-    if (editingIndex !== null) {
-      currentData[editingIndex] = formData;
-    } else {
-      currentData.push(formData);
+    try {
+      if (editingId) {
+        await updateScrollingContent(editingId, formData);
+      } else {
+        await addScrollingContent(formData);
+      }
+      resetForm();
+      alert('Scrolling content saved successfully!');
+    } catch (error) {
+      console.error('Error saving scrolling content:', error);
+      alert('Error saving scrolling content. Please try again.');
     }
-    
-    updateScrollingData(currentData);
-    resetForm();
-    alert('Scrolling content updated successfully!');
   };
 
   const resetForm = () => {
     setFormData({
       language: '',
-      text: ''
+      text: '',
+      is_active: true
     });
     setIsEditing(false);
-    setEditingIndex(null);
+    setEditingId(null);
   };
 
-  const handleEdit = (index: number) => {
-    setFormData(scrollingData[index]);
-    setEditingIndex(index);
+  const handleEdit = (content: ScrollingContentItem) => {
+    setFormData({
+      language: content.language,
+      text: content.text,
+      is_active: content.is_active
+    });
+    setEditingId(content.id);
     setIsEditing(true);
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this scrolling content?')) {
-      const currentData = scrollingData.filter((_, i) => i !== index);
-      updateScrollingData(currentData);
-      alert('Scrolling content deleted successfully!');
+      try {
+        await deleteScrollingContent(id);
+        alert('Scrolling content deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting scrolling content:', error);
+        alert('Error deleting scrolling content. Please try again.');
+      }
+    }
+  };
+
+  const toggleActive = async (content: ScrollingContentItem) => {
+    try {
+      await updateScrollingContent(content.id, { is_active: !content.is_active });
+    } catch (error) {
+      console.error('Error updating scrolling content:', error);
+      alert('Error updating scrolling content. Please try again.');
     }
   };
 
@@ -89,16 +100,16 @@ const AdminScrollingContent = () => {
           {isEditing && (
             <Card>
               <CardHeader>
-                <CardTitle>{editingIndex !== null ? 'Edit Scrolling Content' : 'Add New Scrolling Content'}</CardTitle>
+                <CardTitle>{editingId ? 'Edit Scrolling Content' : 'Add New Scrolling Content'}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <Label>Language</Label>
+                    <Label>Language/Category</Label>
                     <Input
                       value={formData.language}
                       onChange={(e) => setFormData({...formData, language: e.target.value})}
-                      placeholder="e.g., Multilingual, English, Telugu"
+                      placeholder="e.g., English, Telugu, BREAKING, IMPORTANT"
                       required
                     />
                   </div>
@@ -112,9 +123,18 @@ const AdminScrollingContent = () => {
                       required
                     />
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="is_active"
+                      checked={formData.is_active}
+                      onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                    />
+                    <Label htmlFor="is_active">Active (will be shown in ticker)</Label>
+                  </div>
                   <div className="flex space-x-2">
                     <Button type="submit">
-                      {editingIndex !== null ? 'Update' : 'Add'} Content
+                      {editingId ? 'Update' : 'Add'} Content
                     </Button>
                     <Button type="button" variant="outline" onClick={resetForm}>
                       Cancel
@@ -127,33 +147,59 @@ const AdminScrollingContent = () => {
 
           {/* Content List */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Current Scrolling Content ({scrollingData.length})</h2>
-            {scrollingData.map((content, index) => (
-              <Card key={index}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                          {content.language}
-                        </span>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Current Scrolling Content ({scrollingData.length})</h2>
+              <div className="text-sm text-gray-600">
+                Active: {scrollingData.filter(c => c.is_active).length}
+              </div>
+            </div>
+            <div className="max-h-96 overflow-y-auto space-y-3">
+              {scrollingData.map((content) => (
+                <Card key={content.id}>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            content.language === 'Multilingual' 
+                              ? 'bg-blue-100 text-blue-800' 
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {content.language === 'Multilingual' ? 'BREAKING' : content.language}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            content.is_active 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {content.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2 line-clamp-3">
+                          {content.text}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">
-                        {content.text.substring(0, 200)}...
-                      </p>
+                      <div className="flex space-x-2 ml-4">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => toggleActive(content)}
+                          title={content.is_active ? 'Deactivate' : 'Activate'}
+                        >
+                          {content.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(content)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(content.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex space-x-2 ml-4">
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(index)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="destructive" onClick={() => handleDelete(index)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -164,9 +210,10 @@ const AdminScrollingContent = () => {
           <CardContent>
             <div className="text-sm text-gray-600 space-y-2">
               <p>• The scrolling content appears at the bottom of the website as a news ticker</p>
-              <p>• You can add multilingual content separated by bullet points (•)</p>
-              <p>• Use the language field to specify which languages are included</p>
-              <p>• The content will automatically scroll across the bottom of all pages</p>
+              <p>• Only active content will be displayed in the ticker</p>
+              <p>• Use meaningful language/category labels like "BREAKING", "IMPORTANT", "English", "Telugu"</p>
+              <p>• The word "Multilingual" will be automatically replaced with "BREAKING" in the ticker</p>
+              <p>• Content automatically cycles every 6 seconds</p>
               <p>• Make sure the content is informative and relevant to drug awareness</p>
             </div>
           </CardContent>

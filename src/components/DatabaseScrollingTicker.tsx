@@ -11,21 +11,21 @@ const DatabaseScrollingTicker = () => {
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % scrollingData.length);
-    }, 8000); // 8 seconds per message
+    }, 6000); // 6 seconds per message
 
     return () => clearInterval(interval);
   }, [scrollingData.length]);
 
   if (isLoading || scrollingData.length === 0) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white py-2 z-40 shadow-lg">
-        <div className="flex items-center">
-          <div className="bg-red-800 px-4 py-2 font-bold text-sm whitespace-nowrap">
+      <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white py-1 z-40 shadow-lg">
+        <div className="flex items-center h-8">
+          <div className="bg-red-800 px-3 py-1 font-bold text-xs whitespace-nowrap">
             IMPORTANT
           </div>
           <div className="flex-1 overflow-hidden">
-            <div className="animate-marquee whitespace-nowrap py-2 px-4">
-              <span className="text-sm font-medium">
+            <div className="animate-marquee whitespace-nowrap py-1 px-3">
+              <span className="text-xs font-medium">
                 If you have any information related to drugs, please call our toll-free number 1908 or submit through anonymous report section. Your details will be kept confidential.
               </span>
             </div>
@@ -38,14 +38,14 @@ const DatabaseScrollingTicker = () => {
   const currentContent = scrollingData[currentIndex];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white py-2 z-40 shadow-lg">
-      <div className="flex items-center">
-        <div className="bg-red-800 px-4 py-2 font-bold text-sm whitespace-nowrap">
-          {currentContent?.language || 'IMPORTANT'}
+    <div className="fixed bottom-0 left-0 right-0 bg-red-600 text-white py-1 z-40 shadow-lg">
+      <div className="flex items-center h-8">
+        <div className="bg-red-800 px-3 py-1 font-bold text-xs whitespace-nowrap">
+          {currentContent?.language === 'Multilingual' ? 'BREAKING' : currentContent?.language || 'IMPORTANT'}
         </div>
         <div className="flex-1 overflow-hidden">
-          <div className="animate-marquee whitespace-nowrap py-2 px-4">
-            <span className="text-sm font-medium">
+          <div className="animate-marquee whitespace-nowrap py-1 px-3">
+            <span className="text-xs font-medium">
               {currentContent?.text || 'Loading...'}
             </span>
           </div>
