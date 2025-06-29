@@ -1,78 +1,88 @@
 
 import { useState } from 'react';
-import { useAdmin } from '../contexts/AdminContext';
+import { useDatabaseAdmin } from '@/contexts/DatabaseAdminContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react';
-import { Achievement } from '../data/achievementsData';
+import { ArrowLeft, Plus, Edit, Trash2, Image } from 'lucide-react';
+import { AchievementItem } from '@/hooks/useContentData';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AdminAchievements = () => {
-  const { isAuthenticated, achievementsData, addAchievement, updateAchievement, deleteAchievement } = useAdmin();
+  const { isAdmin } = useAuth();
+  const { achievementsData, addAchievement, updateAchievement, deleteAchievement, isLoading } = useDatabaseAdmin();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [formData, setFormData] = useState<Achievement>({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Omit<AchievementItem, 'id'>>({
     title: '',
     description: '',
-    crNumber: '',
-    offenders: [{ serialNumber: 1, name: '' }]
+    date: '',
+    image_url: '',
+    category: ''
   });
 
-  if (!isAuthenticated) {
+  if (!isAdmin) {
     navigate('/admin/login');
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingIndex !== null) {
-      updateAchievement(editingIndex, formData);
-    } else {
-      addAchievement(formData);
+    try {
+      if (editingId) {
+        await updateAchievement(editingId, formData);
+      } else {
+        await addAchievement(formData);
+      }
+      resetForm();
+    } catch (error) {
+      console.error('Error saving achievement:', error);
     }
-    resetForm();
   };
 
   const resetForm = () => {
     setFormData({
       title: '',
       description: '',
-      crNumber: '',
-      offenders: [{ serialNumber: 1, name: '' }]
+      date: '',
+      image_url: '',
+      category: ''
     });
     setIsEditing(false);
-    setEditingIndex(null);
+    setEditingId(null);
   };
 
-  const handleEdit = (index: number) => {
-    setFormData(achievementsData[index]);
-    setEditingIndex(index);
+  const handleEdit = (achievement: AchievementItem) => {
+    setFormData({
+      title: achievement.title,
+      description: achievement.description,
+      date: achievement.date,
+      image_url: achievement.image_url || '',
+      category: achievement.category || ''
+    });
+    setEditingId(achievement.id);
     setIsEditing(true);
   };
 
-  const addOffender = () => {
-    setFormData({
-      ...formData,
-      offenders: [...formData.offenders, { serialNumber: formData.offenders.length + 1, name: '' }]
-    });
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this achievement?')) {
+      try {
+        await deleteAchievement(id);
+      } catch (error) {
+        console.error('Error deleting achievement:', error);
+      }
+    }
   };
 
-  const removeOffender = (index: number) => {
-    setFormData({
-      ...formData,
-      offenders: formData.offenders.filter((_, i) => i !== index)
-    });
-  };
-
-  const updateOffender = (index: number, name: string) => {
-    const updatedOffenders = [...formData.offenders];
-    updatedOffenders[index] = { ...updatedOffenders[index], name };
-    setFormData({ ...formData, offenders: updatedOffenders });
-  };
+  if (isLoading) {
+    return <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
+      <div>Loading...</div>
+    </div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -96,7 +106,7 @@ const AdminAchievements = () => {
           {isEditing && (
             <Card>
               <CardHeader>
-                <CardTitle>{editingIndex !== null ? 'Edit Achievement' : 'Add New Achievement'}</CardTitle>
+                <CardTitle>{editingId ? 'Edit Achievement' : 'Add New Achievement'}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -105,6 +115,7 @@ const AdminAchievements = () => {
                     <Input
                       value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      placeholder="Enter achievement title"
                       required
                     />
                   </div>
@@ -113,49 +124,42 @@ const AdminAchievements = () => {
                     <Textarea
                       value={formData.description}
                       onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      placeholder="Enter detailed description"
+                      rows={4}
                       required
                     />
                   </div>
                   <div>
-                    <Label>CR Number</Label>
+                    <Label>Date</Label>
                     <Input
-                      value={formData.crNumber}
-                      onChange={(e) => setFormData({...formData, crNumber: e.target.value})}
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      placeholder="e.g., Dec 2024"
                       required
                     />
                   </div>
                   <div>
-                    <Label>Image Link (Optional)</Label>
+                    <Label>Category (Optional)</Label>
                     <Input
-                      value={formData.imageLink || ''}
-                      onChange={(e) => setFormData({...formData, imageLink: e.target.value})}
+                      value={formData.category || ''}
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      placeholder="e.g., Drug Bust, Award, etc."
                     />
                   </div>
                   <div>
-                    <Label>Offenders</Label>
-                    {formData.offenders.map((offender, index) => (
-                      <div key={index} className="flex items-center space-x-2 mb-2">
-                        <Input
-                          placeholder={`Offender ${index + 1} name`}
-                          value={offender.name}
-                          onChange={(e) => updateOffender(index, e.target.value)}
-                          required
-                        />
-                        {formData.offenders.length > 1 && (
-                          <Button type="button" variant="destructive" size="sm" onClick={() => removeOffender(index)}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                    <Button type="button" variant="outline" onClick={addOffender}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Offender
-                    </Button>
+                    <Label className="flex items-center space-x-2">
+                      <Image className="w-4 h-4" />
+                      <span>Image URL (Optional)</span>
+                    </Label>
+                    <Input
+                      value={formData.image_url || ''}
+                      onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                      placeholder="https://example.com/image.jpg"
+                    />
                   </div>
                   <div className="flex space-x-2">
                     <Button type="submit">
-                      {editingIndex !== null ? 'Update' : 'Add'} Achievement
+                      {editingId ? 'Update' : 'Add'} Achievement
                     </Button>
                     <Button type="button" variant="outline" onClick={resetForm}>
                       Cancel
@@ -169,30 +173,33 @@ const AdminAchievements = () => {
           {/* Achievements List */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Existing Achievements ({achievementsData.length})</h2>
-            {achievementsData.map((achievement, index) => (
-              <Card key={index}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{achievement.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{achievement.description.substring(0, 100)}...</p>
-                      <div className="text-xs text-gray-500">
-                        <div>CR Number: {achievement.crNumber}</div>
-                        <div>Offenders: {achievement.offenders.length}</div>
+            <div className="max-h-96 overflow-y-auto space-y-3">
+              {achievementsData.map((achievement) => (
+                <Card key={achievement.id}>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-sm mb-1">{achievement.title}</h3>
+                        <p className="text-xs text-gray-600 mb-2 line-clamp-2">{achievement.description}</p>
+                        <div className="text-xs text-gray-500 space-y-1">
+                          <div>Date: {achievement.date}</div>
+                          {achievement.category && <div>Category: {achievement.category}</div>}
+                          {achievement.image_url && <div className="text-green-600">Has Image</div>}
+                        </div>
+                      </div>
+                      <div className="flex space-x-2 ml-4">
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(achievement)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(achievement.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex space-x-2 ml-4">
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(index)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="destructive" onClick={() => deleteAchievement(index)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>

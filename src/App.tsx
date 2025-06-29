@@ -81,6 +81,7 @@ const App = () => (
               <Route path="/news" element={<News />} />
               <Route path="/news/:slug" element={<NewsDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/about-tganb" element={<About />} />
               <Route path="/about-logo" element={<AboutLogo />} />
               <Route path="/officers-directory" element={<OfficersDirectory />} />
               <Route path="/central-coordination" element={<CentralCoordination />} />
@@ -103,8 +104,10 @@ const App = () => (
               <Route path="/education" element={<Education />} />
               <Route path="/rehabilitation" element={<Rehabilitation />} />
               <Route path="/anti-drug-soldier" element={<AntiDrugSoldierEnrollment />} />
+              <Route path="/anti-drug-soldier-enrollment" element={<AntiDrugSoldierEnrollment />} />
               <Route path="/certificate-verification" element={<CertificateVerification />} />
               <Route path="/report-drug-activity" element={<DrugReportSubmission />} />
+              <Route path="/drug-report-submission" element={<DrugReportSubmission />} />
               <Route path="/anti-drug-committees" element={<AntiDrugCommittees />} />
               <Route path="/drug-types" element={<DrugTypes />} />
               <Route path="/events-campaigns" element={<EventsCampaigns />} />
@@ -118,11 +121,14 @@ const App = () => (
               <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
               <Route path="/sahay-ai" element={<SahayAI />} />
               <Route path="/sahay-ai-chatbot" element={<SahayAIChatbot />} />
+              <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
               <Route path="/shield-ai" element={<ShieldAI />} />
               <Route path="/shield-ai-risk-assessment" element={<ShieldAIRiskAssessment />} />
+              <Route path="/shield-ai-assessment" element={<ShieldAIRiskAssessment />} />
               <Route path="/testing-kits" element={<TestingKits />} />
               <Route path="/uday-ai" element={<UdayAI />} />
               <Route path="/uday-ai-recovery-planner" element={<UdayAIRecoveryPlanner />} />
+              <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<SecureAdminLogin />} />

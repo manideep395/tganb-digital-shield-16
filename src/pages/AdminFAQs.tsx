@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useAdmin } from '../contexts/AdminContext';
+import { useDatabaseAdmin } from '@/contexts/DatabaseAdminContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,54 +8,75 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react';
-
-interface FAQItem {
-  question: string;
-  answer: string;
-  category: string;
-}
+import { FAQItem } from '@/hooks/useContentData';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AdminFAQs = () => {
-  const { isAuthenticated, faqsData, addFAQ, updateFAQ, deleteFAQ } = useAdmin();
+  const { isAdmin } = useAuth();
+  const { faqsData, addFAQ, updateFAQ, deleteFAQ, isLoading } = useDatabaseAdmin();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [formData, setFormData] = useState<FAQItem>({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Omit<FAQItem, 'id'>>({
     question: '',
     answer: '',
-    category: ''
+    category: 'General'
   });
 
-  if (!isAuthenticated) {
+  if (!isAdmin) {
     navigate('/admin/login');
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingIndex !== null) {
-      updateFAQ(editingIndex, formData);
-    } else {
-      addFAQ(formData);
+    try {
+      if (editingId) {
+        await updateFAQ(editingId, formData);
+      } else {
+        await addFAQ(formData);
+      }
+      resetForm();
+    } catch (error) {
+      console.error('Error saving FAQ:', error);
     }
-    resetForm();
   };
 
   const resetForm = () => {
     setFormData({
       question: '',
       answer: '',
-      category: ''
+      category: 'General'
     });
     setIsEditing(false);
-    setEditingIndex(null);
+    setEditingId(null);
   };
 
-  const handleEdit = (index: number) => {
-    setFormData(faqsData[index]);
-    setEditingIndex(index);
+  const handleEdit = (faq: FAQItem) => {
+    setFormData({
+      question: faq.question,
+      answer: faq.answer,
+      category: faq.category
+    });
+    setEditingId(faq.id);
     setIsEditing(true);
   };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this FAQ?')) {
+      try {
+        await deleteFAQ(id);
+      } catch (error) {
+        console.error('Error deleting FAQ:', error);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
+      <div>Loading...</div>
+    </div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -79,24 +100,16 @@ const AdminFAQs = () => {
           {isEditing && (
             <Card>
               <CardHeader>
-                <CardTitle>{editingIndex !== null ? 'Edit FAQ' : 'Add New FAQ'}</CardTitle>
+                <CardTitle>{editingId ? 'Edit FAQ' : 'Add New FAQ'}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <Label>Category</Label>
-                    <Input
-                      value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      placeholder="e.g., General, Reporting, Legal"
-                      required
-                    />
-                  </div>
-                  <div>
                     <Label>Question</Label>
-                    <Textarea
+                    <Input
                       value={formData.question}
                       onChange={(e) => setFormData({...formData, question: e.target.value})}
+                      placeholder="Enter the question"
                       required
                     />
                   </div>
@@ -105,12 +118,23 @@ const AdminFAQs = () => {
                     <Textarea
                       value={formData.answer}
                       onChange={(e) => setFormData({...formData, answer: e.target.value})}
+                      placeholder="Enter the answer"
+                      rows={4}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label>Category</Label>
+                    <Input
+                      value={formData.category}
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      placeholder="e.g., General, Legal, Drugs, etc."
                       required
                     />
                   </div>
                   <div className="flex space-x-2">
                     <Button type="submit">
-                      {editingIndex !== null ? 'Update' : 'Add'} FAQ
+                      {editingId ? 'Update' : 'Add'} FAQ
                     </Button>
                     <Button type="button" variant="outline" onClick={resetForm}>
                       Cancel
@@ -124,27 +148,33 @@ const AdminFAQs = () => {
           {/* FAQs List */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Existing FAQs ({faqsData.length})</h2>
-            {faqsData.map((faq, index) => (
-              <Card key={index}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="text-xs text-blue-600 font-medium mb-1">{faq.category}</div>
-                      <h3 className="font-semibold mb-2">{faq.question}</h3>
-                      <p className="text-sm text-gray-600">{faq.answer.substring(0, 100)}...</p>
+            <div className="max-h-96 overflow-y-auto space-y-3">
+              {faqsData.map((faq) => (
+                <Card key={faq.id}>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+                            {faq.category}
+                          </span>
+                        </div>
+                        <h3 className="font-semibold text-sm mb-1">{faq.question}</h3>
+                        <p className="text-xs text-gray-600 line-clamp-2">{faq.answer}</p>
+                      </div>
+                      <div className="flex space-x-2 ml-4">
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(faq)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(faq.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex space-x-2 ml-4">
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(index)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="destructive" onClick={() => deleteFAQ(index)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>

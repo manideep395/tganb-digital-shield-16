@@ -1,60 +1,81 @@
 
 import { useState } from 'react';
-import { useAdmin } from '../contexts/AdminContext';
+import { useDatabaseAdmin } from '@/contexts/DatabaseAdminContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react';
-
-interface CelebrityVideo {
-  name: string;
-  designation: string;
-  videoUrl: string;
-}
+import { ArrowLeft, Plus, Edit, Trash2, Video } from 'lucide-react';
+import { CelebrityVideoItem } from '@/hooks/useContentData';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AdminCelebrityVideos = () => {
-  const { isAuthenticated, celebrityVideos, addCelebrityVideo, updateCelebrityVideo, deleteCelebrityVideo } = useAdmin();
+  const { isAdmin } = useAuth();
+  const { celebrityVideos, addCelebrityVideo, updateCelebrityVideo, deleteCelebrityVideo, isLoading } = useDatabaseAdmin();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [formData, setFormData] = useState<CelebrityVideo>({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Omit<CelebrityVideoItem, 'id'>>({
     name: '',
     designation: '',
-    videoUrl: ''
+    video_url: ''
   });
 
-  if (!isAuthenticated) {
+  if (!isAdmin) {
     navigate('/admin/login');
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingIndex !== null) {
-      updateCelebrityVideo(editingIndex, formData);
-    } else {
-      addCelebrityVideo(formData);
+    try {
+      if (editingId) {
+        await updateCelebrityVideo(editingId, formData);
+      } else {
+        await addCelebrityVideo(formData);
+      }
+      resetForm();
+    } catch (error) {
+      console.error('Error saving celebrity video:', error);
     }
-    resetForm();
   };
 
   const resetForm = () => {
     setFormData({
       name: '',
       designation: '',
-      videoUrl: ''
+      video_url: ''
     });
     setIsEditing(false);
-    setEditingIndex(null);
+    setEditingId(null);
   };
 
-  const handleEdit = (index: number) => {
-    setFormData(celebrityVideos[index]);
-    setEditingIndex(index);
+  const handleEdit = (video: CelebrityVideoItem) => {
+    setFormData({
+      name: video.name,
+      designation: video.designation,
+      video_url: video.video_url
+    });
+    setEditingId(video.id);
     setIsEditing(true);
   };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this celebrity video?')) {
+      try {
+        await deleteCelebrityVideo(id);
+      } catch (error) {
+        console.error('Error deleting celebrity video:', error);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
+      <div>Loading...</div>
+    </div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -78,7 +99,7 @@ const AdminCelebrityVideos = () => {
           {isEditing && (
             <Card>
               <CardHeader>
-                <CardTitle>{editingIndex !== null ? 'Edit Celebrity Video' : 'Add New Celebrity Video'}</CardTitle>
+                <CardTitle>{editingId ? 'Edit Celebrity Video' : 'Add New Celebrity Video'}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,6 +108,7 @@ const AdminCelebrityVideos = () => {
                     <Input
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      placeholder="Enter celebrity name"
                       required
                     />
                   </div>
@@ -95,21 +117,25 @@ const AdminCelebrityVideos = () => {
                     <Input
                       value={formData.designation}
                       onChange={(e) => setFormData({...formData, designation: e.target.value})}
+                      placeholder="e.g., Film Actor, Singer, etc."
                       required
                     />
                   </div>
                   <div>
-                    <Label>Video URL</Label>
+                    <Label className="flex items-center space-x-2">
+                      <Video className="w-4 h-4" />
+                      <span>Video URL</span>
+                    </Label>
                     <Input
-                      value={formData.videoUrl}
-                      onChange={(e) => setFormData({...formData, videoUrl: e.target.value})}
-                      placeholder="YouTube URL"
+                      value={formData.video_url}
+                      onChange={(e) => setFormData({...formData, video_url: e.target.value})}
+                      placeholder="YouTube URL (e.g., https://youtu.be/...)"
                       required
                     />
                   </div>
                   <div className="flex space-x-2">
                     <Button type="submit">
-                      {editingIndex !== null ? 'Update' : 'Add'} Celebrity Video
+                      {editingId ? 'Update' : 'Add'} Celebrity Video
                     </Button>
                     <Button type="button" variant="outline" onClick={resetForm}>
                       Cancel
@@ -123,31 +149,33 @@ const AdminCelebrityVideos = () => {
           {/* Celebrity Videos List */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Existing Celebrity Videos ({celebrityVideos.length})</h2>
-            {celebrityVideos.map((video, index) => (
-              <Card key={index}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{video.name}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{video.designation}</p>
-                      <div className="text-xs text-gray-500">
-                        <a href={video.videoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                          View Video
-                        </a>
+            <div className="max-h-96 overflow-y-auto space-y-3">
+              {celebrityVideos.map((video) => (
+                <Card key={video.id}>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-sm mb-1">{video.name}</h3>
+                        <p className="text-xs text-gray-600 mb-2">{video.designation}</p>
+                        <div className="text-xs text-gray-500">
+                          <a href={video.video_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                            View Video
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2 ml-4">
+                        <Button size="sm" variant="outline" onClick={() => handleEdit(video)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(video.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex space-x-2 ml-4">
-                      <Button size="sm" variant="outline" onClick={() => handleEdit(index)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="destructive" onClick={() => deleteCelebrityVideo(index)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
