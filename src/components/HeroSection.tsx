@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Shield, Users, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ScrollingNewsSidebar from './ScrollingNewsSidebar';
+import HeroScrollingBoxes from './HeroScrollingBoxes';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -117,10 +117,8 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scrolling News Sidebar - 25% width */}
-      <div className="w-1/4 relative">
-        <ScrollingNewsSidebar />
-      </div>
+      {/* Scrolling News and Announcements Boxes - 25% width */}
+      <HeroScrollingBoxes />
     </section>
   );
 };

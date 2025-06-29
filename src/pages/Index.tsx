@@ -13,7 +13,6 @@ import StatisticsSection from '../components/StatisticsSection';
 import StationsInfoSection from '../components/StationsInfoSection';
 import RehabilitationSection from '../components/RehabilitationSection';
 import TGANBStructureSection from '../components/TGANBStructureSection';
-import HeroNewsSection from '../components/HeroNewsSection';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -22,7 +21,6 @@ const Index = () => {
     <div className="min-h-screen">
       <Header />
       <HeroSection />
-      <HeroNewsSection />
       <AboutTGANB />
       <TRisingAIHighlight />
       <DirectorMessage />
