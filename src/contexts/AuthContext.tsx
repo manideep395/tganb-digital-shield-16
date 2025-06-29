@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Verify password
+      // Verify password using the database function
       const { data: passwordValid, error: verifyError } = await supabase
         .rpc('verify_password', { 
           password: password, 
@@ -81,14 +81,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Create session with custom claims
+      // Create session with Supabase Auth (for demo, we'll create a temporary user)
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password
       });
 
       if (!error) {
-        // Update last login
+        // Update last login and reset failed attempts
         await supabase
           .from('admin_users')
           .update({ 
@@ -122,6 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
+  // Check if user is admin based on email
   const isAdmin = user?.email === 'admin@tganb.gov.in' || false;
 
   const value = {
