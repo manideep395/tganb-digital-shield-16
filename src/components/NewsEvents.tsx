@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, ExternalLink, ArrowRight } from 'lucide-react';
-import { useAdmin } from '../contexts/AdminContext';
+import { useContentData } from '@/hooks/useContentData';
 
 const NewsEvents = () => {
-  const { newsData } = useAdmin();
+  const { newsData, isLoading } = useContentData();
   const [visibleCount, setVisibleCount] = useState(6);
 
   const loadMore = () => {
@@ -13,6 +13,23 @@ const NewsEvents = () => {
   };
 
   const visibleNews = newsData.slice(0, visibleCount);
+
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 bg-white">
@@ -28,11 +45,11 @@ const NewsEvents = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {visibleNews.map((news, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              {news.imageUrl && (
+            <div key={news.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              {news.image_url && (
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src={news.imageUrl} 
+                    src={news.image_url} 
                     alt={news.title}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
@@ -41,12 +58,12 @@ const NewsEvents = () => {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    news.newsType === 'Breaking News' ? 'bg-red-100 text-red-800' :
-                    news.newsType === 'Achievement' ? 'bg-green-100 text-green-800' :
-                    news.newsType === 'Event' ? 'bg-blue-100 text-blue-800' :
+                    news.news_type === 'Breaking News' ? 'bg-red-100 text-red-800' :
+                    news.news_type === 'Achievement' ? 'bg-green-100 text-green-800' :
+                    news.news_type === 'Event' ? 'bg-blue-100 text-blue-800' :
                     'bg-gray-100 text-gray-800'
                   }`}>
-                    {news.newsType}
+                    {news.news_type}
                   </span>
                   <div className="flex items-center text-gray-500 text-sm">
                     <Calendar className="w-4 h-4 mr-1" />

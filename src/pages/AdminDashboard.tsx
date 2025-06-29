@@ -1,5 +1,4 @@
 
-import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -13,17 +12,16 @@ import {
   LogOut, 
   Settings,
   Shield,
-  TrendingUp,
   Trophy,
   Video,
   HelpCircle,
   Scroll
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDatabaseAdmin } from '@/contexts/DatabaseAdminContext';
 
 const AdminDashboard = () => {
   const { 
-    isAuthenticated, 
-    logout, 
     newsData, 
     announcementData, 
     trainingData,
@@ -31,22 +29,24 @@ const AdminDashboard = () => {
     celebrityVideos,
     faqsData,
     drugReports,
-    scrollingData
-  } = useAdmin();
+    scrollingData,
+    isLoading
+  } = useDatabaseAdmin();
+  const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!user || !isAdmin) {
       navigate('/admin/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [user, isAdmin, navigate]);
 
-  if (!isAuthenticated) {
+  if (!user || !isAdmin) {
     return null;
   }
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     navigate('/admin/login');
   };
 
@@ -111,14 +111,6 @@ const AdminDashboard = () => {
 
   const quickActions = [
     {
-      title: 'Manage Drug Reports',
-      description: 'View and manage submitted drug reports',
-      icon: FileText,
-      action: () => navigate('/admin/drug-reports'),
-      color: 'bg-gradient-to-r from-red-500 to-red-600',
-      count: drugReports.length
-    },
-    {
       title: 'Manage News',
       description: 'Add, edit, or remove news articles with images & links',
       icon: FileText,
@@ -133,14 +125,6 @@ const AdminDashboard = () => {
       action: () => navigate('/admin/announcements'),
       color: 'bg-gradient-to-r from-orange-500 to-orange-600',
       count: announcementData.length
-    },
-    {
-      title: 'Manage Trainings',
-      description: 'Add, edit, or remove training programs',
-      icon: Calendar,
-      action: () => navigate('/admin/trainings'),
-      color: 'bg-gradient-to-r from-purple-500 to-purple-600',
-      count: trainingData.length
     },
     {
       title: 'Manage Achievements',
@@ -176,6 +160,14 @@ const AdminDashboard = () => {
     }
   ];
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -190,10 +182,11 @@ const AdminDashboard = () => {
               />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">TGANB Admin Portal</h1>
-                <p className="text-sm text-gray-500">Live Content Management System</p>
+                <p className="text-sm text-gray-500">Database Content Management System</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
               <Button variant="outline" size="sm">
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -210,8 +203,8 @@ const AdminDashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Content Management Dashboard</h2>
-          <p className="text-gray-600">Manage all website content with real data integration</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Database Content Management</h2>
+          <p className="text-gray-600">Manage all website content with real-time database integration</p>
         </div>
 
         {/* Stats Grid */}
@@ -244,9 +237,7 @@ const AdminDashboard = () => {
                     <div className={`${action.color} p-3 rounded-full group-hover:scale-110 transition-transform duration-300`}>
                       <action.icon className="w-6 h-6 text-white" />
                     </div>
-                    {action.count !== null && (
-                      <span className="text-2xl font-bold text-gray-600">{action.count}</span>
-                    )}
+                    <span className="text-2xl font-bold text-gray-600">{action.count}</span>
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">{action.title}</h4>
                   <p className="text-sm text-gray-600">{action.description}</p>
@@ -266,13 +257,13 @@ const AdminDashboard = () => {
             <CardContent>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {newsData.slice(0, 5).map((news, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded">
+                  <div key={news.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded">
                     <div className={`px-2 py-1 rounded text-xs font-bold ${
-                      news.newsType === 'Breaking News' ? 'bg-red-100 text-red-600' :
-                      news.newsType === 'Achievement' ? 'bg-green-100 text-green-600' :
+                      news.news_type === 'Breaking News' ? 'bg-red-100 text-red-600' :
+                      news.news_type === 'Achievement' ? 'bg-green-100 text-green-600' :
                       'bg-blue-100 text-blue-600'
                     }`}>
-                      {news.newsType}
+                      {news.news_type}
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-sm">{news.title}</p>
@@ -292,7 +283,7 @@ const AdminDashboard = () => {
             <CardContent>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {announcementData.slice(0, 5).map((announcement, index) => (
-                  <div key={index} className="p-3 bg-orange-50 rounded border border-orange-200">
+                  <div key={announcement.id} className="p-3 bg-orange-50 rounded border border-orange-200">
                     <p className="text-sm font-medium">{announcement.name}</p>
                     <p className="text-xs text-gray-600">{announcement.date}</p>
                   </div>
@@ -308,11 +299,10 @@ const AdminDashboard = () => {
             <div className="flex items-start space-x-4">
               <Shield className="w-6 h-6 text-blue-600 mt-1" />
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Live Content Management</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">Live Database Integration</h4>
                 <p className="text-sm text-gray-600">
-                  All changes made here are immediately reflected on the website. 
-                  Content is synchronized across all sections including scrolling sidebar. 
-                  Real data from data files is now fully integrated.
+                  All changes made here are immediately reflected on the website through secure database operations. 
+                  Content is synchronized in real-time across all sections. All admin activities are logged for security.
                 </p>
               </div>
             </div>

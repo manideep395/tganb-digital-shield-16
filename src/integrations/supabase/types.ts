@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          category: string | null
+          created_at: string
+          date: string
+          description: string
+          id: string
+          image_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          date: string
+          description: string
+          id?: string
+          image_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_users: {
         Row: {
           created_at: string
@@ -35,6 +68,36 @@ export type Database = {
           id?: string
           last_login?: string | null
           password_hash?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      announcements: {
+        Row: {
+          attachment_link: string | null
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          attachment_link?: string | null
+          created_at?: string
+          date: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          attachment_link?: string | null
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          name?: string
           updated_at?: string
         }
         Relationships: []
@@ -135,6 +198,33 @@ export type Database = {
         }
         Relationships: []
       }
+      celebrity_videos: {
+        Row: {
+          created_at: string
+          designation: string
+          id: string
+          name: string
+          updated_at: string
+          video_url: string
+        }
+        Insert: {
+          created_at?: string
+          designation: string
+          id?: string
+          name: string
+          updated_at?: string
+          video_url: string
+        }
+        Update: {
+          created_at?: string
+          designation?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          video_url?: string
+        }
+        Relationships: []
+      }
       certificate_verification: {
         Row: {
           certificate_id: string
@@ -225,6 +315,72 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          answer: string
+          category: string
+          created_at: string
+          id: string
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          category?: string
+          created_at?: string
+          id?: string
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          category?: string
+          created_at?: string
+          id?: string
+          question?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      news_articles: {
+        Row: {
+          created_at: string
+          date: string | null
+          description: string
+          id: string
+          image_url: string
+          link: string | null
+          news_type: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          description: string
+          id?: string
+          image_url: string
+          link?: string | null
+          news_type: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          description?: string
+          id?: string
+          image_url?: string
+          link?: string | null
+          news_type?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rate_limit: {
         Row: {
           action: string
@@ -249,6 +405,78 @@ export type Database = {
           id?: string
           ip_address?: string
           window_start?: string
+        }
+        Relationships: []
+      }
+      scrolling_content: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          language: string
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          language: string
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          language?: string
+          text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      training_sessions: {
+        Row: {
+          capacity: number | null
+          created_at: string
+          date: string
+          description: string
+          id: string
+          image_url: string | null
+          instructor: string | null
+          location: string | null
+          registration_link: string | null
+          time: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string
+          date: string
+          description: string
+          id?: string
+          image_url?: string | null
+          instructor?: string | null
+          location?: string | null
+          registration_link?: string | null
+          time?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          instructor?: string | null
+          location?: string | null
+          registration_link?: string | null
+          time?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
