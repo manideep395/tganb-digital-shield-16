@@ -9,50 +9,15 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      admin_users: {
-        Row: {
-          created_at: string | null
-          email: string
-          failed_login_attempts: number | null
-          id: string
-          is_active: boolean | null
-          last_login: string | null
-          locked_until: string | null
-          password_hash: string
-          role: string
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          failed_login_attempts?: number | null
-          id?: string
-          is_active?: boolean | null
-          last_login?: string | null
-          locked_until?: string | null
-          password_hash: string
-          role?: string
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          failed_login_attempts?: number | null
-          id?: string
-          is_active?: boolean | null
-          last_login?: string | null
-          locked_until?: string | null
-          password_hash?: string
-          role?: string
-        }
-        Relationships: []
-      }
       anti_drug_soldiers: {
         Row: {
           address: string
           certificate_id: string
-          class_course_designation: string
-          created_at: string | null
+          class_course_designation: string | null
+          created_at: string
           district: string
           email: string
+          enrollment_date: string
           gender: string
           id: string
           institution_name: string
@@ -66,10 +31,11 @@ export type Database = {
         Insert: {
           address: string
           certificate_id: string
-          class_course_designation: string
-          created_at?: string | null
+          class_course_designation?: string | null
+          created_at?: string
           district: string
           email: string
+          enrollment_date?: string
           gender: string
           id?: string
           institution_name: string
@@ -83,10 +49,11 @@ export type Database = {
         Update: {
           address?: string
           certificate_id?: string
-          class_course_designation?: string
-          created_at?: string | null
+          class_course_designation?: string | null
+          created_at?: string
           district?: string
           email?: string
+          enrollment_date?: string
           gender?: string
           id?: string
           institution_name?: string
@@ -99,61 +66,22 @@ export type Database = {
         }
         Relationships: []
       }
-      audit_logs: {
-        Row: {
-          action: string
-          created_at: string | null
-          id: string
-          ip_address: unknown | null
-          new_values: Json | null
-          old_values: Json | null
-          record_id: string | null
-          table_name: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          action: string
-          created_at?: string | null
-          id?: string
-          ip_address?: unknown | null
-          new_values?: Json | null
-          old_values?: Json | null
-          record_id?: string | null
-          table_name?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          action?: string
-          created_at?: string | null
-          id?: string
-          ip_address?: unknown | null
-          new_values?: Json | null
-          old_values?: Json | null
-          record_id?: string | null
-          table_name?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       certificate_verification: {
         Row: {
           certificate_id: string
-          created_at: string | null
+          created_at: string
           id: string
           student_name: string
         }
         Insert: {
           certificate_id: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           student_name: string
         }
         Update: {
           certificate_id?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           student_name?: string
         }
@@ -161,85 +89,70 @@ export type Database = {
       }
       drug_reports: {
         Row: {
-          created_at: string | null
+          created_at: string
           date_unknown: boolean | null
           detailed_description: string
+          evidence_file_name: string | null
+          evidence_file_size: number | null
           evidence_file_url: string | null
           id: string
           incident_date_time: string | null
-          ip_address: unknown | null
-          is_anonymous: boolean | null
+          ip_address: string | null
+          is_anonymous: boolean
           location_incident: string
           report_type: string
           reporter_email: string | null
           reporter_name: string | null
           reporter_phone: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
           status: string | null
-          updated_at: string | null
+          updated_at: string
           user_agent: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           date_unknown?: boolean | null
           detailed_description: string
+          evidence_file_name?: string | null
+          evidence_file_size?: number | null
           evidence_file_url?: string | null
           id?: string
           incident_date_time?: string | null
-          ip_address?: unknown | null
-          is_anonymous?: boolean | null
+          ip_address?: string | null
+          is_anonymous?: boolean
           location_incident: string
           report_type: string
           reporter_email?: string | null
           reporter_name?: string | null
           reporter_phone?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
           status?: string | null
-          updated_at?: string | null
+          updated_at?: string
           user_agent?: string | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           date_unknown?: boolean | null
           detailed_description?: string
+          evidence_file_name?: string | null
+          evidence_file_size?: number | null
           evidence_file_url?: string | null
           id?: string
           incident_date_time?: string | null
-          ip_address?: unknown | null
-          is_anonymous?: boolean | null
+          ip_address?: string | null
+          is_anonymous?: boolean
           location_incident?: string
           report_type?: string
           reporter_email?: string | null
           reporter_name?: string | null
           reporter_phone?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
           status?: string | null
-          updated_at?: string | null
+          updated_at?: string
           user_agent?: string | null
-        }
-        Relationships: []
-      }
-      rate_limits: {
-        Row: {
-          action: string
-          attempts: number | null
-          blocked_until: string | null
-          id: string
-          ip_address: unknown
-          window_start: string | null
-        }
-        Insert: {
-          action: string
-          attempts?: number | null
-          blocked_until?: string | null
-          id?: string
-          ip_address: unknown
-          window_start?: string | null
-        }
-        Update: {
-          action?: string
-          attempts?: number | null
-          blocked_until?: string | null
-          id?: string
-          ip_address?: unknown
-          window_start?: string | null
         }
         Relationships: []
       }
@@ -248,36 +161,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      check_rate_limit: {
-        Args: {
-          p_ip_address: unknown
-          p_action: string
-          p_max_attempts?: number
-          p_window_minutes?: number
-        }
-        Returns: boolean
-      }
-      hash_password: {
-        Args: { password: string }
-        Returns: string
-      }
-      log_audit_event: {
-        Args: {
-          p_user_id: string
-          p_action: string
-          p_table_name: string
-          p_record_id: string
-          p_old_values: Json
-          p_new_values: Json
-          p_ip_address: unknown
-          p_user_agent: string
-        }
-        Returns: string
-      }
-      verify_password: {
-        Args: { password: string; hash: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
