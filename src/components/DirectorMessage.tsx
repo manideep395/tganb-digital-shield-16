@@ -1,70 +1,67 @@
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Quote } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const DirectorMessage = () => {
+  const handleReadMore = () => {
+    window.location.href = '/directors-note';
+  };
+
   return (
-    <section className="bg-gradient-to-br from-blue-50 via-white to-green-50 font-poppins py-8">
+    <section className="py-8 bg-gradient-to-b from-blue-50 to-white font-poppins dark:from-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
-            Leadership Messages
-          </h2>
-          <p className="text-base text-gray-600 max-w-2xl mx-auto">
-            Inspiring words from our distinguished leaders in the fight against narcotics
-          </p>
-        </div>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">Leadership Messages</h2>
+            <p className="text-gray-600 dark:text-gray-300">Words of guidance from our esteemed leaders</p>
+          </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* DGP Message - Left Side 50% */}
-          <Card className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-3 mb-4">
-                <img 
-                  src="/uploads/f8dc5c1c-f04c-4da0-914e-58f74d4e9436.png" 
-                  alt="DGP Telangana" 
-                  className="w-12 h-12 rounded-full border-2 border-white/30 object-cover"
-                />
-                <div className="text-left">
-                  <h3 className="text-lg font-bold text-white">Dr. Jitender</h3>
-                  <p className="text-blue-200 text-sm">IPS, Director General of Police</p>
-                  <p className="text-blue-200 text-xs">Telangana State</p>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* DGP Message */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+              <div className="text-center mb-4">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">DGP's Message</h3>
+                <div className="flex items-center justify-center space-x-4 mb-4">
+                  <img 
+                    src="/uploads/58955152-6125-4601-abc9-e7cf3762b834.png" 
+                    alt="Dr. Jitender IPS" 
+                    className="w-16 h-16 rounded-full border-2 border-green-600 object-cover"
+                  />
+                  <div className="text-left">
+                    <h4 className="text-lg font-bold text-gray-800 dark:text-white">Dr. Jitender, IPS</h4>
+                    <p className="text-green-600 font-semibold text-sm">DGP, Telangana</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="relative">
-                <Quote className="w-6 h-6 text-blue-300 opacity-50 mb-3" />
-                <blockquote className="text-sm leading-relaxed text-left italic">
-                  "The fight against narcotics requires unwavering commitment from every section of society. Through the Telangana Anti-Narcotics Bureau, we are not just enforcing the law, but building a foundation for a drug-free future. Our comprehensive approach combines strict enforcement with compassionate rehabilitation, ensuring that we address both the symptoms and root causes of this menace."
-                </blockquote>
-              </div>
-            </CardContent>
-          </Card>
+              <blockquote className="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed border-l-4 border-green-600 pl-4">
+                "Drugs ruin lives by damaging mental and physical health. Each of you should spread 
+                the message to at least 10 others — say no to drugs, yes to health and a good life."
+              </blockquote>
+            </div>
 
-          {/* Director Message - Right Side 50% */}
-          <Card className="bg-gradient-to-br from-green-600 to-emerald-700 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 border-0">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-3 mb-4">
-                <img 
-                  src="/uploads/8f0c5105-a6c3-4812-85b3-0e1c39e29f3b.png" 
-                  alt="Director TGANB" 
-                  className="w-12 h-12 rounded-full border-2 border-white/30 object-cover"
-                />
-                <div className="text-left">
-                  <h3 className="text-lg font-bold text-white">Shri. N. Prakash Reddy</h3>
-                  <p className="text-green-200 text-sm">IPS, Director</p>
-                  <p className="text-green-200 text-xs">Telangana Anti-Narcotics Bureau</p>
+            {/* Director Message */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+              <div className="text-center mb-4">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Director's Message</h3>
+                <div className="flex items-center justify-center space-x-4 mb-4">
+                  <img 
+                    src="/uploads/image.png" 
+                    alt="Shri Sandeep Shandilya IPS" 
+                    className="w-16 h-16 rounded-full border-2 border-green-600 object-cover"
+                  />
+                  <div className="text-left">
+                    <h4 className="text-lg font-bold text-gray-800 dark:text-white">Shri Sandeep Shandilya IPS</h4>
+                    <p className="text-green-600 font-semibold text-sm">Director TGANB, Telangana</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="relative">
-                <Quote className="w-6 h-6 text-green-300 opacity-50 mb-3" />
-                <blockquote className="text-sm leading-relaxed text-left italic">
-                  "Our mission extends beyond mere law enforcement. We are guardians of Telangana's future, working tirelessly to create a society where every individual can thrive free from the clutches of narcotics. Through innovative programs like Mission Parivartana and Operation Sankalp, we are transforming lives and communities, one intervention at a time."
-                </blockquote>
-              </div>
-            </CardContent>
-          </Card>
+              <blockquote className="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed border-l-4 border-green-600 pl-4">
+                "Don't Let Drugs Decide Your Destiny. Together, we can build a drug-free Telangana 
+                where every citizen can realize their full potential without the shadow of substance abuse."
+              </blockquote>
+            </div>
+          </div>
         </div>
       </div>
     </section>
