@@ -1,9 +1,14 @@
 
 import { Phone, Mail, MapPin, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
+import { MessageCircle as WhatsApp } from 'lucide-react';
 
 const Footer = () => {
   const handleCall = (number: string) => {
     window.location.href = `tel:${number}`;
+  };
+
+  const handleWhatsApp = (number: string) => {
+    window.open(`https://wa.me/${number}`, '_blank');
   };
 
   const handleEmail = () => {
@@ -16,15 +21,15 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-r from-green-900 via-darkslategrey-900 to-blue-900 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* About Section */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center space-x-3">
               <img 
                 src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                 alt="TGANB Logo" 
-                className="h-12 w-12 rounded-full"
+                className="h-10 w-10 rounded-full"
               />
               <div>
                 <h3 className="text-lg font-bold">TGANB</h3>
@@ -37,7 +42,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h4 className="text-lg font-semibold border-b border-blue-600 pb-2">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="/about-tganb" className="text-blue-100 hover:text-white transition-colors">About TGANB</a></li>
@@ -49,7 +54,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h4 className="text-lg font-semibold border-b border-blue-600 pb-2">Contact Information</h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-center space-x-3">
@@ -73,6 +78,15 @@ const Footer = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-3">
+                <WhatsApp className="w-4 h-4 text-green-400" />
+                <p 
+                  className="text-green-100 cursor-pointer hover:text-white transition-colors"
+                  onClick={() => handleWhatsApp('918712671111')}
+                >
+                  WhatsApp: 8712671111
+                </p>
+              </div>
+              <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-blue-300" />
                 <p 
                   className="text-blue-100 cursor-pointer hover:text-white transition-colors break-all"
@@ -92,7 +106,7 @@ const Footer = () => {
           </div>
 
           {/* Services */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h4 className="text-lg font-semibold border-b border-blue-600 pb-2">Our Services</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="/mission-parivartana" className="text-blue-100 hover:text-white transition-colors">Mission Parivartana</a></li>
@@ -105,7 +119,7 @@ const Footer = () => {
         </div>
 
         {/* Social Media Links */}
-        <div className="border-t border-blue-600 mt-8 pt-8">
+        <div className="border-t border-blue-600 mt-6 pt-6">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex space-x-4">
               <button 
@@ -131,6 +145,12 @@ const Footer = () => {
                 className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
               >
                 <Youtube className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => handleWhatsApp('918712671111')}
+                className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
+              >
+                <WhatsApp className="w-5 h-5" />
               </button>
             </div>
             <div className="text-center md:text-right">
