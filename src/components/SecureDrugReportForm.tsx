@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { FileInput } from "@/components/ui/file-input"
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 
 interface FormData {
@@ -41,13 +42,47 @@ const SecureDrugReportForm = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  // Input sanitization function
+  const sanitizeInput = (input: string): string => {
+    return input
+      .replace(/[<>]/g, '') // Remove potential HTML tags
+      .replace(/javascript:/gi, '') // Remove javascript: protocols
+      .replace(/on\w+=/gi, '') // Remove event handlers
+      .trim();
+  };
+
+  // File validation
+  const validateFile = (file: File): boolean => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+    if (!allowedTypes.includes(file.type)) {
+      setError('Invalid file type. Only JPEG, PNG, GIF, PDF, and TXT files are allowed.');
+      return false;
+    }
+
+    if (file.size > maxSize) {
+      setError('File size too large. Maximum size is 10MB.');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleFileUpload = async (file: File) => {
     try {
+      setError('');
       setIsUploading(true);
       
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
+      if (!validateFile(file)) {
+        return;
+      }
+      
+      const fileExt = file.name.split('.').pop()?.toLowerCase();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `evidence/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -68,49 +103,105 @@ const SecureDrugReportForm = () => {
         evidenceFileUrl: data.publicUrl
       });
     } catch (error) {
-      console.error('File upload error:', error);
-      alert('Failed to upload file. Please try again.');
+      setError('Failed to upload file. Please try again.');
     } finally {
       setIsUploading(false);
     }
   };
 
+  const validateForm = (): boolean => {
+    // Required field validation
+    if (!formData.reportType) {
+      setError('Please select a report type.');
+      return false;
+    }
+
+    if (!formData.locationIncident.trim()) {
+      setError('Please enter the location of the incident.');
+      return false;
+    }
+
+    if (!formData.detailedDescription.trim()) {
+      setError('Please provide a detailed description.');
+      return false;
+    }
+
+    // Non-anonymous validation
+    if (!formData.isAnonymous) {
+      if (!formData.reporterName.trim()) {
+        setError('Please enter your name.');
+        return false;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.reporterEmail.trim() || !emailRegex.test(formData.reporterEmail)) {
+        setError('Please enter a valid email address.');
+        return false;
+      }
+
+      const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+      if (!formData.reporterPhone.trim() || !phoneRegex.test(formData.reporterPhone)) {
+        setError('Please enter a valid phone number.');
+        return false;
+      }
+    }
+
+    // Description length validation
+    if (formData.detailedDescription.length < 10) {
+      setError('Description must be at least 10 characters long.');
+      return false;
+    }
+
+    if (formData.detailedDescription.length > 2000) {
+      setError('Description must be less than 2000 characters.');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
-      // Prepare the report data
-      const reportData = {
-        report_type: formData.reportType,
+      // Sanitize all inputs
+      const sanitizedData = {
+        report_type: sanitizeInput(formData.reportType),
         is_anonymous: formData.isAnonymous,
-        reporter_name: formData.isAnonymous ? null : formData.reporterName,
-        reporter_email: formData.isAnonymous ? null : formData.reporterEmail,
-        reporter_phone: formData.isAnonymous ? null : formData.reporterPhone,
-        location_incident: formData.locationIncident,
+        reporter_name: formData.isAnonymous ? null : sanitizeInput(formData.reporterName),
+        reporter_email: formData.isAnonymous ? null : sanitizeInput(formData.reporterEmail),
+        reporter_phone: formData.isAnonymous ? null : sanitizeInput(formData.reporterPhone),
+        location_incident: sanitizeInput(formData.locationIncident),
         incident_date_time: formData.dateUnknown ? null : formData.incidentDateTime,
         date_unknown: formData.dateUnknown,
-        detailed_description: formData.detailedDescription,
+        detailed_description: sanitizeInput(formData.detailedDescription),
         evidence_file_url: formData.evidenceFileUrl,
         evidence_file_name: formData.evidenceFile?.name || null,
         evidence_file_size: formData.evidenceFile?.size || null,
-        ip_address: null, // This would be set server-side in production
-        user_agent: navigator.userAgent
+        status: 'pending',
+        created_at: new Date().toISOString()
       };
 
       const { error } = await supabase
         .from('drug_reports')
-        .insert(reportData);
+        .insert(sanitizedData);
 
       if (error) {
         throw error;
       }
 
-      // Generate report ID for confirmation
-      const reportId = `TGANB-${Date.now().toString().slice(-6)}`;
+      // Generate secure report ID
+      const reportId = `TGANB-${Date.now().toString().slice(-8)}${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
       
-      alert(`Report submitted successfully! Your report ID is: ${reportId}`);
+      setSuccess(`Report submitted successfully! Your report ID is: ${reportId}. Please save this ID for future reference.`);
       
       // Reset form
       setFormData({
@@ -128,186 +219,225 @@ const SecureDrugReportForm = () => {
       });
       
     } catch (error) {
-      console.error('Report submission error:', error);
-      alert('Failed to submit report. Please try again.');
+      setError('Failed to submit report. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex items-center justify-center">
-      <Card className="w-full max-w-2xl shadow-xl">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            Report a Drug Incident
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <Label htmlFor="reportType" className="block text-gray-700 text-sm font-bold mb-2">
-                Report Type
-              </Label>
-              <Select onValueChange={(value) => setFormData({ ...formData, reportType: value })}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a report type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Possession">Possession</SelectItem>
-                  <SelectItem value="Trafficking">Trafficking</SelectItem>
-                  <SelectItem value="Manufacturing">Manufacturing</SelectItem>
-                  <SelectItem value="Distribution">Distribution</SelectItem>
-                  <SelectItem value="Usage">Usage</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label className="inline-flex items-center space-x-2">
-                <Checkbox
-                  id="isAnonymous"
-                  checked={formData.isAnonymous}
-                  onCheckedChange={(checked) => setFormData({ ...formData, isAnonymous: checked === true })}
-                />
-                <span className="text-gray-700 text-sm font-medium">Report Anonymously</span>
-              </Label>
-            </div>
-
-            {!formData.isAnonymous && (
-              <>
-                <div>
-                  <Label htmlFor="reporterName" className="block text-gray-700 text-sm font-bold mb-2">
-                    Your Name
-                  </Label>
-                  <Input
-                    type="text"
-                    id="reporterName"
-                    placeholder="Enter your name"
-                    value={formData.reporterName}
-                    onChange={(e) => setFormData({ ...formData, reporterName: e.target.value })}
-                    required={!formData.isAnonymous}
-                    disabled={formData.isAnonymous}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="reporterEmail" className="block text-gray-700 text-sm font-bold mb-2">
-                    Your Email
-                  </Label>
-                  <Input
-                    type="email"
-                    id="reporterEmail"
-                    placeholder="Enter your email"
-                    value={formData.reporterEmail}
-                    onChange={(e) => setFormData({ ...formData, reporterEmail: e.target.value })}
-                    required={!formData.isAnonymous}
-                    disabled={formData.isAnonymous}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="reporterPhone" className="block text-gray-700 text-sm font-bold mb-2">
-                    Your Phone Number
-                  </Label>
-                  <Input
-                    type="tel"
-                    id="reporterPhone"
-                    placeholder="Enter your phone number"
-                    value={formData.reporterPhone}
-                    onChange={(e) => setFormData({ ...formData, reporterPhone: e.target.value })}
-                    required={!formData.isAnonymous}
-                    disabled={formData.isAnonymous}
-                  />
-                </div>
-              </>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+        <Card className="shadow-xl border-0">
+          <CardHeader className="text-center bg-blue-600 text-white rounded-t-lg">
+            <CardTitle className="text-2xl font-bold">
+              Secure Drug Incident Report
+            </CardTitle>
+            <p className="text-blue-100">All reports are encrypted and secure</p>
+          </CardHeader>
+          <CardContent className="p-8">
+            {error && (
+              <Alert variant="destructive" className="mb-6">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
 
-            <div>
-              <Label htmlFor="locationIncident" className="block text-gray-700 text-sm font-bold mb-2">
-                Location of Incident
-              </Label>
-              <Input
-                type="text"
-                id="locationIncident"
-                placeholder="Enter the location of the incident"
-                value={formData.locationIncident}
-                onChange={(e) => setFormData({ ...formData, locationIncident: e.target.value })}
-                required
-              />
-            </div>
+            {success && (
+              <Alert className="mb-6 border-green-200 bg-green-50">
+                <AlertDescription className="text-green-800">{success}</AlertDescription>
+              </Alert>
+            )}
 
-            <div>
-              <Label className="inline-flex items-center space-x-2">
-                <Checkbox
-                  id="dateUnknown"
-                  checked={formData.dateUnknown}
-                  onCheckedChange={(checked) => setFormData({ ...formData, dateUnknown: checked === true })}
-                />
-                <span className="text-gray-700 text-sm font-medium">Date and Time Unknown</span>
-              </Label>
-            </div>
-
-            {!formData.dateUnknown && (
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="incidentDateTime" className="block text-gray-700 text-sm font-bold mb-2">
-                  Date and Time of Incident
+                <Label htmlFor="reportType" className="text-sm font-semibold text-gray-700 mb-2 block">
+                  Report Type *
                 </Label>
-                <Input
-                  type="datetime-local"
-                  id="incidentDateTime"
-                  value={formData.incidentDateTime}
-                  onChange={(e) => setFormData({ ...formData, incidentDateTime: e.target.value })}
-                  required={!formData.dateUnknown}
-                  disabled={formData.dateUnknown}
-                />
+                <Select onValueChange={(value) => setFormData({ ...formData, reportType: value })}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a report type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="possession">Drug Possession</SelectItem>
+                    <SelectItem value="trafficking">Drug Trafficking</SelectItem>
+                    <SelectItem value="manufacturing">Drug Manufacturing</SelectItem>
+                    <SelectItem value="distribution">Drug Distribution</SelectItem>
+                    <SelectItem value="usage">Drug Usage</SelectItem>
+                    <SelectItem value="other">Other Drug-Related Activity</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            )}
 
-            <div>
-              <Label htmlFor="detailedDescription" className="block text-gray-700 text-sm font-bold mb-2">
-                Detailed Description
-              </Label>
-              <Textarea
-                id="detailedDescription"
-                placeholder="Enter a detailed description of the incident"
-                rows={4}
-                value={formData.detailedDescription}
-                onChange={(e) => setFormData({ ...formData, detailedDescription: e.target.value })}
-                required
-              />
-            </div>
+              <div>
+                <Label className="inline-flex items-center space-x-2">
+                  <Checkbox
+                    id="isAnonymous"
+                    checked={formData.isAnonymous}
+                    onCheckedChange={(checked) => setFormData({ ...formData, isAnonymous: checked === true })}
+                  />
+                  <span className="text-sm font-medium text-gray-700">Submit this report anonymously</span>
+                </Label>
+                <p className="text-xs text-gray-500 mt-1">Your identity will be completely protected</p>
+              </div>
 
-            <div>
-              <Label htmlFor="evidenceFile" className="block text-gray-700 text-sm font-bold mb-2">
-                Upload Evidence (Optional)
-              </Label>
-              <FileInput
-                id="evidenceFile"
-                onChange={(e) => {
-                  const file = (e.target as HTMLInputElement).files?.[0];
-                  if (file) {
-                    handleFileUpload(file);
-                  }
-                }}
-                disabled={isUploading}
-              />
-              {formData.evidenceFile && (
-                <div className="mt-2">
-                  <p className="text-sm text-gray-600">
-                    Uploaded File: {formData.evidenceFile.name}
-                  </p>
+              {!formData.isAnonymous && (
+                <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-semibold text-gray-700">Contact Information</h3>
+                  
+                  <div>
+                    <Label htmlFor="reporterName" className="text-sm font-medium text-gray-700 mb-1 block">
+                      Full Name *
+                    </Label>
+                    <Input
+                      type="text"
+                      id="reporterName"
+                      placeholder="Enter your full name"
+                      value={formData.reporterName}
+                      onChange={(e) => setFormData({ ...formData, reporterName: e.target.value })}
+                      maxLength={100}
+                      required={!formData.isAnonymous}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="reporterEmail" className="text-sm font-medium text-gray-700 mb-1 block">
+                      Email Address *
+                    </Label>
+                    <Input
+                      type="email"
+                      id="reporterEmail"
+                      placeholder="Enter your email address"
+                      value={formData.reporterEmail}
+                      onChange={(e) => setFormData({ ...formData, reporterEmail: e.target.value })}
+                      maxLength={255}
+                      required={!formData.isAnonymous}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="reporterPhone" className="text-sm font-medium text-gray-700 mb-1 block">
+                      Phone Number *
+                    </Label>
+                    <Input
+                      type="tel"
+                      id="reporterPhone"
+                      placeholder="Enter your phone number"
+                      value={formData.reporterPhone}
+                      onChange={(e) => setFormData({ ...formData, reporterPhone: e.target.value })}
+                      maxLength={20}
+                      required={!formData.isAnonymous}
+                    />
+                  </div>
                 </div>
               )}
-            </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting || isUploading}>
-              {isSubmitting ? 'Submitting...' : 'Submit Report'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <div>
+                <Label htmlFor="locationIncident" className="text-sm font-medium text-gray-700 mb-1 block">
+                  Location of Incident *
+                </Label>
+                <Input
+                  type="text"
+                  id="locationIncident"
+                  placeholder="Enter the location where the incident occurred"
+                  value={formData.locationIncident}
+                  onChange={(e) => setFormData({ ...formData, locationIncident: e.target.value })}
+                  maxLength={255}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label className="inline-flex items-center space-x-2 mb-3">
+                  <Checkbox
+                    id="dateUnknown"
+                    checked={formData.dateUnknown}
+                    onCheckedChange={(checked) => setFormData({ ...formData, dateUnknown: checked === true })}
+                  />
+                  <span className="text-sm font-medium text-gray-700">Date and time unknown</span>
+                </Label>
+
+                {!formData.dateUnknown && (
+                  <div>
+                    <Label htmlFor="incidentDateTime" className="text-sm font-medium text-gray-700 mb-1 block">
+                      Date and Time of Incident
+                    </Label>
+                    <Input
+                      type="datetime-local"
+                      id="incidentDateTime"
+                      value={formData.incidentDateTime}
+                      onChange={(e) => setFormData({ ...formData, incidentDateTime: e.target.value })}
+                      max={new Date().toISOString().slice(0, 16)}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="detailedDescription" className="text-sm font-medium text-gray-700 mb-1 block">
+                  Detailed Description *
+                </Label>
+                <Textarea
+                  id="detailedDescription"
+                  placeholder="Provide a detailed description of the incident (minimum 10 characters)"
+                  rows={5}
+                  value={formData.detailedDescription}
+                  onChange={(e) => setFormData({ ...formData, detailedDescription: e.target.value })}
+                  maxLength={2000}
+                  required
+                  className="resize-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.detailedDescription.length}/2000 characters
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="evidenceFile" className="text-sm font-medium text-gray-700 mb-1 block">
+                  Upload Evidence (Optional)
+                </Label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Supported formats: JPEG, PNG, GIF, PDF, TXT (Max 10MB)
+                </p>
+                <FileInput
+                  id="evidenceFile"
+                  onChange={(e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      handleFileUpload(file);
+                    }
+                  }}
+                  disabled={isUploading}
+                  accept=".jpg,.jpeg,.png,.gif,.pdf,.txt"
+                />
+                {formData.evidenceFile && (
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                    <p className="text-sm text-green-700">
+                      ✓ File uploaded: {formData.evidenceFile.name}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 border-t">
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
+                  disabled={isSubmitting || isUploading}
+                >
+                  {isSubmitting ? 'Submitting Report...' : 'Submit Secure Report'}
+                </Button>
+              </div>
+
+              <div className="text-center">
+                <p className="text-xs text-gray-500">
+                  Your report is encrypted and will be reviewed by authorized personnel only.
+                  All personal information is protected according to privacy policies.
+                </p>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

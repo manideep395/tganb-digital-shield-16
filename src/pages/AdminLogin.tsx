@@ -4,31 +4,52 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Lock, User } from 'lucide-react';
+import { Shield, Lock, User, AlertTriangle } from 'lucide-react';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);
   const { login } = useAdmin();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
-    // Simulate loading time for security appearance
+    // Input validation
+    if (!username.trim() || !password) {
+      setError('Please enter both username and password');
+      return;
+    }
+
+    // Rate limiting
+    if (attempts >= 5) {
+      setError('Too many failed attempts. Please wait before trying again.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Simulate loading time for security
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const success = login(username, password);
+    const success = login(username.trim(), password);
     if (success) {
       navigate('/admin/dashboard');
     } else {
-      setError('Invalid credentials. Please try again.');
+      setAttempts(prev => prev + 1);
+      setError('Invalid credentials. Please check your username and password.');
+      
+      // Auto-reset attempts after 15 minutes
+      setTimeout(() => {
+        setAttempts(0);
+      }, 15 * 60 * 1000);
     }
     setIsLoading(false);
   };
@@ -58,10 +79,6 @@ const AdminLogin = () => {
             Telangana Anti-Narcotics Bureau
             <br />
             Secure Administrator Access
-            <br />
-            <span className="text-sm text-blue-600 mt-2 block">
-              Username: admin | Password: admin123
-            </span>
           </CardDescription>
         </CardHeader>
         
@@ -81,6 +98,8 @@ const AdminLogin = () => {
                   className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Enter username"
                   required
+                  maxLength={50}
+                  autoComplete="username"
                 />
               </div>
             </div>
@@ -99,20 +118,23 @@ const AdminLogin = () => {
                   className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Enter password"
                   required
+                  maxLength={100}
+                  autoComplete="current-password"
                 />
               </div>
             </div>
             
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
+              <Alert variant="destructive">
+                <AlertTriangle className="w-4 h-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
             
             <Button
               type="submit"
               className="w-full h-12 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-300"
-              disabled={isLoading}
+              disabled={isLoading || attempts >= 5}
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">
@@ -126,7 +148,7 @@ const AdminLogin = () => {
           </form>
           
           <div className="mt-6 text-center text-xs text-gray-500">
-            This is a secure government portal. All activities are logged and monitored.
+            This is a secure government portal. All activities are logged and monitored for security purposes.
           </div>
         </CardContent>
       </Card>

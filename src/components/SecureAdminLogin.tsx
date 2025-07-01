@@ -13,8 +13,8 @@ const SecureAdminLogin = () => {
   const navigate = useNavigate();
   const { signIn, isLoading } = useAuth();
   const [formData, setFormData] = useState({
-    email: 'admin@tganb.gov.in',
-    password: 'SecureAdmin2024!'
+    email: '',
+    password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -24,30 +24,40 @@ const SecureAdminLogin = () => {
     e.preventDefault();
     setError('');
 
+    // Input validation
     if (!formData.email || !formData.password) {
       setError('Please fill in all fields');
       return;
     }
 
-    if (attempts >= 3) {
-      setError('Too many failed attempts. Please wait before trying again.');
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Rate limiting
+    if (attempts >= 5) {
+      setError('Too many failed attempts. Please wait 15 minutes before trying again.');
       return;
     }
 
     try {
-      console.log('Attempting to sign in with:', formData.email);
       const { error } = await signIn(formData.email, formData.password);
       
       if (error) {
         setAttempts(prev => prev + 1);
-        setError(error.message || 'Invalid credentials. Please check your email and password.');
-        console.error('Sign in error:', error);
+        setError('Invalid credentials. Please check your email and password.');
+        
+        // Auto-reset attempts after 15 minutes
+        setTimeout(() => {
+          setAttempts(0);
+        }, 15 * 60 * 1000);
       } else {
-        console.log('Sign in successful, navigating to dashboard');
         navigate('/admin/dashboard');
       }
     } catch (err) {
-      console.error('Unexpected error:', err);
       setError('An unexpected error occurred. Please try again.');
     }
   };
@@ -72,10 +82,11 @@ const SecureAdminLogin = () => {
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="admin@tganb.gov.in"
+                onChange={(e) => setFormData({ ...formData, email: e.target.value.trim() })}
+                placeholder="Enter your email"
                 required
                 autoComplete="email"
+                maxLength={255}
               />
             </div>
             
@@ -87,9 +98,10 @@ const SecureAdminLogin = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Enter your secure password"
+                  placeholder="Enter your password"
                   required
                   autoComplete="current-password"
+                  maxLength={255}
                 />
                 <Button
                   type="button"
@@ -113,22 +125,17 @@ const SecureAdminLogin = () => {
             <Button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700"
-              disabled={isLoading || attempts >= 3}
+              disabled={isLoading || attempts >= 5}
             >
               {isLoading ? 'Authenticating...' : 'Sign In'}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <div className="text-sm text-gray-600">
-              <p className="font-semibold">Admin Credentials:</p>
-              <p>Email: admin@tganb.gov.in</p>
-              <p>Password: SecureAdmin2024!</p>
-            </div>
-            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-xs text-yellow-800">
                 <strong>Security Notice:</strong> This system includes audit logging and rate limiting for security.
-                All login attempts are monitored.
+                All login attempts are monitored and logged.
               </p>
             </div>
           </div>
