@@ -20,7 +20,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins">
+    <section className="relative flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins h-[calc(100vh-140px)]">
       {/* 3D Background Elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-black-400/30 to-transparent rounded-full blur-xl animate-pulse"></div>
@@ -29,20 +29,20 @@ const HeroSection = () => {
       </div>
 
       {/* Tiger Mascot and Enrollment Section - 25% width */}
-      <div className="w-1/4 flex flex-col items-center justify-center p-6 relative z-10">
+      <div className="w-1/4 flex flex-col items-center justify-center p-4 relative z-10">
         <div 
-          className="cursor-pointer hover:scale-105 transition-transform duration-300 mb-4"
+          className="cursor-pointer hover:scale-105 transition-transform duration-300 mb-3"
           onClick={handleAntiDrugEnrollment}
         >
           <img 
             src="/lovable-uploads/550efe74-a996-423b-a425-8a3656a2e477.png" 
             alt="Anti-Drug Tiger Mascot" 
-            className="w-72 h-auto drop-shadow-2xl"
+            className="w-56 h-auto drop-shadow-2xl"
           />
         </div>
         <Button 
           onClick={handleAntiDrugEnrollment}
-          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold px-6 py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm"
+          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold px-4 py-2 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-xs"
         >
           Enroll as Anti-Drug Soldier
         </Button>
@@ -50,16 +50,16 @@ const HeroSection = () => {
 
       {/* Main Hero Content - 50% width - Properly Centered */}
       <div className="w-1/2 flex items-center justify-center text-white relative z-10 px-4">
-        <div className="max-w-3xl mx-auto space-y-4 animate-fade-in text-center">
+        <div className="max-w-2xl mx-auto space-y-3 animate-fade-in text-center">
           {/* Three Logos Row - Properly Centered */}
-          <div className="flex justify-center items-center space-x-8 mb-6">
+          <div className="flex justify-center items-center space-x-6 mb-4">
             {/* Telangana Emblem - Left */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-black-600/30 rounded-full blur-md animate-pulse"></div>
               <img 
                 src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
                 alt="Telangana Emblem" 
-                className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-yellow-400 shadow-lg relative z-10"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-yellow-400 shadow-lg relative z-10"
               />
             </div>
             
@@ -70,7 +70,7 @@ const HeroSection = () => {
               <img 
                 src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                 alt="TG ANB Logo" 
-                className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-black-400 shadow-2xl relative z-10 hover:scale-110 transition-transform duration-300"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-black-400 shadow-2xl relative z-10 hover:scale-110 transition-transform duration-300"
               />
             </div>
             
@@ -80,52 +80,52 @@ const HeroSection = () => {
               <img 
                 src="/uploads/db384303-58f4-497a-9043-3cb10d049cee.png" 
                 alt="Telangana Police Logo" 
-                className="w-12 h-12 md:w-14 md:h-14 shadow-lg relative z-10"
+                className="w-10 h-10 md:w-12 md:h-12 shadow-lg relative z-10"
               />
             </div>
           </div>
 
           {/* Hero Content - Perfectly Centered */}
           <div className="text-center">
-            <h1 className="text-xl md:text-3xl font-bold font-poppins leading-tight mb-4">
-              <span className="block text-black text-lg md:text-2xl mb-2">
+            <h1 className="text-lg md:text-2xl font-bold font-poppins leading-tight mb-3">
+              <span className="block text-black text-base md:text-xl mb-2">
                 TELANGANA ANTI-NARCOTICS BUREAU
               </span>
-              <span className="text-white text-lg md:text-xl">
+              <span className="text-white text-sm md:text-lg">
                 Building a Drug-Free Telangana
               </span>
             </h1>
             
-            <p className="text-sm md:text-base text-blue-100 max-w-2xl mx-auto leading-relaxed mb-6">
+            <p className="text-xs md:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed mb-4">
               Dedicated to Combating Drug Abuse Through Enforcement, Awareness, and Community Empowerment
             </p>
 
             {/* Feature Icons - Centered */}
-            <div className="flex justify-center items-center space-x-6 mb-6">
+            <div className="flex justify-center items-center space-x-4 mb-4">
               <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="w-10 h-10 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-yellow-400/30">
-                  <Shield className="w-5 h-5 text-yellow-400" />
+                <div className="w-8 h-8 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-1 border border-yellow-400/30">
+                  <Shield className="w-4 h-4 text-yellow-400" />
                 </div>
                 <span className="text-xs font-poppins">Protection</span>
               </div>
               <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="w-10 h-10 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-yellow-400/30">
-                  <Users className="w-5 h-5 text-yellow-400" />
+                <div className="w-8 h-8 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-1 border border-yellow-400/30">
+                  <Users className="w-4 h-4 text-yellow-400" />
                 </div>
                 <span className="text-xs font-poppins">Community</span>
               </div>
               <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                <div className="w-10 h-10 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-2 border border-yellow-400/30">
-                  <Target className="w-5 h-5 text-yellow-400" />
+                <div className="w-8 h-8 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-1 border border-yellow-400/30">
+                  <Target className="w-4 h-4 text-yellow-400" />
                 </div>
                 <span className="text-xs font-poppins">Prevention</span>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
               <Button 
                 size="sm" 
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold font-poppins px-6 py-2 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm border-2 border-yellow-400/50"
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold font-poppins px-4 py-2 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-xs border-2 border-yellow-400/50"
                 onClick={handleExploreWork}
               >
                 Explore Our Work
@@ -133,7 +133,7 @@ const HeroSection = () => {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-2 border-white text-blue-300 hover:bg-white hover:text-blue-900 font-bold font-poppins px-6 py-2 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm bg-transparent"
+                className="border-2 border-white text-blue-300 hover:bg-white hover:text-blue-900 font-bold font-poppins px-4 py-2 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-xs bg-transparent"
                 onClick={handleReportCrime}
               >
                 Report Drug Crime
