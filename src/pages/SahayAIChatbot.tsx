@@ -17,7 +17,7 @@ const SahayAIChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm Sahay.AI, your 24x7 digital anti-drug assistant. How can I help you today?",
+      text: "Hello! I'm Sahay.AI, your 24x7 digital anti-drug assistant developed by Telangana Anti-Narcotics Bureau. How can I help you today?",
       isUser: false,
       timestamp: new Date()
     }
@@ -25,21 +25,25 @@ const SahayAIChatbot = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [language, setLanguage] = useState('EN');
+  const [currentApiKeyIndex, setCurrentApiKeyIndex] = useState(0);
 
-  // Function to format AI response text
+  // Get all available API keys from environment
+  const getApiKeys = () => {
+    const keys = [];
+    for (let i = 1; i <= 10; i++) {
+      const key = import.meta.env[`VITE_GEMINI_API_KEY_${i}`];
+      if (key) keys.push(key);
+    }
+    return keys.length > 0 ? keys : ["AIzaSyDit5Xy8Vrya6Gul7OD2PCEANZL4hPzNNk"]; // fallback
+  };
+
+  const apiKeys = getApiKeys();
+
   const formatMessage = (text: string) => {
-    // Split by numbered lists first
     let formattedText = text.replace(/(\d+\.\s)/g, '\n$1');
-    
-    // Handle bold text conversion
     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Handle line breaks after colons
     formattedText = formattedText.replace(/:\s/g, ':\n');
-    
-    // Convert newlines to proper line breaks
     formattedText = formattedText.replace(/\n/g, '<br/>');
-    
     return formattedText;
   };
 
@@ -57,8 +61,9 @@ const SahayAIChatbot = () => {
     setInputText('');
     setIsLoading(true);
 
-    try {
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDit5Xy8Vrya6Gul7OD2PCEANZL4hPzNNk", {
+    const tryApiCall = async (keyIndex: number): Promise<string> => {
+      const currentKey = apiKeys[keyIndex];
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${currentKey}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -68,7 +73,14 @@ const SahayAIChatbot = () => {
             {
               parts: [
                 {
-                  text: `You are Sahay.AI, a compassionate AI assistant developed by Telangana Anti-Narcotics Bureau (TG ANB). Your role is to provide support, awareness, and guidance about drug abuse prevention and recovery. Be empathetic, informative, and always encourage seeking professional help when needed. Keep responses concise but helpful. User's message: ${inputText}`
+                  text: `You are Sahay.AI, a compassionate AI assistant developed by Telangana Anti-Narcotics Bureau (TG ANB). Your role is to provide support, awareness, and guidance about drug abuse prevention and recovery. Be empathetic, informative, and always encourage seeking professional help when needed. 
+
+IMPORTANT CONTACT INFORMATION:
+- Emergency helpline: 1908
+- TG ANB Contact: 8712671111 (WhatsApp available)
+- Email: tsnabho-hyd@tspolice.gov.in
+
+Always provide these correct contact numbers when users ask for help or want to reach TG ANB. Keep responses concise but helpful. User's message: ${inputText}`
                 }
               ]
             }
@@ -76,8 +88,37 @@ const SahayAIChatbot = () => {
         })
       });
 
+      if (!response.ok) {
+        throw new Error(`API ${keyIndex + 1} failed`);
+      }
+
       const data = await response.json();
-      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to help you. Could you please rephrase your question?";
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here to help you. Could you please rephrase your question?";
+    };
+
+    try {
+      let aiResponse = "";
+      let success = false;
+
+      // Try each API key until one works
+      for (let i = 0; i < apiKeys.length; i++) {
+        const keyIndex = (currentApiKeyIndex + i) % apiKeys.length;
+        try {
+          aiResponse = await tryApiCall(keyIndex);
+          setCurrentApiKeyIndex((keyIndex + 1) % apiKeys.length); // Move to next key for next request
+          success = true;
+          break;
+        } catch (error) {
+          console.log(`API key ${keyIndex + 1} failed, trying next...`);
+          if (i === apiKeys.length - 1) {
+            throw new Error("All API keys failed");
+          }
+        }
+      }
+
+      if (!success) {
+        throw new Error("All API keys exhausted");
+      }
 
       const aiMessage: Message = {
         id: messages.length + 2,
@@ -91,7 +132,7 @@ const SahayAIChatbot = () => {
       console.error('Error:', error);
       const errorMessage: Message = {
         id: messages.length + 2,
-        text: "I'm sorry, I'm having trouble connecting right now. Please try again or contact our helpline at 8712671111.",
+        text: "I'm sorry, I'm having trouble connecting right now. Please try again or contact our helpline at 1908 or WhatsApp us at 8712671111.",
         isUser: false,
         timestamp: new Date()
       };
@@ -113,7 +154,7 @@ const SahayAIChatbot = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-green-600 text-white">
+      <section className="py-12 bg-gradient-to-r from-blue-600 to-green-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
             <img 
@@ -126,13 +167,13 @@ const SahayAIChatbot = () => {
               <p className="text-xl opacity-90">Your 24x7 Digital Anti-Drug Assistant</p>
             </div>
           </div>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-lg mb-6 max-w-2xl mx-auto">
             An AI-powered companion by TG ANB to help you rise above addiction and find the support you need.
           </p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
           {/* Main Chat Interface */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
@@ -149,7 +190,7 @@ const SahayAIChatbot = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Sahay.AI</h3>
-                  <p className="text-sm opacity-90">Always here to help</p>
+                  <p className="text-sm opacity-90">Always here to help • Emergency: 1908</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -162,6 +203,9 @@ const SahayAIChatbot = () => {
                   <option value="TE">TE</option>
                   <option value="HI">HI</option>
                 </select>
+                <div className="text-xs bg-white/10 px-2 py-1 rounded">
+                  API: {currentApiKeyIndex + 1}/{apiKeys.length}
+                </div>
               </div>
             </div>
 
@@ -214,7 +258,7 @@ const SahayAIChatbot = () => {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask me anything about drug awareness, support, or rehab help..."
+                  placeholder="Ask me anything about drug awareness, support, or rehabilitation help..."
                   className="flex-1"
                   disabled={isLoading}
                 />
@@ -226,11 +270,14 @@ const SahayAIChatbot = () => {
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
+              <div className="mt-2 text-xs text-center text-gray-500">
+                Emergency: 1908 | WhatsApp: 8712671111 | Email: tsnabho-hyd@tspolice.gov.in
+              </div>
             </div>
           </div>
 
-          {/* Powered By Section - Centered */}
-          <div className="mt-8 text-center">
+          {/* Powered By Section */}
+          <div className="mt-6 text-center">
             <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-200/50 dark:border-gray-700/50">
               <div className="flex items-center justify-center mb-3">
                 <img 
