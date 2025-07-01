@@ -1,314 +1,320 @@
 
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  BarChart3, 
-  FileText, 
-  Megaphone, 
-  Users, 
-  Calendar,
-  LogOut, 
-  Settings,
-  Shield,
-  Trophy,
-  Video,
-  HelpCircle,
-  Scroll
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDatabaseAdmin } from '@/contexts/DatabaseAdminContext';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Newspaper, 
+  Megaphone, 
+  Scroll, 
+  GraduationCap, 
+  Trophy, 
+  Video, 
+  HelpCircle, 
+  FileText,
+  Users,
+  BarChart3,
+  Settings,
+  LogOut,
+  Home,
+  Database
+} from 'lucide-react';
 
 const AdminDashboard = () => {
+  const { isAdmin, signOut } = useAuth();
   const { 
     newsData, 
     announcementData, 
-    trainingData,
+    scrollingData, 
+    trainingData, 
     achievementsData,
     celebrityVideos,
     faqsData,
     drugReports,
-    scrollingData,
-    isLoading
+    isLoading 
   } = useDatabaseAdmin();
-  const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user || !isAdmin) {
-      navigate('/admin/login');
-    }
-  }, [user, isAdmin, navigate]);
-
-  if (!user || !isAdmin) {
+  if (!isAdmin) {
+    navigate('/admin/login');
     return null;
   }
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate('/admin/login');
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/admin/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
-  const statsData = [
-    {
-      title: 'Drug Reports',
-      value: drugReports.length,
-      icon: FileText,
-      color: 'text-red-600',
-      bgColor: 'bg-red-100'
-    },
-    {
-      title: 'News Articles',
-      value: newsData.length,
-      icon: BarChart3,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
-    },
-    {
-      title: 'Announcements',
-      value: announcementData.length,
-      icon: Megaphone,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
-    },
-    {
-      title: 'Training Programs',
-      value: trainingData.length,
-      icon: Calendar,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
-    },
-    {
-      title: 'Achievements',
-      value: achievementsData.length,
-      icon: Trophy,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-100'
-    },
-    {
-      title: 'Celebrity Videos',
-      value: celebrityVideos.length,
-      icon: Video,
-      color: 'text-red-600',
-      bgColor: 'bg-red-100'
-    },
-    {
-      title: 'FAQs',
-      value: faqsData.length,
-      icon: HelpCircle,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-100'
-    },
-    {
-      title: 'Scrolling Content',
-      value: scrollingData.length,
-      icon: Scroll,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
-    }
+  const contentStats = [
+    { name: 'News Articles', count: newsData.length, icon: Newspaper, color: 'blue', path: '/admin/news' },
+    { name: 'Announcements', count: announcementData.length, icon: Megaphone, color: 'orange', path: '/admin/announcements' },
+    { name: 'Scrolling Content', count: scrollingData.length, icon: Scroll, color: 'purple', path: '/admin/scrolling-content' },
+    { name: 'Training Sessions', count: trainingData.length, icon: GraduationCap, color: 'green', path: '/admin/trainings' },
+    { name: 'Achievements', count: achievementsData.length, icon: Trophy, color: 'yellow', path: '/admin/achievements' },
+    { name: 'Celebrity Videos', count: celebrityVideos.length, icon: Video, color: 'red', path: '/admin/celebrity-videos' },
+    { name: 'FAQs', count: faqsData.length, icon: HelpCircle, color: 'indigo', path: '/admin/faqs' },
+    { name: 'Drug Reports', count: drugReports.length, icon: FileText, color: 'gray', path: '/admin/drug-reports' }
   ];
 
-  const quickActions = [
-    {
-      title: 'Manage News',
-      description: 'Add, edit, or remove news articles with images & links',
-      icon: FileText,
-      action: () => navigate('/admin/news'),
-      color: 'bg-gradient-to-r from-green-500 to-green-600',
-      count: newsData.length
-    },
-    {
-      title: 'Manage Announcements',
-      description: 'Add, edit, or remove announcements with attachments',
-      icon: Megaphone,
-      action: () => navigate('/admin/announcements'),
-      color: 'bg-gradient-to-r from-orange-500 to-orange-600',
-      count: announcementData.length
-    },
-    {
-      title: 'Manage Achievements',
-      description: 'Add, edit, or remove achievements',
-      icon: Trophy,
-      action: () => navigate('/admin/achievements'),
-      color: 'bg-gradient-to-r from-yellow-500 to-yellow-600',
-      count: achievementsData.length
-    },
-    {
-      title: 'Manage Celebrity Videos',
-      description: 'Add, edit, or remove celebrity videos',
-      icon: Video,
-      action: () => navigate('/admin/celebrity-videos'),
-      color: 'bg-gradient-to-r from-red-500 to-red-600',
-      count: celebrityVideos.length
-    },
-    {
-      title: 'Manage FAQs',
-      description: 'Add, edit, or remove FAQs',
-      icon: HelpCircle,
-      action: () => navigate('/admin/faqs'),
-      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
-      count: faqsData.length
-    },
-    {
-      title: 'Manage Scrolling Content',
-      description: 'Edit scrolling text content at bottom of website',
-      icon: Scroll,
-      action: () => navigate('/admin/scrolling-content'),
-      color: 'bg-gradient-to-r from-blue-500 to-blue-600',
-      count: scrollingData.length
-    }
-  ];
+  const getColorClasses = (color: string) => {
+    const colorMap = {
+      blue: 'bg-blue-50 border-blue-200 text-blue-700',
+      orange: 'bg-orange-50 border-orange-200 text-orange-700',
+      purple: 'bg-purple-50 border-purple-200 text-purple-700',
+      green: 'bg-green-50 border-green-200 text-green-700',
+      yellow: 'bg-yellow-50 border-yellow-200 text-yellow-700',
+      red: 'bg-red-50 border-red-200 text-red-700',
+      indigo: 'bg-indigo-50 border-indigo-200 text-indigo-700',
+      gray: 'bg-gray-50 border-gray-200 text-gray-700'
+    };
+    return colorMap[color as keyof typeof colorMap] || colorMap.gray;
+  };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <img 
-                src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
-                alt="TG ANB Logo" 
-                className="w-10 h-10 rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">TGANB Admin Portal</h1>
-                <p className="text-sm text-gray-500">Database Content Management System</p>
+              <div className="flex items-center space-x-2">
+                <Database className="w-8 h-8 text-blue-600" />
+                <h1 className="text-xl font-bold text-gray-900">TGANB Admin Panel</h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
-              <Button variant="outline" size="sm">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/')}
+                className="flex items-center space-x-2"
+              >
+                <Home className="w-4 h-4" />
+                <span>View Website</span>
               </Button>
-              <Button onClick={handleLogout} variant="destructive" size="sm">
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
+              <Button 
+                variant="outline" 
+                onClick={handleSignOut}
+                className="flex items-center space-x-2 text-red-600 hover:text-red-700 border-red-200 hover:bg-red-50"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
               </Button>
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Database Content Management</h2>
-          <p className="text-gray-600">Manage all website content with real-time database integration</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, Admin!</h2>
+          <p className="text-gray-600">Manage your TGANB website content and monitor system status.</p>
         </div>
 
-        {/* Stats Grid */}
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statsData.map((stat, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
-                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                  </div>
-                  <div className={`${stat.bgColor} p-3 rounded-full`}>
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                  </div>
+          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-sm font-medium">Total Content</p>
+                  <p className="text-3xl font-bold">
+                    {contentStats.reduce((acc, stat) => acc + stat.count, 0)}
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+                <BarChart3 className="w-8 h-8 text-blue-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-100 text-sm font-medium">Active News</p>
+                  <p className="text-3xl font-bold">{newsData.length}</p>
+                </div>
+                <Newspaper className="w-8 h-8 text-green-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-orange-100 text-sm font-medium">Announcements</p>
+                  <p className="text-3xl font-bold">{announcementData.length}</p>
+                </div>
+                <Megaphone className="w-8 h-8 text-orange-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-purple-100 text-sm font-medium">Drug Reports</p>
+                  <p className="text-3xl font-bold">{drugReports.length}</p>
+                </div>
+                <FileText className="w-8 h-8 text-purple-200" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Content Management Section */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <Settings className="w-6 h-6 mr-2" />
+            Content Management
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {contentStats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <Card 
+                  key={stat.name} 
+                  className={`hover:shadow-lg transition-all duration-200 cursor-pointer border-2 ${getColorClasses(stat.color)}`}
+                  onClick={() => navigate(stat.path)}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <Icon className="w-6 h-6" />
+                      <Badge variant="secondary" className="font-bold">
+                        {stat.count}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <CardTitle className="text-sm font-semibold mb-1">{stat.name}</CardTitle>
+                    <CardDescription className="text-xs">
+                      Manage and edit {stat.name.toLowerCase()}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Content Management</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <Users className="w-6 h-6 mr-2" />
+            Quick Actions
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quickActions.map((action, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 cursor-pointer group" onClick={action.action}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`${action.color} p-3 rounded-full group-hover:scale-110 transition-transform duration-300`}>
-                      <action.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-2xl font-bold text-gray-600">{action.count}</span>
-                  </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">{action.title}</h4>
-                  <p className="text-sm text-gray-600">{action.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            <Card className="hover:shadow-lg transition-shadow duration-200">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Newspaper className="w-5 h-5 text-blue-600" />
+                  <span>Add News Article</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm mb-4">
+                  Publish breaking news and important updates
+                </p>
+                <Button 
+                  onClick={() => navigate('/admin/news')}
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
+                  Create News
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow duration-200">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Megaphone className="w-5 h-5 text-orange-600" />
+                  <span>New Announcement</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm mb-4">
+                  Share official announcements with the public
+                </p>
+                <Button 
+                  onClick={() => navigate('/admin/announcements')}
+                  className="w-full bg-orange-600 hover:bg-orange-700"
+                >
+                  Create Announcement
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow duration-200">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="w-5 h-5 text-purple-600" />
+                  <span>View Reports</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm mb-4">
+                  Review submitted drug-related reports
+                </p>
+                <Button 
+                  onClick={() => navigate('/admin/drug-reports')}
+                  className="w-full bg-purple-600 hover:bg-purple-700"
+                >
+                  View Reports
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent News</CardTitle>
-              <CardDescription>Latest news articles</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {newsData.slice(0, 5).map((news, index) => (
-                  <div key={news.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded">
-                    <div className={`px-2 py-1 rounded text-xs font-bold ${
-                      news.news_type === 'Breaking News' ? 'bg-red-100 text-red-600' :
-                      news.news_type === 'Achievement' ? 'bg-green-100 text-green-600' :
-                      'bg-blue-100 text-blue-600'
-                    }`}>
-                      {news.news_type}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-sm">{news.title}</p>
-                      <p className="text-xs text-gray-500">{news.date}</p>
-                    </div>
-                  </div>
-                ))}
+        {/* Recent Activity Summary */}
+        <Card className="bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <BarChart3 className="w-5 h-5 text-gray-600" />
+              <span>System Overview</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div className="p-3 bg-white rounded-lg">
+                <p className="text-2xl font-bold text-blue-600">{newsData.length}</p>
+                <p className="text-sm text-gray-600">News Articles</p>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Announcements</CardTitle>
-              <CardDescription>Latest announcements</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {announcementData.slice(0, 5).map((announcement, index) => (
-                  <div key={announcement.id} className="p-3 bg-orange-50 rounded border border-orange-200">
-                    <p className="text-sm font-medium">{announcement.name}</p>
-                    <p className="text-xs text-gray-600">{announcement.date}</p>
-                  </div>
-                ))}
+              <div className="p-3 bg-white rounded-lg">
+                <p className="text-2xl font-bold text-orange-600">{announcementData.length}</p>
+                <p className="text-sm text-gray-600">Announcements</p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Security Notice */}
-        <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
-          <CardContent className="p-6">
-            <div className="flex items-start space-x-4">
-              <Shield className="w-6 h-6 text-blue-600 mt-1" />
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Live Database Integration</h4>
-                <p className="text-sm text-gray-600">
-                  All changes made here are immediately reflected on the website through secure database operations. 
-                  Content is synchronized in real-time across all sections. All admin activities are logged for security.
-                </p>
+              <div className="p-3 bg-white rounded-lg">
+                <p className="text-2xl font-bold text-green-600">{trainingData.length}</p>
+                <p className="text-sm text-gray-600">Training Sessions</p>
+              </div>
+              <div className="p-3 bg-white rounded-lg">
+                <p className="text-2xl font-bold text-purple-600">{drugReports.length}</p>
+                <p className="text-sm text-gray-600">Drug Reports</p>
               </div>
             </div>
           </CardContent>
         </Card>
-      </main>
+      </div>
     </div>
   );
 };

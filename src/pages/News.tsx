@@ -22,6 +22,8 @@ const News = () => {
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       case 'Alert':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      case 'Event':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
       default:
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
     }
@@ -84,101 +86,130 @@ const News = () => {
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                 <Newspaper className="w-8 h-8 text-blue-600 mr-3" />
-                Latest News
+                Latest News ({newsData.length})
               </h2>
               
-              <div className="space-y-6">
-                {newsData.map((news, index) => (
-                  <article key={news.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-blue-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-                    <div className="relative">
-                      <img 
-                        src={news.image_url} 
-                        alt={news.title}
-                        className="w-full h-48 object-cover"
-                      />
-                      {news.date && (
-                        <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          {news.date}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="p-6">
-                      <div className="flex items-center mb-3">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getNewsTypeColor(news.news_type)}`}>
-                          {news.news_type}
-                        </span>
+              {newsData.length === 0 ? (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center">
+                  <p className="text-gray-500 dark:text-gray-400">No news articles available at the moment.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {newsData.map((news) => (
+                    <article key={news.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-blue-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
+                      <div className="relative">
+                        <img 
+                          src={news.image_url} 
+                          alt={news.title}
+                          className="w-full h-48 object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
+                        />
+                        {news.date && (
+                          <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            {news.date}
+                          </div>
+                        )}
                       </div>
                       
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{news.title}</h3>
-                      
-                      {news.subtitle && (
-                        <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-3">{news.subtitle}</h4>
-                      )}
-                      
-                      <Button 
-                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold group" 
-                        variant="ghost"
-                        onClick={() => handleReadMore(news.title)}
-                      >
-                        <span>Read Full Article</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </div>
-                  </article>
-                ))}
-              </div>
+                      <div className="p-6">
+                        <div className="flex items-center mb-3">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getNewsTypeColor(news.news_type)}`}>
+                            {news.news_type}
+                          </span>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{news.title}</h3>
+                        
+                        {news.subtitle && (
+                          <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-3">{news.subtitle}</h4>
+                        )}
+                        
+                        <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{news.description}</p>
+                        
+                        <div className="flex gap-3">
+                          <Button 
+                            className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold group" 
+                            variant="ghost"
+                            onClick={() => handleReadMore(news.title)}
+                          >
+                            <span>Read Full Article</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                          {news.link && (
+                            <Button 
+                              variant="outline"
+                              onClick={() => window.open(news.link, '_blank')}
+                              className="border-blue-600 text-blue-700 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400"
+                            >
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              External Link
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Announcements Section */}
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                 <Users className="w-8 h-8 text-yellow-600 mr-3" />
-                Announcements
+                Announcements ({announcementData.length})
               </h2>
               
-              <div className="space-y-6">
-                {announcementData.map((announcement, index) => (
-                  <div key={announcement.id} className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex items-start justify-between mb-3">
-                      <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 px-3 py-1 rounded-full">
-                        {announcement.date}
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                      {announcement.name}
-                    </h3>
-                    
-                    {announcement.description && (
-                      <p className="text-gray-600 dark:text-gray-300 mb-3 text-sm">
-                        {announcement.description}
-                      </p>
-                    )}
-                    
-                    <div className="flex gap-3">
-                      <Button 
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white"
-                        onClick={handleLearnMore}
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Learn More
-                      </Button>
-                      {announcement.attachment_link && (
-                        <Button 
-                          variant="outline"
-                          onClick={() => window.open(announcement.attachment_link, '_blank')}
-                          className="border-yellow-600 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-400 dark:text-yellow-400"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          Download
-                        </Button>
+              {announcementData.length === 0 ? (
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-8 text-center border-l-4 border-yellow-500">
+                  <p className="text-gray-500 dark:text-gray-400">No announcements available at the moment.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {announcementData.map((announcement) => (
+                    <div key={announcement.id} className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300">
+                      <div className="flex items-start justify-between mb-3">
+                        <span className="text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 px-3 py-1 rounded-full">
+                          {announcement.date}
+                        </span>
+                      </div>
+                      
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+                        {announcement.name}
+                      </h3>
+                      
+                      {announcement.description && (
+                        <p className="text-gray-600 dark:text-gray-300 mb-3 text-sm">
+                          {announcement.description}
+                        </p>
                       )}
+                      
+                      <div className="flex gap-3">
+                        <Button 
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                          onClick={handleLearnMore}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Learn More
+                        </Button>
+                        {announcement.attachment_link && (
+                          <Button 
+                            variant="outline"
+                            onClick={() => window.open(announcement.attachment_link, '_blank')}
+                            className="border-yellow-600 text-yellow-700 hover:bg-yellow-50 dark:border-yellow-400 dark:text-yellow-400"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
               {/* Emergency Contact */}
               <div className="mt-8 p-6 bg-gradient-to-r from-red-100 to-red-50 dark:from-red-900/20 dark:to-red-800/20 rounded-2xl border-l-4 border-red-500">

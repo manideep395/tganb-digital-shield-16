@@ -12,7 +12,6 @@ import AnonymousReportSection from '../components/AnonymousReportSection';
 import StatisticsSection from '../components/StatisticsSection';
 import StationsInfoSection from '../components/StationsInfoSection';
 import RehabilitationSection from '../components/RehabilitationSection';
-import TGANBStructureSection from '../components/TGANBStructureSection';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -32,7 +31,6 @@ const Index = () => {
       <StatisticsSection />
       <StationsInfoSection />
       <RehabilitationSection />
-      <TGANBStructureSection />
       <DatabaseScrollingTicker />
       <Footer />
     </div>
