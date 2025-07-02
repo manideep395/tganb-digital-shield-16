@@ -1,3 +1,4 @@
+
 import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
@@ -8,18 +9,6 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AdminProvider } from '@/contexts/AdminContext';
 import { DatabaseAdminProvider } from '@/contexts/DatabaseAdminContext';
 import NavigationChatAssistant from '@/components/NavigationChatAssistant';
-
-const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
-const DatabaseAdmin = lazy(() => import('./admin/DatabaseAdmin'));
-const MediaAdmin = lazy(() => import('./admin/MediaAdmin'));
-const UserAdmin = lazy(() => import('./admin/UserAdmin'));
-const SettingsAdmin = lazy(() => import('./admin/SettingsAdmin'));
-const RolesAdmin = lazy(() => import('./admin/RolesAdmin'));
-const PermissionsAdmin = lazy(() => import('./admin/PermissionsAdmin'));
-const AuditLogsAdmin = lazy(() => import('./admin/AuditLogsAdmin'));
-const AdminLogin = lazy(() => import('./admin/AdminLogin'));
-const AdminForgotPassword = lazy(() => import('./admin/AdminForgotPassword'));
-const AdminResetPassword = lazy(() => import('./admin/AdminResetPassword'));
 
 import Index from './pages/Index';
 import AboutTGANB from './pages/AboutTGANB';
@@ -67,8 +56,6 @@ import SahayAI from './pages/SahayAI';
 import AboutSahayAI from './pages/AboutSahayAI';
 import AboutRisingAI from './pages/AboutRisingAI';
 
-import AdminRoute from './components/AdminRoute';
-
 const queryClient = new QueryClient();
 
 function App() {
@@ -82,19 +69,6 @@ function App() {
               <Sonner />
               <BrowserRouter>
                 <Routes>
-                  {/* Admin Routes */}
-                  <Route path="/admin/login" element={<Suspense fallback={<div>Loading...</div>}><AdminLogin /></Suspense>} />
-                  <Route path="/admin/forgot-password" element={<Suspense fallback={<div>Loading...</div>}><AdminForgotPassword /></Suspense>} />
-                  <Route path="/admin/reset-password/:token" element={<Suspense fallback={<div>Loading...</div>}><AdminResetPassword /></Suspense>} />
-                  <Route path="/admin" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><AdminDashboard /></Suspense></AdminRoute>} />
-                  <Route path="/admin/database" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><DatabaseAdmin /></Suspense></AdminRoute>} />
-                  <Route path="/admin/media" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><MediaAdmin /></Suspense></AdminRoute>} />
-                  <Route path="/admin/users" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><UserAdmin /></Suspense></AdminRoute>} />
-                  <Route path="/admin/settings" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><SettingsAdmin /></Suspense></AdminRoute>} />
-                  <Route path="/admin/roles" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><RolesAdmin /></Suspense></AdminRoute>} />
-                  <Route path="/admin/permissions" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><PermissionsAdmin /></Suspense></AdminRoute>} />
-                  <Route path="/admin/audit-logs" element={<AdminRoute><Suspense fallback={<div>Loading...</div>}><AuditLogsAdmin /></Suspense></AdminRoute>} />
-
                   <Route path="/" element={<Index />} />
                   <Route path="/about-tganb" element={<AboutTGANB />} />
                   <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
