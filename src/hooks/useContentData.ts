@@ -41,6 +41,12 @@ export interface TrainingItem {
   registration_link?: string;
 }
 
+export interface AchievementOffender {
+  id: string;
+  serial_number: number;
+  name: string;
+}
+
 export interface AchievementItem {
   id: string;
   title: string;
@@ -48,6 +54,7 @@ export interface AchievementItem {
   date: string;
   image_url?: string;
   category?: string;
+  offenders?: AchievementOffender[];
 }
 
 export interface CelebrityVideoItem {
@@ -131,7 +138,27 @@ export const useContentData = () => {
       }
 
       if (achievementsResponse.data) {
-        setAchievementsData(achievementsResponse.data);
+        // Fetch offenders for each achievement
+        const achievementsWithOffenders = await Promise.all(
+          achievementsResponse.data.map(async (achievement) => {
+            const { data: offenders } = await supabase
+              .from('achievement_offenders')
+              .select('*')
+              .eq('achievement_id', achievement.id)
+              .order('serial_number', { ascending: true });
+
+            return {
+              id: achievement.id,
+              title: achievement.title,
+              description: achievement.description,
+              date: achievement.date,
+              image_url: achievement.image_url || undefined,
+              category: achievement.category || undefined,
+              offenders: offenders || []
+            };
+          })
+        );
+        setAchievementsData(achievementsWithOffenders);
       }
 
       if (videosResponse.data) {

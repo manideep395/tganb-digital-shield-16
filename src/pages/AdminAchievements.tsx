@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, Edit, Trash2, Image } from 'lucide-react';
-import { AchievementItem } from '@/hooks/useContentData';
+import { ArrowLeft, Plus, Edit, Trash2, Image, Users, X } from 'lucide-react';
+import { AchievementItem, AchievementOffender } from '@/hooks/useContentData';
 import { useAuth } from '@/contexts/AuthContext';
 
 const AdminAchievements = () => {
@@ -17,13 +17,14 @@ const AdminAchievements = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<Omit<AchievementItem, 'id'>>({
+  const [formData, setFormData] = useState<Omit<AchievementItem, 'id' | 'offenders'>>({
     title: '',
     description: '',
     date: '',
     image_url: '',
     category: ''
   });
+  const [offenders, setOffenders] = useState<Omit<AchievementOffender, 'id'>[]>([]);
 
   if (!isAdmin) {
     navigate('/admin/login');
@@ -34,9 +35,9 @@ const AdminAchievements = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await updateAchievement(editingId, formData);
+        await updateAchievement(editingId, formData, offenders);
       } else {
-        await addAchievement(formData);
+        await addAchievement(formData, offenders);
       }
       resetForm();
     } catch (error) {
@@ -52,6 +53,7 @@ const AdminAchievements = () => {
       image_url: '',
       category: ''
     });
+    setOffenders([]);
     setIsEditing(false);
     setEditingId(null);
   };
@@ -64,6 +66,7 @@ const AdminAchievements = () => {
       image_url: achievement.image_url || '',
       category: achievement.category || ''
     });
+    setOffenders(achievement.offenders || []);
     setEditingId(achievement.id);
     setIsEditing(true);
   };
@@ -78,6 +81,21 @@ const AdminAchievements = () => {
     }
   };
 
+  const addOffender = () => {
+    const newSerialNumber = Math.max(0, ...offenders.map(o => o.serial_number)) + 1;
+    setOffenders([...offenders, { serial_number: newSerialNumber, name: '' }]);
+  };
+
+  const updateOffender = (index: number, field: keyof Omit<AchievementOffender, 'id'>, value: string | number) => {
+    const updated = [...offenders];
+    updated[index] = { ...updated[index], [field]: value };
+    setOffenders(updated);
+  };
+
+  const removeOffender = (index: number) => {
+    setOffenders(offenders.filter((_, i) => i !== index));
+  };
+
   if (isLoading) {
     return <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
       <div>Loading...</div>
@@ -86,7 +104,7 @@ const AdminAchievements = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             <Button onClick={() => navigate('/admin/dashboard')} variant="outline">
@@ -104,12 +122,12 @@ const AdminAchievements = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Form */}
           {isEditing && (
-            <Card>
+            <Card className="lg:col-span-1">
               <CardHeader>
                 <CardTitle>{editingId ? 'Edit Achievement' : 'Add New Achievement'}</CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4 max-h-96 overflow-y-auto">
                   <div>
                     <Label>Title</Label>
                     <Input
@@ -157,6 +175,48 @@ const AdminAchievements = () => {
                       placeholder="https://example.com/image.jpg"
                     />
                   </div>
+                  
+                  {/* Offenders Section */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label className="flex items-center space-x-2">
+                        <Users className="w-4 h-4" />
+                        <span>Offenders</span>
+                      </Label>
+                      <Button type="button" onClick={addOffender} size="sm" variant="outline">
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {offenders.map((offender, index) => (
+                        <div key={index} className="flex gap-2 items-center">
+                          <Input
+                            type="number"
+                            value={offender.serial_number}
+                            onChange={(e) => updateOffender(index, 'serial_number', parseInt(e.target.value) || 1)}
+                            placeholder="S.No"
+                            className="w-20"
+                            min="1"
+                          />
+                          <Input
+                            value={offender.name}
+                            onChange={(e) => updateOffender(index, 'name', e.target.value)}
+                            placeholder="Offender name"
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => removeOffender(index)}
+                            size="sm"
+                            variant="outline"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
                   <div className="flex space-x-2">
                     <Button type="submit">
                       {editingId ? 'Update' : 'Add'} Achievement
@@ -171,7 +231,7 @@ const AdminAchievements = () => {
           )}
 
           {/* Achievements List */}
-          <div className="space-y-4">
+          <div className={`space-y-4 ${isEditing ? 'lg:col-span-1' : 'lg:col-span-2'}`}>
             <h2 className="text-xl font-semibold">Existing Achievements ({achievementsData.length})</h2>
             <div className="max-h-96 overflow-y-auto space-y-3">
               {achievementsData.map((achievement) => (
@@ -185,6 +245,9 @@ const AdminAchievements = () => {
                           <div>Date: {achievement.date}</div>
                           {achievement.category && <div>Category: {achievement.category}</div>}
                           {achievement.image_url && <div className="text-green-600">Has Image</div>}
+                          {achievement.offenders && achievement.offenders.length > 0 && (
+                            <div className="text-blue-600">{achievement.offenders.length} Offender(s)</div>
+                          )}
                         </div>
                       </div>
                       <div className="flex space-x-2 ml-4">

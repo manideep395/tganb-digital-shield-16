@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
@@ -8,6 +7,7 @@ import {
   ScrollingContentItem,
   TrainingItem,
   AchievementItem,
+  AchievementOffender,
   CelebrityVideoItem,
   FAQItem,
   useContentData
@@ -49,8 +49,8 @@ interface DatabaseAdminContextType {
   deleteTraining: (id: string) => Promise<void>;
   
   // Achievement management
-  addAchievement: (achievement: Omit<AchievementItem, 'id'>) => Promise<void>;
-  updateAchievement: (id: string, achievement: Partial<AchievementItem>) => Promise<void>;
+  addAchievement: (achievement: Omit<AchievementItem, 'id' | 'offenders'>, offenders?: Omit<AchievementOffender, 'id'>[]) => Promise<void>;
+  updateAchievement: (id: string, achievement: Partial<Omit<AchievementItem, 'offenders'>>, offenders?: Omit<AchievementOffender, 'id'>[]) => Promise<void>;
   deleteAchievement: (id: string) => Promise<void>;
   
   // Celebrity videos management
@@ -289,33 +289,90 @@ export const DatabaseAdminProvider: React.FC<{ children: React.ReactNode }> = ({
     await refetchData();
   };
 
-  // Achievement management functions
-  const addAchievement = async (achievement: Omit<AchievementItem, 'id'>) => {
+  // Achievement management functions with offenders support
+  const addAchievement = async (achievement: Omit<AchievementItem, 'id' | 'offenders'>, offenders?: Omit<AchievementOffender, 'id'>[]) => {
     if (!isAdmin) throw new Error('Admin access required');
     
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('achievements')
-      .insert(achievement);
+      .insert({
+        title: achievement.title,
+        description: achievement.description,
+        date: achievement.date,
+        category: achievement.category,
+        image_url: achievement.image_url
+      })
+      .select()
+      .single();
     
     if (error) throw error;
+    
+    // Add offenders if provided
+    if (offenders && offenders.length > 0 && data) {
+      const offendersData = offenders.map(offender => ({
+        achievement_id: data.id,
+        serial_number: offender.serial_number,
+        name: offender.name
+      }));
+      
+      const { error: offendersError } = await supabase
+        .from('achievement_offenders')
+        .insert(offendersData);
+      
+      if (offendersError) throw offendersError;
+    }
+    
     await refetchData();
   };
 
-  const updateAchievement = async (id: string, achievement: Partial<AchievementItem>) => {
+  const updateAchievement = async (id: string, achievement: Partial<Omit<AchievementItem, 'offenders'>>, offenders?: Omit<AchievementOffender, 'id'>[]) => {
     if (!isAdmin) throw new Error('Admin access required');
+    
+    const updateData: any = {};
+    if (achievement.title) updateData.title = achievement.title;
+    if (achievement.description) updateData.description = achievement.description;
+    if (achievement.date) updateData.date = achievement.date;
+    if (achievement.category !== undefined) updateData.category = achievement.category;
+    if (achievement.image_url !== undefined) updateData.image_url = achievement.image_url;
     
     const { error } = await supabase
       .from('achievements')
-      .update(achievement)
+      .update(updateData)
       .eq('id', id);
     
     if (error) throw error;
+    
+    // Update offenders if provided
+    if (offenders !== undefined) {
+      // Delete existing offenders
+      await supabase
+        .from('achievement_offenders')
+        .delete()
+        .eq('achievement_id', id);
+      
+      // Add new offenders
+      if (offenders.length > 0) {
+        const offendersData = offenders.map(offender => ({
+          achievement_id: id,
+          serial_number: offender.serial_number,
+          name: offender.name
+        }));
+        
+        const { error: offendersError } = await supabase
+          .from('achievement_offenders')
+          .insert(offendersData);
+        
+        if (offendersError) throw offendersError;
+      }
+    }
+    
     await refetchData();
   };
 
   const deleteAchievement = async (id: string) => {
     if (!isAdmin) throw new Error('Admin access required');
     
+    // Offenders will be deleted automatically due to CASCADE
     const { error } = await supabase
       .from('achievements')
       .delete()
