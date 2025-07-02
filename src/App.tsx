@@ -26,6 +26,9 @@ import AdminTrainings from "./pages/AdminTrainings";
 import AdminAchievements from "./pages/AdminAchievements";
 import AdminCelebrityVideos from "./pages/AdminCelebrityVideos";
 import AdminFAQs from "./pages/AdminFAQs";
+import MissionParivartana from "./pages/MissionParivartana";
+import PrahariClubs from "./pages/PrahariClubs";
+import EventsCampaigns from "./pages/EventsCampaigns";
 import RedirectionChatbot from "./components/RedirectionChatbot";
 
 const queryClient = new QueryClient();
@@ -46,10 +49,15 @@ const App = () => (
                 <Route path="/learning-resources" element={<LearningResources />} />
                 <Route path="/achievements" element={<Achievements />} />
                 <Route path="/anti-drug-soldiers" element={<AntiDrugSoldierEnrollment />} />
+                <Route path="/anti-drug-soldier-enrollment" element={<AntiDrugSoldierEnrollment />} />
                 <Route path="/certificate-verification" element={<CertificateVerification />} />
                 <Route path="/shield-ai" element={<ShieldAIRiskAssessment />} />
                 <Route path="/drug-report" element={<DrugReportSubmission />} />
+                <Route path="/drug-report-submission" element={<DrugReportSubmission />} />
                 <Route path="/secure-drug-report" element={<SecureDrugReportForm />} />
+                <Route path="/mission-parivartana" element={<MissionParivartana />} />
+                <Route path="/prahari-clubs" element={<PrahariClubs />} />
+                <Route path="/events-campaigns" element={<EventsCampaigns />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/news" element={<AdminNews />} />
