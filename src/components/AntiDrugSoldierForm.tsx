@@ -182,9 +182,9 @@ const AntiDrugSoldierForm = () => {
                 <Card className="text-center p-6 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
                   <div className="mb-4">
                     <img 
-                      src="/uploads/8b0dff45-b9b3-4e49-b4b6-89e85f89f8ac.png" 
+                      src="/lovable-uploads/550efe74-a996-423b-a425-8a3656a2e477.png" 
                       alt="TG ANB Tiger Mascot" 
-                      className="w-full max-w-48 mx-auto rounded-lg shadow-lg"
+                      className="w-full max-w-48 mx-auto rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <h3 className="text-xl font-bold text-orange-800 mb-2">Join the Force!</h3>

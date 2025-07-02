@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -69,7 +70,7 @@ import DrugTypes from "./pages/DrugTypes";
 import TestingKits from "./pages/TestingKits";
 import MythsFacts from "./pages/MythsFacts";
 
-// Missing page imports
+// Import the correct page components
 import SahayAIChatPage from "./pages/SahayAIChatPage";
 import ShieldAIAssessmentPage from "./pages/ShieldAIAssessmentPage";
 
@@ -112,7 +113,7 @@ const App = () => (
                 <Route path="/about-uday-ai" element={<AboutUdayAI />} />
                 <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
                 
-                {/* Add missing routes */}
+                {/* Fixed routes for Sahay AI Chat and Shield AI Assessment */}
                 <Route path="/sahay-ai-chat" element={<SahayAIChatPage />} />
                 <Route path="/shield-ai-assessment" element={<ShieldAIAssessmentPage />} />
                 
@@ -140,7 +141,7 @@ const App = () => (
                 <Route path="/officers-directory" element={<OfficersDirectory />} />
                 <Route path="/operation-sankalp" element={<OperationSankalp />} />
                 <Route path="/drug-types" element={<DrugTypes />} />
-                <Route path="/testing-kits" element={<TestingKits />} />
+                <Route path="/testing-kites" element={<TestingKits />} />
                 <Route path="/myths-facts" element={<MythsFacts />} />
                 
                 {/* Admin Routes */}
