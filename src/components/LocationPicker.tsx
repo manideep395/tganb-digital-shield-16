@@ -32,8 +32,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ onLocationSelect, selec
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearchClick = () => {
     searchLocation(searchQuery);
   };
 
@@ -89,18 +88,24 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ onLocationSelect, selec
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
-        <form onSubmit={handleSearch} className="flex-1 flex gap-2">
+        <div className="flex-1 flex gap-2">
           <Input
             type="text"
             placeholder="Search for location (e.g., Hyderabad, Telangana)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="flex-1"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearchClick();
+              }
+            }}
           />
-          <Button type="submit" disabled={isSearching}>
+          <Button type="button" onClick={handleSearchClick} disabled={isSearching}>
             <Search className="w-4 h-4" />
           </Button>
-        </form>
+        </div>
         <Button type="button" onClick={getCurrentLocation} variant="outline">
           <MapPin className="w-4 h-4 mr-2" />
           Current Location
@@ -108,7 +113,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ onLocationSelect, selec
       </div>
 
       {searchResults.length > 0 && (
-        <div className="bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+        <div className="bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 relative">
           {searchResults.map((result, index) => (
             <div
               key={index}
@@ -141,6 +146,45 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ onLocationSelect, selec
               </p>
             </div>
           </div>
+        </div>
+      )}
+
+      {selectedLocation && (
+        <div className="mt-4">
+          <Button 
+            type="button" 
+            onClick={() => setShowMap(!showMap)} 
+            variant="outline"
+            className="w-full"
+          >
+            {showMap ? 'Hide Map' : 'Show Map'}
+          </Button>
+          
+          {showMap && (
+            <div className="mt-4 border rounded-lg overflow-hidden">
+              <iframe
+                width="100%"
+                height="300"
+                frameBorder="0"
+                scrolling="no"
+                marginHeight={0}
+                marginWidth={0}
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${selectedLocation.lng - 0.01},${selectedLocation.lat - 0.01},${selectedLocation.lng + 0.01},${selectedLocation.lat + 0.01}&layer=mapnik&marker=${selectedLocation.lat},${selectedLocation.lng}`}
+                style={{ border: 0 }}
+                title="Location Map"
+              ></iframe>
+              <div className="p-2 bg-gray-50 text-xs text-gray-600">
+                <a 
+                  href={`https://www.openstreetmap.org/?mlat=${selectedLocation.lat}&mlon=${selectedLocation.lng}#map=15/${selectedLocation.lat}/${selectedLocation.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  View Larger Map on OpenStreetMap
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
