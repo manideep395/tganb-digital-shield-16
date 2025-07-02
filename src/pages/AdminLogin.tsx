@@ -195,7 +195,7 @@ const AdminLogin = () => {
               </p>
             </div>
 
-            {/* Development credentials info - Remove in production */}
+            {/* Development credentials info */}
             {process.env.NODE_ENV === 'development' && (
               <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-xs text-green-800">
@@ -203,6 +203,9 @@ const AdminLogin = () => {
                   • admin@tganb.gov.in : SecureAdmin2024!<br/>
                   • tganb@tspolice : Tganb1!<br/>
                   • teagle@tgp.com : Teagle@1
+                </p>
+                <p className="text-xs text-green-600 mt-2">
+                  <strong>Note:</strong> Make sure these users exist in your admin_users table with matching passwords.
                 </p>
               </div>
             )}

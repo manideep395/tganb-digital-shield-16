@@ -30,28 +30,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
+    // Check for stored admin session
+    const storedSession = localStorage.getItem('adminSession');
+    if (storedSession) {
+      try {
+        const parsedSession = JSON.parse(storedSession);
+        const now = new Date().getTime();
         
-        // Log auth events for audit
-        if (session?.user) {
-          console.log('Auth event:', event, 'User:', session.user.email);
+        // Check if session is still valid (30 minutes)
+        if (parsedSession.expiresAt && now < parsedSession.expiresAt) {
+          setUser(parsedSession.user);
+          setSession(parsedSession);
+        } else {
+          localStorage.removeItem('adminSession');
         }
+      } catch (error) {
+        localStorage.removeItem('adminSession');
       }
-    );
-
-    return () => subscription.unsubscribe();
+    }
+    setIsLoading(false);
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -73,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const sanitizedEmail = sanitizeInput(email.toLowerCase().trim());
       
       // Rate limiting check
-      const clientIP = 'user_session'; // Use session identifier
+      const clientIP = 'user_session';
       const rateLimitResult = loginLimiter.isAllowed(clientIP);
       
       if (!rateLimitResult.allowed) {
@@ -84,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
       }
 
-      // Check if user exists in admin_users table first
+      // Check if user exists in admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
         .select('id, email, password_hash, failed_login_attempts')
@@ -96,12 +93,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Check for account lockout
+      // Check for account lockout (3 failed attempts)
       if (adminUser.failed_login_attempts >= 3) {
         return { error: { message: 'Account temporarily locked due to too many failed attempts' } };
       }
 
-      // Verify password (currently plain text comparison, but structured for future hashing)
+      // Verify password (simple comparison for now - in production use proper hashing)
       const passwordValid = password === adminUser.password_hash;
 
       if (!passwordValid) {
@@ -117,42 +114,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Create a proper Supabase auth session using signInWithPassword
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: sanitizedEmail,
-        password: password
-      });
+      // Create session object
+      const sessionData = {
+        user: {
+          id: adminUser.id,
+          email: adminUser.email,
+          user_metadata: { email: adminUser.email }
+        },
+        access_token: `admin_${adminUser.id}_${Date.now()}`,
+        refresh_token: `refresh_${adminUser.id}_${Date.now()}`,
+        expires_at: Math.floor((Date.now() + 30 * 60 * 1000) / 1000), // 30 minutes
+        expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes in milliseconds
+      };
 
-      if (error) {
-        // If Supabase auth fails, we need to create the user first
-        const { error: signUpError } = await supabase.auth.signUp({
-          email: sanitizedEmail,
-          password: password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/admin/dashboard`
-          }
-        });
+      // Store session in localStorage for persistence
+      localStorage.setItem('adminSession', JSON.stringify(sessionData));
 
-        if (signUpError) {
-          return { error: { message: 'Authentication service error' } };
-        }
-
-        // Try signing in again after signup
-        const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
-          email: sanitizedEmail,
-          password: password
-        });
-
-        if (retryError) {
-          return { error: { message: 'Authentication failed' } };
-        }
-
-        setSession(retryData.session);
-        setUser(retryData.user);
-      } else {
-        setSession(data.session);
-        setUser(data.user);
-      }
+      setSession(sessionData as any);
+      setUser(sessionData.user as any);
 
       // Reset failed attempts on successful login
       await supabase
@@ -176,11 +155,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
       setSession(null);
       setUser(null);
       
-      // Clear any stored tokens
+      // Clear stored session
       localStorage.removeItem('adminSession');
       sessionStorage.clear();
     } catch (error) {
