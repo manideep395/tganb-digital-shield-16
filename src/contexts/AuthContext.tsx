@@ -73,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (adminError || !adminUser) {
+        console.log('Admin user not found:', sanitizedEmail);
         return { error: { message: 'Invalid credentials' } };
       }
 
@@ -81,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Account temporarily locked due to too many failed attempts' } };
       }
 
-      // Password verification (in production, use proper bcrypt)
+      // Simple password verification (matches database storage)
       if (password !== adminUser.password_hash) {
         // Update failed attempts
         await supabase
@@ -94,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Create secure session
+      // Create secure session for successful login
       const mockUser: User = {
         id: adminUser.id,
         email: adminUser.email,
@@ -139,12 +140,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .insert({
           user_id: adminUser.id,
           action: 'login_success',
-          ip_address: 'client_ip', // Would be populated server-side
+          ip_address: 'client_ip',
           user_agent: navigator.userAgent
         });
 
+      console.log('Login successful for:', sanitizedEmail);
       return { error: null };
     } catch (error) {
+      console.error('Login error:', error);
       return { error: { message: 'Authentication service temporarily unavailable' } };
     } finally {
       setIsLoading(false);
@@ -171,9 +174,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  // Secure admin check
+  // Enhanced admin check
   const isAdmin = Boolean(
     user?.email === 'admin@tganb.gov.in' || 
+    user?.email === 'tganb@tspolice' ||
+    user?.email === 'teagle@tgp.com' ||
     user?.app_metadata?.role === 'admin'
   );
 

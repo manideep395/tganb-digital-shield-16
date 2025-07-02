@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart, Brain, Users, Lock, Target, Lightbulb } from 'lucide-react';
+import { Heart, Brain, Users, Lock, Target, Lightbulb, MessageCircle, Shield, Sunrise } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -12,71 +12,68 @@ const AboutTRisingAI = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 via-green-100 to-indigo-100 font-poppins text-black">
+    <div className="min-h-screen bg-white font-poppins text-gray-900">
       <Header />
       
-      {/* Hero Section */}
-      <section className="py-20 relative overflow-hidden">
+      {/* Hero Section - Compact */}
+      <section className="py-8 bg-gradient-to-r from-blue-50 to-indigo-50">
         <div className="container mx-auto px-4">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.6 }}
+            className="text-center"
           >
-            <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center justify-center mb-4">
               <img 
                 src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
                 alt="TG ANB Logo" 
-                className="h-20 w-20 rounded-full mr-6 border-4 border-black/30"
+                className="h-12 w-12 rounded-full mr-3 border-2 border-blue-200"
               />
               <div>
-                <h1 className="text-5xl md:text-7xl font-bold mb-4">
-                  T-<span className="text-yellow-700">RISING</span>.AI
+                <h1 className="text-3xl md:text-4xl font-bold text-blue-900 mb-1">
+                  T-<span className="text-orange-600">RISING</span>.AI
                 </h1>
-                <p className="text-2xl md:text-3xl text-blue-800 mb-2">
-                  Telangana's AI-Powered Platform
-                </p>
-                <p className="text-xl text-blue-800">
-                  for Drug Awareness, Prevention, and Recovery
+                <p className="text-lg text-blue-700">
+                  Telangana's AI-Powered Anti-Drug Initiative
                 </p>
               </div>
             </div>
           </motion.div>
 
-          {/* T-RISING.AI Meaning */}
+          {/* T-RISING.AI Meaning - Compact */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-4xl mx-auto mb-16"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-4xl mx-auto mt-6"
           >
-            <Card className="bg-blue-200 backdrop-blur-md border-blue-300">
-              <CardContent className="p-8 text-center">
-                <h2 className="text-3xl font-bold mb-6 text-yellow-900">T-RISING.AI stands for:</h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-lg">
-                  <div className="flex items-center space-x-3">
-                    <Heart className="w-6 h-6 text-red-400" />
+            <Card className="bg-white border border-blue-200 shadow-sm">
+              <CardContent className="p-6 text-center">
+                <h2 className="text-xl font-semibold mb-4 text-blue-900">T-RISING.AI Stands For:</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <Heart className="w-4 h-4 text-red-500" />
                     <span><strong>R</strong>ecovery</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Target className="w-6 h-6 text-orange-400" />
+                  <div className="flex items-center space-x-2">
+                    <Target className="w-4 h-4 text-orange-500" />
                     <span><strong>I</strong>ntervention</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Users className="w-6 h-6 text-green-400" />
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-green-500" />
                     <span><strong>S</strong>upport</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Brain className="w-6 h-6 text-blue-400" />
+                  <div className="flex items-center space-x-2">
+                    <Brain className="w-4 h-4 text-blue-500" />
                     <span><strong>I</strong>ntelligence</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Lightbulb className="w-6 h-6 text-yellow-400" />
+                  <div className="flex items-center space-x-2">
+                    <Lightbulb className="w-4 h-4 text-yellow-500" />
                     <span><strong>N</strong>urturing</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-500 rounded flex items-center justify-center text-xs font-bold">🌅</div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-gradient-to-r from-purple-400 to-pink-500 rounded flex items-center justify-center text-xs">🌅</div>
                     <span><strong>G</strong>rowth</span>
                   </div>
                 </div>
@@ -86,98 +83,75 @@ const AboutTRisingAI = () => {
         </div>
       </section>
 
-      {/* Introduction Section */}
-      <section className="py-16 bg-white/5 backdrop-blur-sm">
+      {/* Introduction - Compact */}
+      <section className="py-6 bg-gray-50">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-6xl mx-auto"
-          >
-            <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-8">
-              <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center text-blue">
-                  <span className="mr-4">🌐</span> Introduction
+          <div className="max-w-5xl mx-auto">
+            <Card className="bg-white border border-gray-200 shadow-sm">
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-semibold mb-3 flex items-center text-blue-900">
+                  <span className="mr-3">🌐</span> Overview
                 </h2>
-                <p className="text-lg leading-relaxed mb-6 text-black">
-                  T-RISING.AI is an advanced, AI-powered digital initiative developed by the Telangana Anti-Narcotics Bureau (TG ANB) to create a safer, healthier, and drug-free society through the responsible use of Artificial Intelligence. This intelligent platform is designed to serve the citizens of Telangana—especially youth and vulnerable individuals—by offering 24x7 AI support, personalized prevention strategies, and structured recovery plans.
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  T-RISING.AI is an advanced, AI-powered digital initiative by the Telangana Anti-Narcotics Bureau (TG ANB) to create a safer, drug-free society through responsible AI implementation. This platform provides 24×7 AI support, personalized prevention strategies, and structured recovery assistance for citizens of Telangana.
                 </p>
-                <p className="text-lg leading-relaxed text-black">
-                  This initiative reflects TG ANB's commitment to technological innovation in public safety and citizen well-being.
-                </p>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-2 text-blue-900">Mission Statement</h3>
+                  <p className="text-blue-800">
+                    To empower society with intelligent digital tools that provide real-time support in combating drug abuse, enabling timely prevention, and facilitating guided recovery journeys.
+                  </p>
+                </div>
               </CardContent>
             </Card>
-
-            <Card className="bg-white/10 backdrop-blur-md border-black/20">
-              <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center text-black">
-                  <span className="mr-4">🎯</span> Mission of T-RISING.AI
-                </h2>
-                <p className="text-lg leading-relaxed text-black">
-                  To empower society with intelligent digital tools that provide real-time support in combating drug abuse, enabling timely prevention, and facilitating guided recovery journeys—strengthening the collective fight against narcotics in Telangana.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* 3 Pillars Section */}
-      <section className="py-16">
+      {/* Three AI Models - Compact Grid */}
+      <section className="py-6">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.6 }}
+            className="text-center mb-6"
           >
-            <h2 className="text-5xl font-bold mb-8 text-black">
-              🤖 The 3 Pillars of T-RISING.AI
+            <h2 className="text-2xl font-semibold mb-2 text-blue-900">
+              The 3 AI Solutions
             </h2>
-            <p className="text-xl text-blue-900 max-w-4xl mx-auto">
-              T-RISING.AI comprises three specialized AI models, each uniquely developed to address a specific stage of the anti-drug journey: Awareness, Prevention, and Recovery.
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Three specialized AI models addressing Awareness, Prevention, and Recovery stages of anti-drug intervention.
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 max-w-6xl mx-auto">
             {/* Sahay.AI */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <Card className="bg-gradient-to-br from-blue-800/30 to-blue-900/30 backdrop-blur-md border-blue-600/30 h-full">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl">🤝</span>
+              <Card className="bg-white border border-green-200 hover:shadow-md transition-shadow h-full">
+                <CardContent className="p-5 text-center h-full flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <MessageCircle className="w-6 h-6 text-green-600" />
                     </div>
-                    <h3 className="text-3xl font-bold text-black mb-2">Sahay.AI</h3>
-                    <p className="text-lg font-semibold text-black">The AI Chat Companion</p>
-                    <p className="text-sm italic text-black">Your digital friend, always ready to help.</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Sahay.AI</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      24×7 multilingual AI chatbot for instant drug awareness support and guidance.
+                    </p>
+                    <div className="text-xs text-gray-500 mb-4">
+                      • Anonymous assistance<br/>
+                      • Multi-language support<br/>
+                      • Rehabilitation guidance
+                    </div>
                   </div>
-                  
-                  <p className="text-blue-700 mb-6">
-                    Sahay.AI is an empathetic, multilingual AI chatbot built to provide instant support, information, and guidance on drug-related queries, awareness tips, and rehabilitation options.
-                  </p>
-
-                  <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-black">🔹 Key Features:</h4>
-                    <ul className="space-y-2 text-sm text-blue-900">
-                      <li>• 24x7 anonymous assistance</li>
-                      <li>• Conversational interface supporting English, Telugu, and Hindi</li>
-                      <li>• Explains drug effects, legal consequences, and coping strategies</li>
-                      <li>• Directs users to nearest rehabilitation centers and helplines</li>
-                      <li>• Built for both public users and officers on field duty</li>
-                    </ul>
-                  </div>
-
                   <Button 
                     onClick={() => navigate('/sahay-ai-chat')}
-                    className="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white text-sm py-2"
                   >
-                    Try Sahay.AI
+                    💬 Chat Now
                   </Button>
                 </CardContent>
               </Card>
@@ -185,40 +159,31 @@ const AboutTRisingAI = () => {
 
             {/* Shield.AI */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Card className="bg-gradient-to-br from-blue-800/30 to-blue-900/30 backdrop-blur-md border-blue-600/30 h-full">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl">🛡️</span>
+              <Card className="bg-white border border-blue-200 hover:shadow-md transition-shadow h-full">
+                <CardContent className="p-5 text-center h-full flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Shield className="w-6 h-6 text-blue-600" />
                     </div>
-                    <h3 className="text-3xl font-bold text-black mb-2">Shield.AI</h3>
-                    <p className="text-lg font-semibold text-black">AI-Based Drug Prevention Engine</p>
-                    <p className="text-sm italic text-black">Stopping it before it starts.</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Shield.AI</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      AI-powered risk assessment system with personalized prevention recommendations.
+                    </p>
+                    <div className="text-xs text-gray-500 mb-4">
+                      • Anonymous risk assessment<br/>
+                      • Personalized prevention tips<br/>
+                      • Early intervention alerts
+                    </div>
                   </div>
-                  
-                  <p className="text-blue-700 mb-6">
-                    Shield.AI is a questionnaire-based prevention system powered by intelligent algorithms. It detects behavioral, environmental, and psychological risk factors to provide customized drug prevention tips.
-                  </p>
-
-                  <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-black">🔹 Key Features:</h4>
-                    <ul className="space-y-2 text-sm text-blue-900">
-                      <li>• Anonymous survey for students, youth, and at-risk individuals</li>
-                      <li>• AI-generated prevention tips based on risk profile</li>
-                      <li>• Early intervention flagging for parents or counselors (optional)</li>
-                      <li>• Perfect for education institutions and awareness campaigns</li>
-                    </ul>
-                  </div>
-
                   <Button 
                     onClick={() => navigate('/shield-ai-assessment')}
-                    className="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2"
                   >
-                    Try Shield.AI
+                    🛡️ Take Assessment
                   </Button>
                 </CardContent>
               </Card>
@@ -226,40 +191,31 @@ const AboutTRisingAI = () => {
 
             {/* Uday.AI */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <Card className="bg-gradient-to-br from-blue-800/30 to-blue-900/30 backdrop-blur-md border-blue-600/30 h-full">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl">🌅</span>
+              <Card className="bg-white border border-purple-200 hover:shadow-md transition-shadow h-full">
+                <CardContent className="p-5 text-center h-full flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Sunrise className="w-6 h-6 text-purple-600" />
                     </div>
-                    <h3 className="text-3xl font-bold text-black 2">Uday.AI</h3>
-                    <p className="text-lg font-semibold text-black">Personalized Recovery Planner</p>
-                    <p className="text-sm italic text-black">A new dawn begins with every step.</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Uday.AI</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Daily AI planner for recovery support and personalized rehabilitation assistance.
+                    </p>
+                    <div className="text-xs text-gray-500 mb-4">
+                      • Daily recovery planning<br/>
+                      • Mental health check-ins<br/>
+                      • Motivational support
+                    </div>
                   </div>
-                  
-                  <p className="text-blue-700 mb-6">
-                    Uday.AI supports individuals already in recovery or rehabilitation. By collecting daily self-assessments and inputs, it generates a personalized daily schedule, mental health check-ins, and motivational support.
-                  </p>
-
-                  <div className="space-y-3 mb-6">
-                    <h4 className="font-bold text-black">🔹 Key Features:</h4>
-                    <ul className="space-y-2 text-sm text-blue-900">
-                      <li>• Daily planning for nutrition, hydration, therapy, and rest</li>
-                      <li>• Personalized recovery tasks with reminders</li>
-                      <li>• Emotional support content and mental tracking</li>
-                      <li>• Works offline (in PWA) and integrates with rehab center monitoring</li>
-                    </ul>
-                  </div>
-
                   <Button 
                     onClick={() => navigate('/uday-ai-planner')}
-                    className="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm py-2"
                   >
-                    Try Uday.AI
+                    🌅 Start Planning
                   </Button>
                 </CardContent>
               </Card>
@@ -268,97 +224,71 @@ const AboutTRisingAI = () => {
         </div>
       </section>
 
-      {/* Privacy & Ethics Section */}
-      <section className="py-16 bg-white/5 backdrop-blur-sm">
+      {/* Privacy & Impact - Compact */}
+      <section className="py-6 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto space-y-8">
-            <Card className="bg-white/10 backdrop-blur-md border-white/20">
-              <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center text-white">
-                  <Lock className="mr-4 text-blue-400" />
-                  Privacy & Data Ethics
-                </h2>
-                <p className="text-lg leading-relaxed text-black">
-                  All tools under T-RISING.AI are designed with data privacy, user anonymity, and safety as top priorities. No user-identifiable information is stored without explicit consent. TG ANB ensures secure, encrypted handling of all AI interactions.
-                </p>
-              </CardContent>
-            </Card>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card className="bg-white border border-gray-200 shadow-sm">
+                <CardContent className="p-5">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center text-blue-900">
+                    <Lock className="mr-2 text-blue-600" />
+                    Privacy & Security
+                  </h3>
+                  <p className="text-sm text-gray-700">
+                    All T-RISING.AI tools prioritize data privacy, user anonymity, and safety. No user-identifiable information is stored without explicit consent. TG ANB ensures secure, encrypted handling of all AI interactions.
+                  </p>
+                </CardContent>
+              </Card>
 
-            <Card className="bg-white/10 backdrop-blur-md border-black/20">
-              <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center text-black">
-                  <span className="mr-4">🛠️</span> Developed By
-                </h2>
-                <p className="text-lg leading-relaxed text-black">
-                  T-RISING.AI is proudly developed by the Telangana Anti-Narcotics Bureau (TG ANB), in collaboration with young technologists, student innovators, and social welfare departments—representing a synergy of technology, public service, and citizen engagement.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/10 backdrop-blur-md border-black/20">
-              <CardContent className="p-8">
-                <h2 className="text-4xl font-bold mb-6 flex items-center text-black">
-                  <span className="mr-4">📍</span> Impact Goals
-                </h2>
-                <div className="grid md:grid-cols-2 gap-6 text-lg text-black">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-2xl">🌱</span>
-                    <span>Reduce youth exposure to drugs through awareness & tech</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-2xl">🧠</span>
-                    <span>Empower every citizen with free access to AI-based help</span>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-2xl">🛡️</span>
-                    <span>Build an AI-supported frontline against narcotic threats in Telangana</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              <Card className="bg-white border border-gray-200 shadow-sm">
+                <CardContent className="p-5">
+                  <h3 className="text-lg font-semibold mb-3 text-blue-900">
+                    <span className="mr-2">🎯</span> Impact Goals
+                  </h3>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>• Reduce youth exposure to drugs through AI-powered awareness</li>
+                    <li>• Provide free AI-based support to every citizen</li>
+                    <li>• Build an AI-supported frontline against narcotic threats</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16">
+      {/* Call to Action - Compact */}
+      <section className="py-6">
         <div className="container mx-auto px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             className="max-w-4xl mx-auto"
           >
-            <Card className="bg-gradient-to-r from-blue-600/20 to-blue-600/20 backdrop-blur-md border-blue-400/30">
-              <CardContent className="p-12">
-                <h2 className="text-5xl font-bold mb-8 flex items-center justify-center text-blue-900">
-                  <span className="mr-4">🌟</span> Join the Mission
+            <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-none">
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-semibold mb-4">
+                  🌟 Join the T-RISING.AI Mission
                 </h2>
-                <div className="space-y-4 text-2xl font-bold mb-8 text-black">
-                  <p>Together, let's rise above drugs.</p>
-                  <p>Together, let's rise with T-RISING.AI.</p>
-                </div>
+                <p className="text-blue-100 mb-4 text-sm">
+                  "Technology for Prevention. Intelligence for Recovery. Support for All."
+                  <br/>
+                  <span className="text-xs">— Telangana Anti-Narcotics Bureau</span>
+                </p>
                 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8">
-                  <p className="text-2xl italic mb-4 text-black">
-                    "Technology for Prevention. Intelligence for Recovery. Support for All."
-                  </p>
-                  <p className="text-lg font-semibold text-blue">
-                    — Telangana Anti-Narcotics Bureau
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="flex flex-wrap justify-center gap-3">
                   <Button 
                     onClick={() => navigate('/about-rising-ai')}
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 px-8 py-4 text-lg"
+                    className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-2 text-sm"
                   >
-                    Explore All AI Tools
+                    Explore All Tools
                   </Button>
                   <Button 
                     onClick={() => navigate('/contact')}
                     variant="outline"
-                    className="border-white text-blue-900 hover:bg-white hover:text-gray-900 px-8 py-4 text-lg"
+                    className="border-white text-white hover:bg-white hover:text-blue-600 px-6 py-2 text-sm"
                   >
                     Contact Us
                   </Button>

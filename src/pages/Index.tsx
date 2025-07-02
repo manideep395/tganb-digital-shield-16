@@ -7,7 +7,6 @@ import DirectorMessage from '../components/DirectorMessage';
 import InitiativesHighlight from '../components/InitiativesHighlight';
 import AnimatedMetrics from '../components/AnimatedMetrics';
 import AntiDrugSoldierSection from '../components/AntiDrugSoldierSection';
-import TrainingsSlider from '../components/TrainingsSlider';
 import AnonymousReportSection from '../components/AnonymousReportSection';
 import StatisticsSection from '../components/StatisticsSection';
 import StationsInfoSection from '../components/StationsInfoSection';
@@ -26,7 +25,6 @@ const Index = () => {
       <InitiativesHighlight />
       <AnimatedMetrics />
       <AntiDrugSoldierSection />
-      <TrainingsSlider />
       <AnonymousReportSection />
       <StatisticsSection />
       <StationsInfoSection />

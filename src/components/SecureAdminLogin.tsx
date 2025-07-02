@@ -55,6 +55,7 @@ const SecureAdminLogin = () => {
           setAttempts(0);
         }, 15 * 60 * 1000);
       } else {
+        // Successful login
         navigate('/admin/dashboard');
       }
     } catch (err) {
@@ -136,6 +137,16 @@ const SecureAdminLogin = () => {
               <p className="text-xs text-yellow-800">
                 <strong>Security Notice:</strong> This system includes audit logging and rate limiting for security.
                 All login attempts are monitored and logged.
+              </p>
+            </div>
+            
+            {/* Development credentials info */}
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-xs text-blue-800">
+                <strong>Authorized Credentials:</strong><br/>
+                • admin@tganb.gov.in<br/>
+                • tganb@tspolice<br/>
+                • teagle@tgp.com
               </p>
             </div>
           </div>
