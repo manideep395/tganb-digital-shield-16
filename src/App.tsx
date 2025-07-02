@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -31,6 +30,45 @@ import PrahariClubs from "./pages/PrahariClubs";
 import EventsCampaigns from "./pages/EventsCampaigns";
 import RedirectionChatbot from "./components/RedirectionChatbot";
 
+// T-RISING.AI Pages
+import AboutRisingAI from "./pages/AboutRisingAI";
+import AboutTRisingAI from "./pages/AboutTRisingAI";
+import SahayAI from "./pages/SahayAI";
+import AboutSahayAI from "./pages/AboutSahayAI";
+import SahayAIChatbot from "./pages/SahayAIChatbot";
+import ShieldAI from "./pages/ShieldAI";
+import AboutShieldAI from "./pages/AboutShieldAI";
+import UdayAI from "./pages/UdayAI";
+import AboutUdayAI from "./pages/AboutUdayAI";
+import UdayAIRecoveryPlanner from "./pages/UdayAIRecoveryPlanner";
+
+// About Pages
+import AboutTGANB from "./pages/AboutTGANB";
+import AboutLogo from "./pages/AboutLogo";
+import VisionMission from "./pages/VisionMission";
+import DirectorsNote from "./pages/DirectorsNote";
+import TganbStructure from "./pages/TganbStructure";
+import StateCoordination from "./pages/StateCoordination";
+import CentralCoordination from "./pages/CentralCoordination";
+import TganbGo27 from "./pages/TganbGo27";
+
+// Other Pages
+import Contact from "./pages/Contact";
+import News from "./pages/News";
+import NewsDetail from "./pages/NewsDetail";
+import Statistics from "./pages/Statistics";
+import Education from "./pages/Education";
+import Rehabilitation from "./pages/Rehabilitation";
+import RehabilitationCenters from "./pages/RehabilitationCenters";
+import AntiDrugCommittees from "./pages/AntiDrugCommittees";
+import NarcoticPoliceStations from "./pages/NarcoticPoliceStations";
+import RegionalNarcoticPoliceStations from "./pages/RegionalNarcoticPoliceStations";
+import OfficersDirectory from "./pages/OfficersDirectory";
+import OperationSankalp from "./pages/OperationSankalp";
+import DrugTypes from "./pages/DrugTypes";
+import TestingKits from "./pages/TestingKits";
+import MythsFacts from "./pages/MythsFacts";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -58,6 +96,46 @@ const App = () => (
                 <Route path="/mission-parivartana" element={<MissionParivartana />} />
                 <Route path="/prahari-clubs" element={<PrahariClubs />} />
                 <Route path="/events-campaigns" element={<EventsCampaigns />} />
+                
+                {/* T-RISING.AI Routes */}
+                <Route path="/about-rising-ai" element={<AboutRisingAI />} />
+                <Route path="/about-t-rising-ai" element={<AboutTRisingAI />} />
+                <Route path="/sahay-ai" element={<SahayAI />} />
+                <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
+                <Route path="/sahay-ai-chatbot" element={<SahayAIChatbot />} />
+                <Route path="/shield-ai-about" element={<AboutShieldAI />} />
+                <Route path="/uday-ai" element={<UdayAI />} />
+                <Route path="/about-uday-ai" element={<AboutUdayAI />} />
+                <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
+                
+                {/* About Routes */}
+                <Route path="/about-tganb" element={<AboutTGANB />} />
+                <Route path="/about-logo" element={<AboutLogo />} />
+                <Route path="/vision-mission" element={<VisionMission />} />
+                <Route path="/directors-note" element={<DirectorsNote />} />
+                <Route path="/tganb-structure" element={<TganbStructure />} />
+                <Route path="/state-coordination" element={<StateCoordination />} />
+                <Route path="/central-coordination" element={<CentralCoordination />} />
+                <Route path="/tganb-go-27" element={<TganbGo27 />} />
+                
+                {/* Other Routes */}
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/news" element={<News />} />
+                <Route path="/news/:id" element={<NewsDetail />} />
+                <Route path="/statistics" element={<Statistics />} />
+                <Route path="/education" element={<Education />} />
+                <Route path="/rehabilitation" element={<Rehabilitation />} />
+                <Route path="/rehabilitation-centers" element={<RehabilitationCenters />} />
+                <Route path="/anti-drug-committees" element={<AntiDrugCommittees />} />
+                <Route path="/narcotic-police-stations" element={<NarcoticPoliceStations />} />
+                <Route path="/regional-narcotic-police-stations" element={<RegionalNarcoticPoliceStations />} />
+                <Route path="/officers-directory" element={<OfficersDirectory />} />
+                <Route path="/operation-sankalp" element={<OperationSankalp />} />
+                <Route path="/drug-types" element={<DrugTypes />} />
+                <Route path="/testing-kits" element={<TestingKits />} />
+                <Route path="/myths-facts" element={<MythsFacts />} />
+                
+                {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/news" element={<AdminNews />} />
