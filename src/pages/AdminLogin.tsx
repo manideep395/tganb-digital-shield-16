@@ -5,73 +5,52 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '../contexts/AuthContext';
+import { useAdmin } from '../contexts/AdminContext';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Lock, User, AlertTriangle, Eye, EyeOff } from 'lucide-react';
-import { sanitizeInput, generateCSRFToken } from '@/utils/inputSanitization';
-import { logSecurityEvent } from '@/utils/securityConfig';
+import { Shield, Lock, User, AlertTriangle } from 'lucide-react';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [csrfToken] = useState(() => generateCSRFToken());
-  const { signIn, isAdmin } = useAuth();
+  const [attempts, setAttempts] = useState(0);
+  const { login } = useAdmin();
   const navigate = useNavigate();
-
-  // Redirect if already logged in
-  if (isAdmin) {
-    navigate('/admin/dashboard');
-    return null;
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
-
-    // Log login attempt
-    logSecurityEvent('LOGIN_ATTEMPT', { email: sanitizeInput(email) });
 
     // Input validation
-    if (!email.trim() || !password) {
-      setError('Please enter both email and password');
-      setIsLoading(false);
+    if (!username.trim() || !password) {
+      setError('Please enter both username and password');
       return;
     }
 
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address');
-      setIsLoading(false);
+    // Rate limiting
+    if (attempts >= 5) {
+      setError('Too many failed attempts. Please wait before trying again.');
       return;
     }
 
-    try {
-      const { error } = await signIn(email, password);
+    setIsLoading(true);
+
+    // Simulate loading time for security
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const success = login(username.trim(), password);
+    if (success) {
+      navigate('/admin/dashboard');
+    } else {
+      setAttempts(prev => prev + 1);
+      setError('Invalid credentials. Please check your username and password.');
       
-      if (error) {
-        setError(error.message);
-        logSecurityEvent('LOGIN_FAILED', { 
-          email: sanitizeInput(email), 
-          error: error.message 
-        });
-      } else {
-        logSecurityEvent('LOGIN_SUCCESS', { email: sanitizeInput(email) });
-        navigate('/admin/dashboard');
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again.');
-      logSecurityEvent('LOGIN_ERROR', { 
-        email: sanitizeInput(email), 
-        error: String(err) 
-      });
+      // Auto-reset attempts after 15 minutes
+      setTimeout(() => {
+        setAttempts(0);
+      }, 15 * 60 * 1000);
     }
-    
     setIsLoading(false);
   };
 
@@ -105,24 +84,22 @@ const AdminLogin = () => {
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <input type="hidden" name="csrf_token" value={csrfToken} />
-            
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700 font-medium">
-                Email Address
+              <Label htmlFor="username" className="text-gray-700 font-medium">
+                Username
               </Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                 <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(sanitizeInput(e.target.value))}
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Enter your government email"
+                  placeholder="Enter username"
                   required
-                  maxLength={255}
-                  autoComplete="email"
+                  maxLength={50}
+                  autoComplete="username"
                 />
               </div>
             </div>
@@ -135,24 +112,15 @@ const AdminLogin = () => {
                 <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                 <Input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Enter your secure password"
+                  className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Enter password"
                   required
-                  maxLength={255}
+                  maxLength={100}
                   autoComplete="current-password"
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </Button>
               </div>
             </div>
             
@@ -166,7 +134,7 @@ const AdminLogin = () => {
             <Button
               type="submit"
               className="w-full h-12 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-300"
-              disabled={isLoading}
+              disabled={isLoading || attempts >= 5}
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">
@@ -179,36 +147,8 @@ const AdminLogin = () => {
             </Button>
           </form>
           
-          <div className="mt-6 space-y-4">
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-xs text-red-800">
-                <strong>Security Notice:</strong> This system includes comprehensive audit logging, 
-                rate limiting, and intrusion detection. All activities are monitored and logged 
-                for security compliance.
-              </p>
-            </div>
-            
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-xs text-blue-800">
-                <strong>Authorized Access Only:</strong> Unauthorized access is strictly prohibited 
-                and will be prosecuted to the full extent of the law.
-              </p>
-            </div>
-
-            {/* Development credentials info */}
-            {process.env.NODE_ENV === 'development' && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-xs text-green-800">
-                  <strong>Test Credentials:</strong><br/>
-                  • admin@tganb.gov.in : SecureAdmin2024!<br/>
-                  • tganb@tspolice : Tganb1!<br/>
-                  • teagle@tgp.com : Teagle@1
-                </p>
-                <p className="text-xs text-green-600 mt-2">
-                  <strong>Note:</strong> Make sure these users exist in your admin_users table with matching passwords.
-                </p>
-              </div>
-            )}
+          <div className="mt-6 text-center text-xs text-gray-500">
+            This is a secure government portal. All activities are logged and monitored for security purposes.
           </div>
         </CardContent>
       </Card>

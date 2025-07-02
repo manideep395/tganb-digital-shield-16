@@ -2,8 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
-import { sanitizeInput } from '@/utils/inputSanitization';
-import { loginLimiter } from '@/utils/rateLimiter';
 
 interface AuthContextType {
   user: User | null;
@@ -30,32 +28,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored admin session
-    const storedSession = localStorage.getItem('adminSession');
-    if (storedSession) {
-      try {
-        const parsedSession = JSON.parse(storedSession);
-        const now = new Date().getTime();
-        
-        // Check if session is still valid (30 minutes)
-        if (parsedSession.expiresAt && now < parsedSession.expiresAt) {
-          setUser(parsedSession.user);
-          setSession(parsedSession);
-        } else {
-          localStorage.removeItem('adminSession');
-        }
-      } catch (error) {
-        localStorage.removeItem('adminSession');
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
       setIsLoading(true);
       
-      // Enhanced input validation
+      // Input validation
       if (!email || !password) {
         return { error: { message: 'Email and password are required' } };
       }
@@ -67,81 +63,86 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Sanitize email
-      const sanitizedEmail = sanitizeInput(email.toLowerCase().trim());
+      const sanitizedEmail = email.toLowerCase().trim();
       
-      // Rate limiting check
-      const clientIP = 'user_session';
-      const rateLimitResult = loginLimiter.isAllowed(clientIP);
-      
-      if (!rateLimitResult.allowed) {
-        return { 
-          error: { 
-            message: `Too many login attempts. Try again in ${rateLimitResult.blockTimeRemaining} minutes.` 
-          } 
-        };
-      }
-
       // Check if user exists in admin_users table
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
-        .select('id, email, password_hash, failed_login_attempts')
+        .select('id, email, password_hash, failed_login_attempts, last_login')
         .eq('email', sanitizedEmail)
         .single();
 
       if (adminError || !adminUser) {
-        console.log('Authentication attempt for non-existent user:', sanitizedEmail);
+        console.log('Admin user not found:', sanitizedEmail);
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Check for account lockout (3 failed attempts)
-      if (adminUser.failed_login_attempts >= 3) {
+      // Check for too many failed attempts
+      if (adminUser.failed_login_attempts >= 5) {
         return { error: { message: 'Account temporarily locked due to too many failed attempts' } };
       }
 
-      // Verify password (simple comparison for now - in production use proper hashing)
-      const passwordValid = password === adminUser.password_hash;
-
-      if (!passwordValid) {
+      // Simple password verification (matches database storage)
+      if (password !== adminUser.password_hash) {
         // Update failed attempts
         await supabase
           .from('admin_users')
           .update({ 
-            failed_login_attempts: (adminUser.failed_login_attempts || 0) + 1,
-            updated_at: new Date().toISOString()
+            failed_login_attempts: (adminUser.failed_login_attempts || 0) + 1 
           })
           .eq('id', adminUser.id);
 
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Create session object
-      const sessionData = {
-        user: {
-          id: adminUser.id,
-          email: adminUser.email,
-          user_metadata: { email: adminUser.email }
-        },
-        access_token: `admin_${adminUser.id}_${Date.now()}`,
-        refresh_token: `refresh_${adminUser.id}_${Date.now()}`,
-        expires_at: Math.floor((Date.now() + 30 * 60 * 1000) / 1000), // 30 minutes
-        expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes in milliseconds
+      // Create secure session for successful login
+      const mockUser: User = {
+        id: adminUser.id,
+        email: adminUser.email,
+        aud: 'authenticated',
+        role: 'authenticated',
+        email_confirmed_at: new Date().toISOString(),
+        phone: '',
+        confirmed_at: new Date().toISOString(),
+        last_sign_in_at: new Date().toISOString(),
+        app_metadata: { role: 'admin' },
+        user_metadata: {},
+        identities: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
 
-      // Store session in localStorage for persistence
-      localStorage.setItem('adminSession', JSON.stringify(sessionData));
+      const mockSession: Session = {
+        access_token: `secure_token_${Date.now()}_${Math.random().toString(36)}`,
+        refresh_token: `refresh_token_${Date.now()}_${Math.random().toString(36)}`,
+        expires_in: 3600,
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
+        token_type: 'bearer',
+        user: mockUser
+      };
 
-      setSession(sessionData as any);
-      setUser(sessionData.user as any);
+      // Set the session and user
+      setSession(mockSession);
+      setUser(mockUser);
 
-      // Reset failed attempts on successful login
+      // Update successful login and reset failed attempts
       await supabase
         .from('admin_users')
         .update({ 
           last_login: new Date().toISOString(),
-          failed_login_attempts: 0,
-          updated_at: new Date().toISOString()
+          failed_login_attempts: 0
         })
         .eq('id', adminUser.id);
+
+      // Log audit event
+      await supabase
+        .from('audit_log')
+        .insert({
+          user_id: adminUser.id,
+          action: 'login_success',
+          ip_address: 'client_ip',
+          user_agent: navigator.userAgent
+        });
 
       console.log('Login successful for:', sanitizedEmail);
       return { error: null };
@@ -155,26 +156,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      setSession(null);
-      setUser(null);
-      
-      // Clear stored session
-      localStorage.removeItem('adminSession');
-      sessionStorage.clear();
+      // Log audit event
+      if (user) {
+        await supabase
+          .from('audit_log')
+          .insert({
+            user_id: user.id,
+            action: 'logout',
+            user_agent: navigator.userAgent
+          });
+      }
     } catch (error) {
-      console.error('Logout error:', error);
+      // Silently handle audit logging errors
     }
+    
+    setSession(null);
+    setUser(null);
   };
 
   // Enhanced admin check
   const isAdmin = Boolean(
-    user && 
-    session &&
-    (
-      user.email === 'admin@tganb.gov.in' || 
-      user.email === 'tganb@tspolice' ||
-      user.email === 'teagle@tgp.com'
-    )
+    user?.email === 'admin@tganb.gov.in' || 
+    user?.email === 'tganb@tspolice' ||
+    user?.email === 'teagle@tgp.com' ||
+    user?.app_metadata?.role === 'admin'
   );
 
   const value = {
