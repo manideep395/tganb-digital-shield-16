@@ -32,10 +32,11 @@ const SahayAIChatbot = () => {
     const keys = [];
     for (let i = 1; i <= 10; i++) {
       const key = import.meta.env[`VITE_GEMINI_API_KEY_${i}`];
-      if (key && key.trim()) {
+      if (key && key.trim() && key !== '') {
         keys.push(key);
       }
     }
+    console.log(`Found ${keys.length} API keys configured`);
     return keys;
   };
 
@@ -72,6 +73,7 @@ const SahayAIChatbot = () => {
 
     const apiKeys = getApiKeys();
     if (apiKeys.length === 0) {
+      console.error('No API keys found in environment variables');
       const errorMessage: Message = {
         id: messages.length + 2,
         text: "I'm sorry, no API keys are configured. Please contact support at 1908 or 8712671111.",
@@ -88,6 +90,7 @@ const SahayAIChatbot = () => {
 
     while (attempts < apiKeys.length && !success) {
       const currentKey = apiKeys[currentApiKeyIndex];
+      console.log(`Attempting API call with key index ${currentApiKeyIndex + 1}`);
       
       try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${currentKey}`, {
@@ -129,6 +132,7 @@ User's message: ${inputText}`
 
           setMessages(prev => [...prev, aiMessage]);
           success = true;
+          console.log('API call successful');
         } else {
           throw new Error(`HTTP ${response.status}`);
         }
