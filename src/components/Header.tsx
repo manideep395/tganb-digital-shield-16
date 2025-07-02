@@ -25,10 +25,7 @@ const Header = () => {
         { title: 'State Co-ordination', href: '/state-coordination' },
         { title: 'TGANB GO 27', href: '/tganb-go-27' },
         { title: 'TGANB Structure', href: '/tganb-structure' },
-        { title: 'About T-RISING.AI', href: '/about-t-rising-ai' },
-        { title: 'About Sahay AI', href: '/about-sahay-ai', gradient: 'from-green-500 to-emerald-500' },
-        { title: 'About Shield AI', href: '/about-shield-ai', gradient: 'from-blue-500 to-indigo-500' },
-        { title: 'About Uday AI', href: '/about-uday-ai', gradient: 'from-purple-500 to-pink-500' }
+        { title: 'About T-RISING.AI', href: '/about-t-rising-ai' }
       ]
     },
     { 
@@ -49,7 +46,6 @@ const Header = () => {
         { title: 'Prahari Clubs', href: '/prahari-clubs' },
         { title: 'Anti-Drug Committees', href: '/anti-drug-committees' },
         { title: 'Events & Campaigns', href: '/events-campaigns' },
-        { title: 'Testing Kits & Detection Methods', href: '/testing-kits' },
         { title: 'Education', href: '/education' },
         { title: 'Myths & Facts', href: '/myths-facts' },
         { title: 'FAQs', href: '/faqs' },
