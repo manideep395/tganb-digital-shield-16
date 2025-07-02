@@ -55,6 +55,7 @@ import Rehabilitation from './pages/Rehabilitation';
 import SahayAI from './pages/SahayAI';
 import AboutSahayAI from './pages/AboutSahayAI';
 import AboutRisingAI from './pages/AboutRisingAI';
+import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
 
@@ -114,6 +115,7 @@ function App() {
                   <Route path="/sahay-ai" element={<SahayAI />} />
                   <Route path="/about-sahay-ai" element={<AboutSahayAI />} />
                   <Route path="/about-rising-ai" element={<AboutRisingAI />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
                 <NavigationChatAssistant />
               </BrowserRouter>
