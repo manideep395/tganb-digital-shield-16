@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -45,6 +44,13 @@ const DrugReportSubmission = () => {
     setIsSubmitting(true);
 
     try {
+      // Validate description length (minimum 10 characters as per database constraint)
+      if (formData.detailedDescription.length < 10) {
+        alert('Description must be at least 10 characters long.');
+        setIsSubmitting(false);
+        return;
+      }
+
       const reportData = {
         report_type: formData.reportType,
         is_anonymous: formData.isAnonymous,
@@ -64,6 +70,11 @@ const DrugReportSubmission = () => {
 
       if (error) {
         console.error('Error submitting report:', error);
+        if (error.code === '23514') {
+          alert('Please provide a more detailed description (minimum 10 characters).');
+        } else {
+          alert('Error submitting report. Please try again.');
+        }
         throw error;
       }
 
@@ -72,7 +83,6 @@ const DrugReportSubmission = () => {
       
     } catch (error) {
       console.error('Error submitting report:', error);
-      alert('Error submitting report. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -208,19 +218,20 @@ const DrugReportSubmission = () => {
                     
                     <div>
                       <Label htmlFor="location">Location of Incident *</Label>
-                      <LocationPicker
-                        onLocationSelect={handleLocationSelect}
-                        selectedLocation={formData.selectedLocation}
-                      />
-                      {!formData.selectedLocation && (
-                        <Input
-                          id="location"
-                          value={formData.locationIncident}
-                          onChange={(e) => setFormData({...formData, locationIncident: e.target.value})}
-                          placeholder="Or type location manually"
-                          className="mt-2"
+                      <div className="space-y-2">
+                        <LocationPicker
+                          onLocationSelect={handleLocationSelect}
+                          selectedLocation={formData.selectedLocation}
                         />
-                      )}
+                        {!formData.selectedLocation && (
+                          <Input
+                            id="location"
+                            value={formData.locationIncident}
+                            onChange={(e) => setFormData({...formData, locationIncident: e.target.value})}
+                            placeholder="Or type location manually"
+                          />
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center space-x-2 mb-4">
@@ -247,7 +258,7 @@ const DrugReportSubmission = () => {
                     )}
 
                     <div>
-                      <Label htmlFor="description">Detailed Description *</Label>
+                      <Label htmlFor="description">Detailed Description * (Minimum 10 characters)</Label>
                       <Textarea
                         id="description"
                         value={formData.detailedDescription}
@@ -255,14 +266,18 @@ const DrugReportSubmission = () => {
                         placeholder="Provide detailed information about the incident, including location details, people involved, activities observed, etc."
                         rows={6}
                         required
+                        minLength={10}
                       />
+                      <p className="text-sm text-gray-500 mt-1">
+                        {formData.detailedDescription.length}/10 minimum characters
+                      </p>
                     </div>
                   </div>
 
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={isSubmitting || !formData.reportType || !formData.detailedDescription || (!formData.selectedLocation && !formData.locationIncident)}
+                    disabled={isSubmitting || !formData.reportType || formData.detailedDescription.length < 10 || (!formData.selectedLocation && !formData.locationIncident)}
                   >
                     {isSubmitting ? (
                       <>
@@ -281,7 +296,6 @@ const DrugReportSubmission = () => {
             </Card>
           </div>
 
-          {/* Information Sidebar */}
           <div className="space-y-6">
             <Card>
               <CardHeader>

@@ -2,15 +2,27 @@
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, BookOpen, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { trainingData } from '../data/trainingData';
+import { useContentData } from '@/hooks/useContentData';
 
 const TrainingsSlider = () => {
   const navigate = useNavigate();
+  const { trainingData, isLoading } = useContentData();
 
-  // Get latest 4 trainings sorted by date
-  const latestTrainings = [...trainingData]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 4);
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-gradient-to-br from-indigo-50 to-purple-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading training programs...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Get latest 4 trainings from database
+  const latestTrainings = trainingData.slice(0, 4);
 
   return (
     <section className="py-16 bg-gradient-to-br from-indigo-50 to-purple-50">
@@ -23,17 +35,13 @@ const TrainingsSlider = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {latestTrainings.map((training, index) => (
+          {latestTrainings.map((training) => (
             <div
-              key={index}
+              key={training.id}
               className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
             >
-              <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 ${
-                training.status === 'Upcoming' ? 'bg-blue-100 text-blue-600' :
-                training.status === 'Completed' ? 'bg-green-100 text-green-600' :
-                'bg-orange-100 text-orange-600'
-              }`}>
-                {training.status}
+              <div className="inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 bg-blue-100 text-blue-600">
+                Training Session
               </div>
               
               <h3 className="text-lg font-bold text-gray-800 mb-3">{training.title}</h3>
@@ -44,14 +52,18 @@ const TrainingsSlider = () => {
                   <Calendar className="w-4 h-4 mr-2" />
                   <span>{training.date}</span>
                 </div>
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <span>{training.duration}</span>
-                </div>
-                <div className="flex items-center">
-                  <Users className="w-4 h-4 mr-2" />
-                  <span>{training.participants} participants</span>
-                </div>
+                {training.time && (
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-2" />
+                    <span>{training.time}</span>
+                  </div>
+                )}
+                {training.instructor && (
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-2" />
+                    <span>{training.instructor}</span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

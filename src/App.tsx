@@ -69,6 +69,10 @@ import DrugTypes from "./pages/DrugTypes";
 import TestingKits from "./pages/TestingKits";
 import MythsFacts from "./pages/MythsFacts";
 
+// Missing page imports
+import SahayAIChatPage from "./pages/SahayAIChatPage";
+import ShieldAIAssessmentPage from "./pages/ShieldAIAssessmentPage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -107,6 +111,10 @@ const App = () => (
                 <Route path="/uday-ai" element={<UdayAI />} />
                 <Route path="/about-uday-ai" element={<AboutUdayAI />} />
                 <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
+                
+                {/* Add missing routes */}
+                <Route path="/sahay-ai-chat" element={<SahayAIChatPage />} />
+                <Route path="/shield-ai-assessment" element={<ShieldAIAssessmentPage />} />
                 
                 {/* About Routes */}
                 <Route path="/about-tganb" element={<AboutTGANB />} />
