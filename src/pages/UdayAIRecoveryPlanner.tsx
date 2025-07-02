@@ -280,7 +280,7 @@ const UdayAIRecoveryPlanner = () => {
           <div className="flex items-center justify-center mb-6">
             <Sunrise className="w-16 h-16 mr-4" />
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-2">Uday.AI</1>
+              <h1 className="text-4xl md:text-6xl font-bold mb-2">Uday.AI</h1>
               <p className="text-xl opacity-90">Recovery Risk Assessment</p>
             </div>
           </div>
