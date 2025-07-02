@@ -37,7 +37,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-sm text-blue-100 leading-relaxed">
-              Telangana Anti Narcotics Bureau is dedicated to combating drug trafficking and substance abuse through enforcement, prevention, and community engagement.
+              Telangana Anti-Narcotics Bureau is dedicated to combating drug trafficking and substance abuse through enforcement, prevention, and community engagement.
             </p>
           </div>
 
@@ -69,15 +69,6 @@ const Footer = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="w-4 h-4 text-blue-300" />
-                <p 
-                  className="text-blue-100 cursor-pointer hover:text-white transition-colors"
-                  onClick={() => handleCall('8712671111')}
-                >
-                  Contact: 8712671111
-                </p>
-              </div>
-              <div className="flex items-center space-x-3">
                 <WhatsApp className="w-4 h-4 text-green-400" />
                 <p 
                   className="text-green-100 cursor-pointer hover:text-white transition-colors"
@@ -98,7 +89,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-blue-300 mt-0.5" />
                 <p className="text-blue-100 text-xs leading-relaxed">
-                  Telangana Anti Narcotics Bureau<br />
+                  Telangana Anti-Narcotics Bureau<br />
                   Hyderabad, Telangana, India
                 </p>
               </div>
@@ -155,7 +146,7 @@ const Footer = () => {
             </div>
             <div className="text-center md:text-right">
               <p className="text-sm text-blue-200">
-                © 2025 Telangana Anti Narcotics Bureau. All rights reserved.
+                © 2025 Telangana Anti-Narcotics Bureau. All rights reserved.
               </p>
               <p className="text-xs text-blue-300 mt-1">
                 Government of Telangana

@@ -20,7 +20,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins py-4">
+    <section className="relative flex overflow-hidden bg-gradient-to-br from-green-400 via-darkslategrey-900 to-blue-700 font-poppins py-2">
       {/* 3D Background Elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-black-400/30 to-transparent rounded-full blur-xl animate-pulse"></div>
@@ -29,9 +29,9 @@ const HeroSection = () => {
       </div>
 
       {/* Tiger Mascot and Enrollment Section - 25% width */}
-      <div className="w-1/4 flex flex-col items-center justify-center p-2 relative z-10">
+      <div className="w-1/4 flex flex-col items-center justify-start p-2 relative z-10 pt-4">
         <div 
-          className="cursor-pointer hover:scale-105 transition-transform duration-300 mb-2"
+          className="cursor-pointer hover:scale-105 transition-transform duration-300 mb-3 -mt-8"
           onClick={handleAntiDrugEnrollment}
         >
           <img 
@@ -42,7 +42,7 @@ const HeroSection = () => {
         </div>
         <Button 
           onClick={handleAntiDrugEnrollment}
-          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold px-6 py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm mt-1"
+          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold px-6 py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-sm"
         >
           Enroll as Anti-Drug Soldier
         </Button>

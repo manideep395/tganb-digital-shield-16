@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Menu, X, Phone, ChevronDown, Mail, Instagram, Twitter, Facebook, Youtube, Shield } from 'lucide-react';
 import { MessageCircle as WhatsApp } from 'lucide-react';
@@ -102,28 +103,28 @@ const Header = () => {
 
   return (
     <header className="bg-white shadow-lg border-b border-darkslategrey-600 sticky top-0 z-50 font-poppins">
-      {/* Top Header - More Compact */}
-      <div className="bg-gradient-to-r from-green-900 via-darkslategrey-900 to-blue-900 text-white py-1">
+      {/* Top Header - Increased Size */}
+      <div className="bg-gradient-to-r from-green-900 via-darkslategrey-900 to-blue-900 text-white py-2">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <img 
               src="/uploads/cfe052e4-2276-4a1d-b6af-bc0ad7c3ccd4.png" 
               alt="TG ANB Logo" 
-              className="h-12 w-12 md:h-14 md:w-14 rounded-full border border-white/30"
+              className="h-14 w-14 md:h-16 md:w-16 rounded-full border border-white/30"
             />
             <div className="h-4 w-px bg-white/30 hidden md:block"></div>
             <img 
               src="/uploads/37f408d2-9357-4e1c-af91-05f171f00af2.png" 
               alt="Government of Telangana" 
-              className="h-10 w-10 md:h-14 md:w-14 rounded-full border border-white/30"
+              className="h-12 w-12 md:h-16 md:w-16 rounded-full border border-white/30"
             />
           </div>
           
           <div className="text-center flex-1">
-            <h1 className="text-sm md:text-2xl font-bold font-poppins tracking-wide">
-              TELANGANA ANTI NARCOTICS BUREAU (TGANB)
+            <h1 className="text-lg md:text-3xl font-bold font-poppins tracking-wide">
+              TELANGANA ANTI-NARCOTICS BUREAU (TGANB)
             </h1>
-            <p className="text-xs text-blue-200 hidden md:block">Government of Telangana</p>
+            <p className="text-sm md:text-lg text-blue-200">Government of Telangana</p>
           </div>
 
           {/* Desktop Contact Info */}
@@ -135,13 +136,6 @@ const Header = () => {
               >
                 <Phone className="w-3 h-3" />
                 <span>1908</span>
-              </div>
-              <div 
-                className="flex items-center space-x-1 bg-blue-600 px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:bg-blue-700 transition-colors"
-                onClick={() => handleCall('8712671111')}
-              >
-                <Phone className="w-2 h-2" />
-                <span>8712671111</span>
               </div>
               <div 
                 className="flex items-center space-x-1 bg-green-600 px-2 py-1 rounded-full text-xs font-medium cursor-pointer hover:bg-green-700 transition-colors"
@@ -199,8 +193,8 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Main Navigation - More Compact */}
-      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-0.5">
+      {/* Main Navigation - Increased font size from xs to sm */}
+      <nav className="bg-gradient-to-r from-blue-50 via-white to-blue-50 py-1">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             {/* Mobile menu button */}
@@ -218,7 +212,7 @@ const Header = () => {
               {menuItems.map((item, index) => (
                 <div key={index} className="relative group">
                   <button 
-                    className={`text-xs font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
+                    className={`text-sm font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap flex items-center gap-1 ${
                       item.href === '/' 
                         ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600 font-bold' 
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
@@ -257,7 +251,7 @@ const Header = () => {
               {/* T-RISING.AI Button */}
               <button 
                 onClick={() => handleNavigation('/about-rising-ai')}
-                className="text-xs font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg"
+                className="text-sm font-medium transition-all duration-200 py-1 px-2 rounded whitespace-nowrap text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 font-bold shadow-lg"
               >
                 T-RISING.AI
               </button>
@@ -319,13 +313,6 @@ const Header = () => {
                     >
                       <Phone className="w-3 h-3" />
                       <span>1908</span>
-                    </button>
-                    <button 
-                      onClick={() => handleCall('8712671111')}
-                      className="flex items-center space-x-1 bg-blue-600 px-2 py-1 rounded text-white text-xs"
-                    >
-                      <Phone className="w-3 h-3" />
-                      <span>8712671111</span>
                     </button>
                     <button 
                       onClick={() => handleWhatsApp('918712671111')}
