@@ -113,8 +113,8 @@ const App = () => (
                 <Route path="/about-uday-ai" element={<AboutUdayAI />} />
                 <Route path="/uday-ai-planner" element={<UdayAIRecoveryPlanner />} />
                 
-                {/* Fixed routes for Sahay AI Chat and Shield AI Assessment */}
-                <Route path="/sahay-ai-chat" element={<SahayAIChatPage />} />
+                {/* Use the original SahayAIChatbot for both routes */}
+                <Route path="/sahay-ai-chat" element={<SahayAIChatbot />} />
                 <Route path="/shield-ai-assessment" element={<ShieldAIAssessmentPage />} />
                 
                 {/* About Routes */}
