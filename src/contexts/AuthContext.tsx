@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
+import { sanitizeInput } from '@/utils/inputSanitization';
+import { loginLimiter } from '@/utils/rateLimiter';
 
 interface AuthContextType {
   user: User | null;
@@ -37,10 +39,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
+        
+        // Log auth events for audit
+        if (session?.user) {
+          console.log('Auth event:', event, 'User:', session.user.email);
+        }
       }
     );
 
@@ -51,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       
-      // Enhanced input validation and sanitization
+      // Enhanced input validation
       if (!email || !password) {
         return { error: { message: 'Email and password are required' } };
       }
@@ -62,124 +69,92 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Invalid email format' } };
       }
 
-      // Sanitize email (prevent injection attacks)
-      const sanitizedEmail = email.toLowerCase().trim().replace(/[<>]/g, '');
+      // Sanitize email
+      const sanitizedEmail = sanitizeInput(email.toLowerCase().trim());
       
       // Rate limiting check
-      const clientIP = 'client'; // In production, get actual client IP
-      const { data: rateLimitCheck, error: rateLimitError } = await supabase.rpc('check_rate_limit', {
-        p_ip_address: clientIP,
-        p_action: 'admin_login',
-        p_max_attempts: 3,
-        p_window_minutes: 15
-      });
-
-      if (rateLimitError || !rateLimitCheck) {
-        return { error: { message: 'Too many login attempts. Please try again later.' } };
-      }
+      const clientIP = 'user_session'; // Use session identifier
+      const rateLimitResult = loginLimiter.isAllowed(clientIP);
       
-      // Check if user exists in admin_users table with enhanced security
+      if (!rateLimitResult.allowed) {
+        return { 
+          error: { 
+            message: `Too many login attempts. Try again in ${rateLimitResult.blockTimeRemaining} minutes.` 
+          } 
+        };
+      }
+
+      // Check if user exists in admin_users table first
       const { data: adminUser, error: adminError } = await supabase
         .from('admin_users')
-        .select('id, email, password_hash, failed_login_attempts, last_login')
+        .select('id, email, password_hash, failed_login_attempts')
         .eq('email', sanitizedEmail)
         .single();
 
       if (adminError || !adminUser) {
         console.log('Authentication attempt for non-existent user:', sanitizedEmail);
-        // Log failed attempt for audit
-        await supabase.rpc('log_audit_event', {
-          p_user_id: null,
-          p_action: 'failed_login_invalid_user',
-          p_ip_address: clientIP,
-          p_user_agent: navigator.userAgent
-        });
         return { error: { message: 'Invalid credentials' } };
       }
 
       // Check for account lockout
-      if (adminUser.failed_login_attempts >= 5) {
-        await supabase.rpc('log_audit_event', {
-          p_user_id: adminUser.id,
-          p_action: 'login_blocked_too_many_attempts',
-          p_ip_address: clientIP,
-          p_user_agent: navigator.userAgent
-        });
+      if (adminUser.failed_login_attempts >= 3) {
         return { error: { message: 'Account temporarily locked due to too many failed attempts' } };
       }
 
-      // Enhanced password verification (currently plain text, but structured for future hashing)
-      let passwordValid = false;
-      try {
-        // For now, direct comparison (will be replaced with bcrypt in production)
-        passwordValid = password === adminUser.password_hash;
-      } catch (error) {
-        console.error('Password verification error:', error);
-        return { error: { message: 'Authentication service error' } };
-      }
+      // Verify password (currently plain text comparison, but structured for future hashing)
+      const passwordValid = password === adminUser.password_hash;
 
       if (!passwordValid) {
-        // Update failed attempts with exponential backoff
-        const newFailedAttempts = (adminUser.failed_login_attempts || 0) + 1;
+        // Update failed attempts
         await supabase
           .from('admin_users')
           .update({ 
-            failed_login_attempts: newFailedAttempts,
+            failed_login_attempts: (adminUser.failed_login_attempts || 0) + 1,
             updated_at: new Date().toISOString()
           })
           .eq('id', adminUser.id);
 
-        // Log failed attempt
-        await supabase.rpc('log_audit_event', {
-          p_user_id: adminUser.id,
-          p_action: 'failed_login_invalid_password',
-          p_ip_address: clientIP,
-          p_user_agent: navigator.userAgent
-        });
-
         return { error: { message: 'Invalid credentials' } };
       }
 
-      // Create secure session for successful login
-      const mockUser: User = {
-        id: adminUser.id,
-        email: adminUser.email,
-        aud: 'authenticated',
-        role: 'authenticated',
-        email_confirmed_at: new Date().toISOString(),
-        phone: '',
-        confirmed_at: new Date().toISOString(),
-        last_sign_in_at: new Date().toISOString(),
-        app_metadata: { 
-          role: 'admin',
-          login_time: new Date().toISOString(),
-          session_timeout: 30 * 60 * 1000 // 30 minutes
-        },
-        user_metadata: {
-          email: adminUser.email,
-          last_login: adminUser.last_login
-        },
-        identities: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
+      // Create a proper Supabase auth session using signInWithPassword
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: sanitizedEmail,
+        password: password
+      });
 
-      // Create session with security tokens
-      const sessionToken = `secure_${Date.now()}_${Math.random().toString(36).substring(2)}`;
-      const mockSession: Session = {
-        access_token: sessionToken,
-        refresh_token: `refresh_${Date.now()}_${Math.random().toString(36).substring(2)}`,
-        expires_in: 1800, // 30 minutes
-        expires_at: Math.floor(Date.now() / 1000) + 1800,
-        token_type: 'bearer',
-        user: mockUser
-      };
+      if (error) {
+        // If Supabase auth fails, we need to create the user first
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: sanitizedEmail,
+          password: password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/admin/dashboard`
+          }
+        });
 
-      // Set the session and user
-      setSession(mockSession);
-      setUser(mockUser);
+        if (signUpError) {
+          return { error: { message: 'Authentication service error' } };
+        }
 
-      // Update successful login and reset failed attempts
+        // Try signing in again after signup
+        const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
+          email: sanitizedEmail,
+          password: password
+        });
+
+        if (retryError) {
+          return { error: { message: 'Authentication failed' } };
+        }
+
+        setSession(retryData.session);
+        setUser(retryData.user);
+      } else {
+        setSession(data.session);
+        setUser(data.user);
+      }
+
+      // Reset failed attempts on successful login
       await supabase
         .from('admin_users')
         .update({ 
@@ -188,19 +163,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           updated_at: new Date().toISOString()
         })
         .eq('id', adminUser.id);
-
-      // Log successful login for audit
-      await supabase.rpc('log_audit_event', {
-        p_user_id: adminUser.id,
-        p_action: 'login_success',
-        p_ip_address: clientIP,
-        p_user_agent: navigator.userAgent
-      });
-
-      // Set session timeout
-      setTimeout(() => {
-        signOut();
-      }, 30 * 60 * 1000); // Auto logout after 30 minutes
 
       console.log('Login successful for:', sanitizedEmail);
       return { error: null };
@@ -214,39 +176,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      // Log audit event for logout
-      if (user) {
-        await supabase.rpc('log_audit_event', {
-          p_user_id: user.id,
-          p_action: 'logout',
-          p_user_agent: navigator.userAgent
-        });
-      }
+      await supabase.auth.signOut();
+      setSession(null);
+      setUser(null);
+      
+      // Clear any stored tokens
+      localStorage.removeItem('adminSession');
+      sessionStorage.clear();
     } catch (error) {
-      // Silently handle audit logging errors
-      console.error('Logout audit logging error:', error);
+      console.error('Logout error:', error);
     }
-    
-    // Clear session and user state
-    setSession(null);
-    setUser(null);
-    
-    // Clear any stored tokens
-    localStorage.removeItem('adminSession');
-    sessionStorage.clear();
   };
 
-  // Enhanced admin check with security validation
+  // Enhanced admin check
   const isAdmin = Boolean(
-    user && (
+    user && 
+    session &&
+    (
       user.email === 'admin@tganb.gov.in' || 
       user.email === 'tganb@tspolice' ||
       user.email === 'teagle@tgp.com'
-    ) && 
-    user.app_metadata?.role === 'admin' &&
-    session &&
-    session.expires_at && 
-    session.expires_at > Math.floor(Date.now() / 1000)
+    )
   );
 
   const value = {
