@@ -1,10 +1,29 @@
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { trainingData } from '../data/trainingData';
 import { Calendar, MapPin, Users, Image } from 'lucide-react';
+import { useContentData } from '@/hooks/useContentData';
 
 const LearningResources = () => {
+  const { trainingData, isLoading } = useContentData();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <Header />
+        <main className="py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading training resources...</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Header />
@@ -21,16 +40,16 @@ const LearningResources = () => {
           </div>
 
           <div className="grid gap-8">
-            {trainingData.map((training) => (
+            {trainingData.map((training, index) => (
               <div key={training.id} className="bg-white rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300 overflow-hidden">
                 <div className="grid md:grid-cols-4 gap-6 p-6">
                   {/* Training Image Placeholder */}
                   <div className="md:col-span-1">
                     <div className="aspect-square bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center">
-                      {training.photo ? (
+                      {training.image_url ? (
                         <img 
-                          src={training.photo} 
-                          alt={`Training ${training.id}`}
+                          src={training.image_url} 
+                          alt={`Training ${index + 1}`}
                           className="w-full h-full object-cover rounded-xl"
                         />
                       ) : (
@@ -46,13 +65,17 @@ const LearningResources = () => {
                   <div className="md:col-span-3 space-y-4">
                     <div className="flex items-start justify-between">
                       <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                        Training #{training.id}
+                        Training #{index + 1}
                       </div>
                     </div>
 
                     <h3 className="text-xl font-bold text-gray-900 leading-tight">
-                      {training.name}
+                      {training.title}
                     </h3>
+
+                    <p className="text-gray-600 leading-relaxed">
+                      {training.description}
+                    </p>
 
                     <div className="grid md:grid-cols-3 gap-4">
                       <div className="flex items-start space-x-3">
@@ -65,31 +88,42 @@ const LearningResources = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-start space-x-3">
-                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <MapPin className="w-4 h-4 text-purple-600" />
+                      {training.location && (
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-4 h-4 text-purple-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-gray-700">Venue</p>
+                            <p className="text-sm text-gray-600">{training.location}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-700">Venue</p>
-                          <p className="text-sm text-gray-600">{training.place}</p>
-                        </div>
-                      </div>
+                      )}
 
-                      <div className="flex items-start space-x-3">
-                        <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Users className="w-4 h-4 text-orange-600" />
+                      {training.instructor && (
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Users className="w-4 h-4 text-orange-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-gray-700">Participants</p>
+                            <p className="text-sm text-gray-600">{training.instructor}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-700">Participants</p>
-                          <p className="text-sm text-gray-600">{training.nominatedOfficers}</p>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+
+          {trainingData.length === 0 && (
+            <div className="text-center py-12">
+              <Image className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <p className="text-xl text-gray-600">No training programs available at the moment.</p>
+            </div>
+          )}
 
           {/* Summary Stats */}
           <div className="mt-16 grid md:grid-cols-4 gap-6">

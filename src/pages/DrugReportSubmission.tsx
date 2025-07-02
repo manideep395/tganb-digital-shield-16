@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,11 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Shield, AlertTriangle, FileText, Send, ArrowLeft } from 'lucide-react';
-import { useAdmin } from '../contexts/AdminContext';
+import { supabase } from '@/integrations/supabase/client';
+import LocationPicker from '@/components/LocationPicker';
 
 const DrugReportSubmission = () => {
   const navigate = useNavigate();
-  const { addDrugReport } = useAdmin();
   
   const [formData, setFormData] = useState({
     reportType: '',
@@ -23,20 +24,12 @@ const DrugReportSubmission = () => {
     locationIncident: '',
     incidentDateTime: '',
     dateUnknown: false,
-    detailedDescription: ''
+    detailedDescription: '',
+    selectedLocation: null as { lat: number; lng: number; address: string } | null
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  const districts = [
-    'Adilabad', 'Bhadradri Kothagudem', 'Hyderabad', 'Jagtial', 'Jangaon', 'Jayashankar',
-    'Jogulamba', 'Kamareddy', 'Karimnagar', 'Khammam', 'Komaram Bheem', 'Mahabubabad',
-    'Mahbubnagar', 'Mancherial', 'Medak', 'Medchal', 'Mulugu', 'Nagarkurnool', 'Nalgonda',
-    'Narayanpet', 'Nirmal', 'Nizamabad', 'Peddapalli', 'Rajanna Sircilla', 'Ranga Reddy',
-    'Sangareddy', 'Siddipet', 'Suryapet', 'Vikarabad', 'Wanaparthy', 'Warangal Rural',
-    'Warangal Urban', 'Yadadri Bhuvanagiri'
-  ];
 
   const reportTypes = [
     { value: 'drug_trafficking', label: 'Drug Trafficking' },
@@ -52,48 +45,41 @@ const DrugReportSubmission = () => {
     setIsSubmitting(true);
 
     try {
-      // Create the report object
       const reportData = {
-        reportType: formData.reportType,
-        isAnonymous: formData.isAnonymous,
-        reporterName: formData.isAnonymous ? undefined : formData.reporterName,
-        reporterEmail: formData.isAnonymous ? undefined : formData.reporterEmail,
-        reporterPhone: formData.isAnonymous ? undefined : formData.reporterPhone,
-        locationIncident: formData.locationIncident,
-        incidentDateTime: formData.dateUnknown ? undefined : formData.incidentDateTime,
-        dateUnknown: formData.dateUnknown,
-        detailedDescription: formData.detailedDescription,
-        status: 'pending' as const
+        report_type: formData.reportType,
+        is_anonymous: formData.isAnonymous,
+        reporter_name: formData.isAnonymous ? null : formData.reporterName,
+        reporter_email: formData.isAnonymous ? null : formData.reporterEmail,
+        reporter_phone: formData.isAnonymous ? null : formData.reporterPhone,
+        location_incident: formData.selectedLocation ? formData.selectedLocation.address : formData.locationIncident,
+        incident_date_time: formData.dateUnknown ? null : formData.incidentDateTime,
+        date_unknown: formData.dateUnknown,
+        detailed_description: formData.detailedDescription,
+        status: 'pending'
       };
 
-      // Add the report using admin context
-      addDrugReport(reportData);
-      
-      setSubmitted(true);
-      console.log('Drug report submitted successfully:', reportData);
-      
-      // Reset form after successful submission
-      setTimeout(() => {
-        setFormData({
-          reportType: '',
-          isAnonymous: false,
-          reporterName: '',
-          reporterEmail: '',
-          reporterPhone: '',
-          locationIncident: '',
-          incidentDateTime: '',
-          dateUnknown: false,
-          detailedDescription: ''
-        });
-        setSubmitted(false);
-      }, 3000);
+      const { error } = await supabase
+        .from('drug_reports')
+        .insert([reportData]);
 
+      if (error) {
+        console.error('Error submitting report:', error);
+        throw error;
+      }
+
+      setSubmitted(true);
+      console.log('Drug report submitted successfully');
+      
     } catch (error) {
       console.error('Error submitting report:', error);
       alert('Error submitting report. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleLocationSelect = (location: { lat: number; lng: number; address: string }) => {
+    setFormData({ ...formData, selectedLocation: location, locationIncident: location.address });
   };
 
   if (submitted) {
@@ -188,7 +174,7 @@ const DrugReportSubmission = () => {
                             value={formData.reporterName}
                             onChange={(e) => setFormData({...formData, reporterName: e.target.value})}
                             placeholder="Enter your full name"
-                            required
+                            required={!formData.isAnonymous}
                           />
                         </div>
                         <div>
@@ -199,7 +185,7 @@ const DrugReportSubmission = () => {
                             value={formData.reporterEmail}
                             onChange={(e) => setFormData({...formData, reporterEmail: e.target.value})}
                             placeholder="Enter your email"
-                            required
+                            required={!formData.isAnonymous}
                           />
                         </div>
                       </div>
@@ -210,7 +196,7 @@ const DrugReportSubmission = () => {
                           value={formData.reporterPhone}
                           onChange={(e) => setFormData({...formData, reporterPhone: e.target.value})}
                           placeholder="Enter your phone number"
-                          required
+                          required={!formData.isAnonymous}
                         />
                       </div>
                     </div>
@@ -221,19 +207,20 @@ const DrugReportSubmission = () => {
                     <h3 className="font-semibold text-gray-900">Incident Details</h3>
                     
                     <div>
-                      <Label htmlFor="location">Location/District of Incident *</Label>
-                      <Select value={formData.locationIncident} onValueChange={(value) => setFormData({...formData, locationIncident: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select district" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {districts.map((district) => (
-                            <SelectItem key={district} value={district}>
-                              {district}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="location">Location of Incident *</Label>
+                      <LocationPicker
+                        onLocationSelect={handleLocationSelect}
+                        selectedLocation={formData.selectedLocation}
+                      />
+                      {!formData.selectedLocation && (
+                        <Input
+                          id="location"
+                          value={formData.locationIncident}
+                          onChange={(e) => setFormData({...formData, locationIncident: e.target.value})}
+                          placeholder="Or type location manually"
+                          className="mt-2"
+                        />
+                      )}
                     </div>
 
                     <div className="flex items-center space-x-2 mb-4">
@@ -275,7 +262,7 @@ const DrugReportSubmission = () => {
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !formData.reportType || !formData.detailedDescription || (!formData.selectedLocation && !formData.locationIncident)}
                   >
                     {isSubmitting ? (
                       <>

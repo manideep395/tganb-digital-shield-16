@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle, Search } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { faqsData } from '../data/faqsData';
+import { useContentData } from '@/hooks/useContentData';
 
 const FAQs = () => {
+  const { faqsData, isLoading } = useContentData();
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -17,6 +18,23 @@ const FAQs = () => {
     faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
     faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <Header />
+        <main className="py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading FAQs...</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -51,7 +69,7 @@ const FAQs = () => {
           {/* FAQs List */}
           <div className="max-w-4xl mx-auto space-y-4">
             {filteredFaqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+              <div key={faq.id} className="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                 <button
                   className="w-full p-6 text-left hover:bg-gray-50 transition-colors focus:outline-none focus:bg-gray-50"
                   onClick={() => toggleExpand(index)}
@@ -60,9 +78,16 @@ const FAQs = () => {
                     <div className="flex-1 pr-4">
                       <div className="flex items-start gap-3">
                         <HelpCircle className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                        <h3 className="text-lg font-semibold text-gray-900 font-poppins">
-                          {faq.question}
-                        </h3>
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-medium">
+                              {faq.category}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-900 font-poppins">
+                            {faq.question}
+                          </h3>
+                        </div>
                       </div>
                     </div>
                     <div className="flex-shrink-0">
@@ -78,7 +103,7 @@ const FAQs = () => {
                 {expandedFaq === index && (
                   <div className="px-6 pb-6 border-t border-gray-100">
                     <div className="pt-4 pl-8">
-                      <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                      <p className="text-gray-700 leading-relaxed whitespace-pre-line">{faq.answer}</p>
                     </div>
                   </div>
                 )}
