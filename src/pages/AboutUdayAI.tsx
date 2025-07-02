@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sunrise, Calendar, Heart, Target, Clock, Star } from 'lucide-react';
+import { Sunrise, Heart, Target, Clock, Star, Users, Phone, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AboutUdayAI = () => {
@@ -36,7 +36,7 @@ const AboutUdayAI = () => {
                 About <span className="text-orange-600">Uday.AI</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Your personalized AI recovery companion for structured healing and daily motivation
+                Your AI-powered recovery consultation assistant that connects you with professional help and guidance
               </p>
             </div>
 
@@ -45,18 +45,18 @@ const AboutUdayAI = () => {
                 <CardHeader>
                   <CardTitle className="text-2xl text-orange-600 flex items-center">
                     <Heart className="mr-3" />
-                    Recovery Journey Support
+                    Professional Recovery Guidance
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-gray-700 leading-relaxed">
-                    Uday.AI is designed to support individuals in their recovery journey with personalized 
-                    daily schedules, motivational content, and progress tracking. Each day brings new hope 
-                    and structured support for sustainable recovery.
+                    Uday.AI is designed to assess your recovery needs and connect you with appropriate professional 
+                    resources. Rather than creating plans, it focuses on providing expert consultation recommendations 
+                    and connecting you with qualified rehabilitation centers, counselors, and medical professionals.
                   </p>
                   <p className="text-gray-700 leading-relaxed">
-                    Through daily assessments and AI-generated plans, Uday.AI adapts to your needs, 
-                    providing the right balance of structure, motivation, and flexibility for successful recovery.
+                    Through intelligent assessment, Uday.AI evaluates your situation and provides immediate guidance 
+                    on whom to consult, what type of professional help you need, and how to access the right resources for your recovery journey.
                   </p>
                 </CardContent>
               </Card>
@@ -66,9 +66,9 @@ const AboutUdayAI = () => {
                   whileHover={{ scale: 1.05 }}
                   className="bg-gradient-to-br from-orange-100 to-amber-100 p-6 rounded-2xl text-center"
                 >
-                  <Calendar className="w-12 h-12 text-orange-600 mx-auto mb-3" />
-                  <h3 className="font-bold text-gray-800">Daily Planning</h3>
-                  <p className="text-sm text-gray-600">Structured recovery schedules</p>
+                  <Users className="w-12 h-12 text-orange-600 mx-auto mb-3" />
+                  <h3 className="font-bold text-gray-800">Expert Consultation</h3>
+                  <p className="text-sm text-gray-600">Connect with professionals</p>
                 </motion.div>
 
                 <motion.div
@@ -76,33 +76,33 @@ const AboutUdayAI = () => {
                   className="bg-gradient-to-br from-amber-100 to-yellow-100 p-6 rounded-2xl text-center"
                 >
                   <Target className="w-12 h-12 text-amber-600 mx-auto mb-3" />
-                  <h3 className="font-bold text-gray-800">Goal Setting</h3>
-                  <p className="text-sm text-gray-600">Personalized recovery targets</p>
+                  <h3 className="font-bold text-gray-800">Risk Assessment</h3>
+                  <p className="text-sm text-gray-600">Evaluate recovery needs</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="bg-gradient-to-br from-yellow-100 to-lime-100 p-6 rounded-2xl text-center"
                 >
-                  <Clock className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                  <h3 className="font-bold text-gray-800">Progress Tracking</h3>
-                  <p className="text-sm text-gray-600">Monitor your journey</p>
+                  <MapPin className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
+                  <h3 className="font-bold text-gray-800">Center Referrals</h3>
+                  <p className="text-sm text-gray-600">Find nearby facilities</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="bg-gradient-to-br from-lime-100 to-green-100 p-6 rounded-2xl text-center"
                 >
-                  <Star className="w-12 h-12 text-lime-600 mx-auto mb-3" />
-                  <h3 className="font-bold text-gray-800">Motivation</h3>
-                  <p className="text-sm text-gray-600">Daily inspiration and support</p>
+                  <Phone className="w-12 h-12 text-lime-600 mx-auto mb-3" />
+                  <h3 className="font-bold text-gray-800">Immediate Support</h3>
+                  <p className="text-sm text-gray-600">24/7 consultation guidance</p>
                 </motion.div>
               </div>
             </div>
 
             <Card className="backdrop-blur-sm bg-white/90 shadow-xl border-0 rounded-2xl mb-12">
               <CardHeader>
-                <CardTitle className="text-2xl text-orange-600">Daily Recovery Components</CardTitle>
+                <CardTitle className="text-2xl text-orange-600">How Uday.AI Helps You</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
@@ -110,22 +110,22 @@ const AboutUdayAI = () => {
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">Morning Routine</h4>
-                        <p className="text-gray-600 text-sm">Structured start with meditation and goal setting</p>
+                        <h4 className="font-semibold text-gray-800">Instant Risk Assessment</h4>
+                        <p className="text-gray-600 text-sm">AI evaluates your situation and determines the level of professional intervention needed</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-amber-500 rounded-full mt-2"></div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">Wellness Activities</h4>
-                        <p className="text-gray-600 text-sm">Physical exercise and mental health practices</p>
+                        <h4 className="font-semibold text-gray-800">Professional Matching</h4>
+                        <p className="text-gray-600 text-sm">Connects you with appropriate specialists, counselors, and treatment centers</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">Social Connection</h4>
-                        <p className="text-gray-600 text-sm">Building healthy relationships and support networks</p>
+                        <h4 className="font-semibold text-gray-800">Consultation Guidance</h4>
+                        <p className="text-gray-600 text-sm">Provides specific advice on what questions to ask and what to expect</p>
                       </div>
                     </div>
                   </div>
@@ -133,24 +133,58 @@ const AboutUdayAI = () => {
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-lime-500 rounded-full mt-2"></div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">Skill Development</h4>
-                        <p className="text-gray-600 text-sm">Learning new coping strategies and life skills</p>
+                        <h4 className="font-semibold text-gray-800">Resource Directory</h4>
+                        <p className="text-gray-600 text-sm">Access to comprehensive database of rehabilitation centers and professionals</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">Evening Reflection</h4>
-                        <p className="text-gray-600 text-sm">Daily progress review and gratitude practice</p>
+                        <h4 className="font-semibold text-gray-800">Family Support Guidance</h4>
+                        <p className="text-gray-600 text-sm">Advice for family members on how to support recovery journey</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-teal-500 rounded-full mt-2"></div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">Crisis Support</h4>
-                        <p className="text-gray-600 text-sm">24/7 access to emergency resources and guidance</p>
+                        <h4 className="font-semibold text-gray-800">Emergency Resources</h4>
+                        <p className="text-gray-600 text-sm">Immediate access to crisis intervention and emergency support</p>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-white/90 shadow-xl border-0 rounded-2xl mb-12">
+              <CardHeader>
+                <CardTitle className="text-2xl text-orange-600">Professional Consultation Areas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-800 mb-2">Medical Professionals</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Addiction Medicine Specialists</li>
+                      <li>• Psychiatrists</li>
+                      <li>• General Physicians</li>
+                    </ul>
+                  </div>
+                  <div className="bg-amber-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-800 mb-2">Counseling Services</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Licensed Counselors</li>
+                      <li>• Family Therapists</li>
+                      <li>• Group Therapy Leaders</li>
+                    </ul>
+                  </div>
+                  <div className="bg-yellow-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-800 mb-2">Treatment Centers</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Inpatient Facilities</li>
+                      <li>• Outpatient Programs</li>
+                      <li>• Specialized Clinics</li>
+                    </ul>
                   </div>
                 </div>
               </CardContent>
@@ -162,7 +196,7 @@ const AboutUdayAI = () => {
                 className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all"
               >
                 <Sunrise className="mr-3" />
-                Start Your Recovery Plan
+                Get Professional Consultation Guidance
               </Button>
             </div>
           </motion.div>
