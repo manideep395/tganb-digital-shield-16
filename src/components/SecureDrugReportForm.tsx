@@ -146,9 +146,9 @@ const SecureDrugReportForm = () => {
       }
     }
 
-    // Description length validation
-    if (formData.detailedDescription.length < 10) {
-      setError('Description must be at least 10 characters long.');
+    // Description length validation - Updated to 100 characters minimum
+    if (formData.detailedDescription.length < 100) {
+      setError('Description must be at least 100 characters long.');
       return false;
     }
 
@@ -374,11 +374,11 @@ const SecureDrugReportForm = () => {
 
               <div>
                 <Label htmlFor="detailedDescription" className="text-sm font-medium text-gray-700 mb-1 block">
-                  Detailed Description *
+                  Detailed Description * (Minimum 100 characters)
                 </Label>
                 <Textarea
                   id="detailedDescription"
-                  placeholder="Provide a detailed description of the incident (minimum 10 characters)"
+                  placeholder="Provide a detailed description of the incident (minimum 100 characters). Include location details, people involved, activities observed, etc."
                   rows={5}
                   value={formData.detailedDescription}
                   onChange={(e) => setFormData({ ...formData, detailedDescription: e.target.value })}
@@ -387,7 +387,7 @@ const SecureDrugReportForm = () => {
                   className="resize-none"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  {formData.detailedDescription.length}/2000 characters
+                  {formData.detailedDescription.length}/2000 characters (minimum 100 required)
                 </p>
               </div>
 

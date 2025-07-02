@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -44,9 +45,9 @@ const DrugReportSubmission = () => {
     setIsSubmitting(true);
 
     try {
-      // Validate description length (minimum 10 characters as per database constraint)
-      if (formData.detailedDescription.length < 10) {
-        alert('Description must be at least 10 characters long.');
+      // Validate description length (minimum 100 characters as per database constraint)
+      if (formData.detailedDescription.length < 100) {
+        alert('Description must be at least 100 characters long.');
         setIsSubmitting(false);
         return;
       }
@@ -71,7 +72,7 @@ const DrugReportSubmission = () => {
       if (error) {
         console.error('Error submitting report:', error);
         if (error.code === '23514') {
-          alert('Please provide a more detailed description (minimum 10 characters).');
+          alert('Please provide a more detailed description (minimum 100 characters).');
         } else {
           alert('Error submitting report. Please try again.');
         }
@@ -258,18 +259,18 @@ const DrugReportSubmission = () => {
                     )}
 
                     <div>
-                      <Label htmlFor="description">Detailed Description * (Minimum 10 characters)</Label>
+                      <Label htmlFor="description">Detailed Description * (Minimum 100 characters)</Label>
                       <Textarea
                         id="description"
                         value={formData.detailedDescription}
                         onChange={(e) => setFormData({...formData, detailedDescription: e.target.value})}
-                        placeholder="Provide detailed information about the incident, including location details, people involved, activities observed, etc."
+                        placeholder="Provide detailed information about the incident, including location details, people involved, activities observed, etc. Please be as descriptive as possible with at least 100 characters."
                         rows={6}
                         required
-                        minLength={10}
+                        minLength={100}
                       />
                       <p className="text-sm text-gray-500 mt-1">
-                        {formData.detailedDescription.length}/10 minimum characters
+                        {formData.detailedDescription.length}/100 minimum characters
                       </p>
                     </div>
                   </div>
@@ -277,7 +278,7 @@ const DrugReportSubmission = () => {
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={isSubmitting || !formData.reportType || formData.detailedDescription.length < 10 || (!formData.selectedLocation && !formData.locationIncident)}
+                    disabled={isSubmitting || !formData.reportType || formData.detailedDescription.length < 100 || (!formData.selectedLocation && !formData.locationIncident)}
                   >
                     {isSubmitting ? (
                       <>
@@ -323,7 +324,7 @@ const DrugReportSubmission = () => {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-sm text-gray-600">
-                  <li>• Provide as much detail as possible</li>
+                  <li>• Provide as much detail as possible (minimum 100 characters)</li>
                   <li>• Include specific locations and times</li>
                   <li>• Do not approach suspected individuals</li>
                   <li>• For emergencies, call 100 immediately</li>
