@@ -35,7 +35,7 @@ const HeroSection = () => {
           onClick={handleAntiDrugEnrollment}
         >
           <img 
-            src="/lovable-uploads/550efe74-a996-423b-a425-8a3656a2e477.png" 
+            src="/uploads/550efe74-a996-423b-a425-8a3656a2e477.png" 
             alt="Anti-Drug Tiger Mascot" 
             className="w-72 h-auto drop-shadow-2xl transform scale-110"
           />

@@ -182,7 +182,7 @@ const AntiDrugSoldierForm = () => {
                 <Card className="text-center p-6 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
                   <div className="mb-4">
                     <img 
-                      src="/lovable-uploads/550efe74-a996-423b-a425-8a3656a2e477.png" 
+                      src="/uploads/550efe74-a996-423b-a425-8a3656a2e477.png" 
                       alt="TG ANB Tiger Mascot" 
                       className="w-full max-w-48 mx-auto rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
                     />
