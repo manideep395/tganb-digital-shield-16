@@ -56,9 +56,9 @@ const HeroScrollingBoxes = () => {
 
   if (isLoading) {
     return (
-      <div className="w-1/4 space-y-4 p-4">
-        <div className="h-32 bg-blue-100/50 rounded-xl animate-pulse"></div>
-        <div className="h-32 bg-orange-100/50 rounded-xl animate-pulse"></div>
+      <div className="w-full lg:w-1/4 space-y-4 p-2 md:p-4">
+        <div className="h-32 md:h-40 bg-blue-100/50 rounded-xl animate-pulse"></div>
+        <div className="h-32 md:h-40 bg-orange-100/50 rounded-xl animate-pulse"></div>
       </div>
     );
   }
@@ -67,39 +67,39 @@ const HeroScrollingBoxes = () => {
   const currentAnnouncement = announcementData[announcementIndex];
 
   return (
-    <div className="w-1/4 space-y-4 p-4">
-      {/* News Box */}
-      <div className="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-4 text-white relative overflow-hidden group">
-        <div className="absolute top-2 right-2 opacity-50 group-hover:opacity-100 transition-opacity">
-          <ArrowUp className="w-4 h-4 animate-bounce" />
+    <div className="w-full lg:w-1/4 space-y-3 md:space-y-4 p-2 md:p-4">
+      {/* News Box - Enhanced for better visibility */}
+      <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-3 md:p-4 text-white relative overflow-hidden group shadow-lg min-h-[140px] md:min-h-[160px]">
+        <div className="absolute top-2 right-2 opacity-60 group-hover:opacity-100 transition-opacity">
+          <ArrowUp className="w-3 h-3 md:w-4 md:h-4 animate-bounce" />
         </div>
         
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 md:mb-3">
           <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2 text-blue-200" />
-            <span className="text-xs font-bold uppercase tracking-wide">News & Updates</span>
+            <Calendar className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-blue-200" />
+            <span className="text-xs md:text-sm font-bold uppercase tracking-wide">News Updates</span>
           </div>
           <div className="flex items-center space-x-1">
             <button 
               onClick={() => handleNewsNavigation('prev')}
-              className="w-5 h-5 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
+              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
               disabled={newsData.length <= 1}
             >
-              <ChevronLeft className="w-3 h-3" />
+              <ChevronLeft className="w-2 h-2 md:w-3 md:h-3" />
             </button>
             <button 
               onClick={() => handleNewsNavigation('next')}
-              className="w-5 h-5 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
+              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
               disabled={newsData.length <= 1}
             >
-              <ChevronRight className="w-3 h-3" />
+              <ChevronRight className="w-2 h-2 md:w-3 md:h-3" />
             </button>
           </div>
         </div>
         
         <div 
           onClick={handleNewsClick}
-          className="cursor-pointer hover:bg-blue-600/20 rounded-lg p-2 transition-colors"
+          className="cursor-pointer hover:bg-blue-600/20 rounded-lg p-2 transition-colors flex-1"
         >
           {currentNews ? (
             <div className="space-y-2">
@@ -111,16 +111,16 @@ const HeroScrollingBoxes = () => {
                   <span className="text-xs opacity-80">{currentNews.date}</span>
                 )}
               </div>
-              <h4 className="text-sm font-bold line-clamp-2 leading-tight">
+              <h4 className="text-xs md:text-sm font-bold line-clamp-2 leading-tight">
                 {currentNews.title}
               </h4>
-              <p className="text-xs opacity-90 line-clamp-2">
+              <p className="text-xs opacity-90 line-clamp-2 leading-relaxed">
                 {currentNews.description}
               </p>
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-sm opacity-80">No news available</p>
+              <p className="text-xs md:text-sm opacity-80">No news available</p>
             </div>
           )}
 
@@ -130,38 +130,38 @@ const HeroScrollingBoxes = () => {
         </div>
       </div>
 
-      {/* Announcements Box */}
-      <div className="bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl p-4 text-white relative overflow-hidden group">
-        <div className="absolute top-2 right-2 opacity-50 group-hover:opacity-100 transition-opacity">
-          <ArrowUp className="w-4 h-4 animate-bounce" />
+      {/* Announcements Box - Enhanced for better visibility */}
+      <div className="bg-gradient-to-br from-orange-600 to-orange-800 rounded-xl p-3 md:p-4 text-white relative overflow-hidden group shadow-lg min-h-[140px] md:min-h-[160px]">
+        <div className="absolute top-2 right-2 opacity-60 group-hover:opacity-100 transition-opacity">
+          <ArrowUp className="w-3 h-3 md:w-4 md:h-4 animate-bounce" />
         </div>
         
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 md:mb-3">
           <div className="flex items-center">
-            <Megaphone className="w-4 h-4 mr-2 text-orange-200" />
-            <span className="text-xs font-bold uppercase tracking-wide">Announcements</span>
+            <Megaphone className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-orange-200" />
+            <span className="text-xs md:text-sm font-bold uppercase tracking-wide">Announcements</span>
           </div>
           <div className="flex items-center space-x-1">
             <button 
               onClick={() => handleAnnouncementNavigation('prev')}
-              className="w-5 h-5 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
+              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
               disabled={announcementData.length <= 1}
             >
-              <ChevronLeft className="w-3 h-3" />
+              <ChevronLeft className="w-2 h-2 md:w-3 md:h-3" />
             </button>
             <button 
               onClick={() => handleAnnouncementNavigation('next')}
-              className="w-5 h-5 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
+              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
               disabled={announcementData.length <= 1}
             >
-              <ChevronRight className="w-3 h-3" />
+              <ChevronRight className="w-2 h-2 md:w-3 md:h-3" />
             </button>
           </div>
         </div>
         
         <div 
           onClick={handleAnnouncementClick}
-          className="cursor-pointer hover:bg-orange-600/20 rounded-lg p-2 transition-colors"
+          className="cursor-pointer hover:bg-orange-600/20 rounded-lg p-2 transition-colors flex-1"
         >
           {currentAnnouncement ? (
             <div className="space-y-2">
@@ -171,18 +171,18 @@ const HeroScrollingBoxes = () => {
                 </span>
                 <span className="text-xs opacity-80">{currentAnnouncement.date}</span>
               </div>
-              <h4 className="text-sm font-bold line-clamp-2 leading-tight">
+              <h4 className="text-xs md:text-sm font-bold line-clamp-2 leading-tight">
                 {currentAnnouncement.name}
               </h4>
               {currentAnnouncement.description && (
-                <p className="text-xs opacity-90 line-clamp-2">
+                <p className="text-xs opacity-90 line-clamp-2 leading-relaxed">
                   {currentAnnouncement.description}
                 </p>
               )}
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-sm opacity-80">No announcements available</p>
+              <p className="text-xs md:text-sm opacity-80">No announcements available</p>
             </div>
           )}
 
