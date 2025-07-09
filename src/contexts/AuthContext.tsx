@@ -12,6 +12,15 @@ interface AuthContextType {
   isAdmin: boolean;
 }
 
+interface LoginResponse {
+  success: boolean;
+  error?: string;
+  user?: {
+    id: string;
+    email: string;
+  };
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
@@ -78,14 +87,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Authentication service error' } };
       }
 
-      if (!data.success) {
-        return { error: { message: data.error } };
+      // Type assertion for the response data
+      const loginResponse = data as LoginResponse;
+
+      if (!loginResponse.success) {
+        return { error: { message: loginResponse.error || 'Authentication failed' } };
       }
 
       // Create secure session for successful login
       const mockUser: User = {
-        id: data.user.id,
-        email: data.user.email,
+        id: loginResponse.user!.id,
+        email: loginResponse.user!.email,
         aud: 'authenticated',
         role: 'authenticated',
         email_confirmed_at: new Date().toISOString(),

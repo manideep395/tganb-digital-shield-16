@@ -229,11 +229,7 @@ const Header = () => {
                       {item.dropdown.map((dropdownItem, dropdownIndex) => (
                         <button
                           key={dropdownIndex}
-                          className={`w-full text-left py-2 px-4 text-sm font-medium transition-colors ${
-                            dropdownItem.gradient 
-                              ? `text-white bg-gradient-to-r ${dropdownItem.gradient} hover:opacity-90 mx-2 rounded-md`
-                              : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
-                          }`}
+                          className="w-full text-left py-2 px-4 text-sm font-medium transition-colors text-gray-700 hover:bg-blue-50 hover:text-blue-600"
                           onClick={() => handleNavigation(dropdownItem.href)}
                         >
                           {dropdownItem.title}
@@ -271,11 +267,7 @@ const Header = () => {
                     {item.dropdown && item.dropdown.map((dropdownItem, dropdownIndex) => (
                       <button
                         key={dropdownIndex}
-                        className={`w-full text-left py-2 px-8 text-sm ${
-                          dropdownItem.gradient 
-                            ? `text-white bg-gradient-to-r ${dropdownItem.gradient}`
-                            : 'text-gray-600 hover:bg-blue-50'
-                        }`}
+                        className="w-full text-left py-2 px-8 text-sm text-gray-600 hover:bg-blue-50"
                         onClick={() => handleNavigation(dropdownItem.href)}
                       >
                         {dropdownItem.title}
