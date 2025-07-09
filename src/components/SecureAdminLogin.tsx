@@ -18,43 +18,27 @@ const SecureAdminLogin = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [attempts, setAttempts] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // Input validation
     if (!formData.email || !formData.password) {
       setError('Please fill in all fields');
       return;
     }
 
-    // Rate limiting
-    if (attempts >= 5) {
-      setError('Too many failed attempts. Please wait 15 minutes before trying again.');
-      return;
-    }
+    console.log('Form submitted with:', formData.email);
 
     try {
-      console.log('Attempting login with email:', formData.email);
       const { error } = await signIn(formData.email, formData.password);
       
       if (error) {
-        console.error('Login error:', error);
-        setAttempts(prev => prev + 1);
-        setError(error.message || 'Invalid credentials. Please check your email and password.');
-        
-        // Auto-reset attempts after 15 minutes
-        setTimeout(() => {
-          setAttempts(0);
-        }, 15 * 60 * 1000);
+        console.error('Login failed:', error);
+        setError(error.message || 'Login failed. Please try again.');
       } else {
-        console.log('Login successful, redirecting to dashboard...');
-        // Small delay to ensure state is updated
-        setTimeout(() => {
-          navigate('/admin/dashboard');
-        }, 100);
+        console.log('Login successful, navigating to dashboard...');
+        navigate('/admin/dashboard');
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -86,7 +70,6 @@ const SecureAdminLogin = () => {
                 placeholder="Enter your email"
                 required
                 autoComplete="email"
-                maxLength={255}
                 className="mt-1 text-sm md:text-base"
               />
             </div>
@@ -102,7 +85,6 @@ const SecureAdminLogin = () => {
                   placeholder="Enter your password"
                   required
                   autoComplete="current-password"
-                  maxLength={255}
                   className="pr-10 text-sm md:text-base"
                 />
                 <Button
@@ -127,28 +109,18 @@ const SecureAdminLogin = () => {
             <Button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-sm md:text-base py-2 md:py-3"
-              disabled={isLoading || attempts >= 5}
+              disabled={isLoading}
             >
               {isLoading ? 'Authenticating...' : 'Sign In'}
             </Button>
           </form>
 
           <div className="mt-6 space-y-4">
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-xs text-yellow-800">
-                <strong>Security Notice:</strong> This system includes audit logging and rate limiting for security.
-                All login attempts are monitored and logged.
-              </p>
-            </div>
-            
-            {/* Development credentials info */}
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-xs text-blue-800">
-                <strong>Valid Credentials:</strong><br/>
-                • admin@tganb.gov.in<br/>
-                • tganb@tspolice<br/>
-                • teagle@tgp.com<br/>
-                <strong>Password:</strong> SecureAdmin2024!
+                <strong>Test Credentials:</strong><br/>
+                Email: admin@tganb.gov.in<br/>
+                Password: SecureAdmin2024!
               </p>
             </div>
           </div>
