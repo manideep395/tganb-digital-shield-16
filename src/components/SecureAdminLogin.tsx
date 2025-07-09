@@ -30,13 +30,6 @@ const SecureAdminLogin = () => {
       return;
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
-
     // Rate limiting
     if (attempts >= 5) {
       setError('Too many failed attempts. Please wait 15 minutes before trying again.');
@@ -44,21 +37,25 @@ const SecureAdminLogin = () => {
     }
 
     try {
+      console.log('Attempting login with email:', formData.email);
       const { error } = await signIn(formData.email, formData.password);
       
       if (error) {
+        console.error('Login error:', error);
         setAttempts(prev => prev + 1);
-        setError('Invalid credentials. Please check your email and password.');
+        setError(error.message || 'Invalid credentials. Please check your email and password.');
         
         // Auto-reset attempts after 15 minutes
         setTimeout(() => {
           setAttempts(0);
         }, 15 * 60 * 1000);
       } else {
-        // Successful login
+        console.log('Login successful, redirecting to dashboard...');
+        // Successful login - redirect to dashboard
         navigate('/admin/dashboard');
       }
     } catch (err) {
+      console.error('Unexpected error:', err);
       setError('An unexpected error occurred. Please try again.');
     }
   };
@@ -145,10 +142,11 @@ const SecureAdminLogin = () => {
             {/* Development credentials info */}
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-xs text-blue-800">
-                <strong>Authorized Credentials:</strong><br/>
-                • admin@tganb.gov.in (Password: SecureAdmin2024!)<br/>
-                • tganb@tspolice (Password: SecureAdmin2024!)<br/>
-                • teagle@tgp.com (Password: SecureAdmin2024!)
+                <strong>Valid Credentials:</strong><br/>
+                • admin@tganb.gov.in<br/>
+                • tganb@tspolice<br/>
+                • teagle@tgp.com<br/>
+                <strong>Password:</strong> SecureAdmin2024!
               </p>
             </div>
           </div>

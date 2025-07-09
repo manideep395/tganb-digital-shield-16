@@ -56,9 +56,9 @@ const HeroScrollingBoxes = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full lg:w-1/4 space-y-4 p-2 md:p-4">
-        <div className="h-32 md:h-40 bg-blue-100/50 rounded-xl animate-pulse"></div>
-        <div className="h-32 md:h-40 bg-orange-100/50 rounded-xl animate-pulse"></div>
+      <div className="w-full h-full p-2 md:p-4 space-y-4">
+        <div className="h-40 md:h-44 lg:h-48 bg-blue-100/50 rounded-xl animate-pulse"></div>
+        <div className="h-40 md:h-44 lg:h-48 bg-orange-100/50 rounded-xl animate-pulse"></div>
       </div>
     );
   }
@@ -67,42 +67,42 @@ const HeroScrollingBoxes = () => {
   const currentAnnouncement = announcementData[announcementIndex];
 
   return (
-    <div className="w-full lg:w-1/4 space-y-3 md:space-y-4 p-2 md:p-4">
-      {/* News Box - Enhanced for better visibility */}
-      <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-3 md:p-4 text-white relative overflow-hidden group shadow-lg min-h-[140px] md:min-h-[160px]">
-        <div className="absolute top-2 right-2 opacity-60 group-hover:opacity-100 transition-opacity">
-          <ArrowUp className="w-3 h-3 md:w-4 md:h-4 animate-bounce" />
+    <div className="w-full h-full p-2 md:p-4 space-y-4 flex flex-col">
+      {/* News Box - Consistent styling across all screen sizes */}
+      <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-4 text-white relative overflow-hidden group shadow-lg flex-1 min-h-[180px] md:min-h-[200px] lg:min-h-[220px] flex flex-col">
+        <div className="absolute top-3 right-3 opacity-60 group-hover:opacity-100 transition-opacity">
+          <ArrowUp className="w-4 h-4 animate-bounce" />
         </div>
         
-        <div className="flex items-center justify-between mb-2 md:mb-3">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
-            <Calendar className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-blue-200" />
-            <span className="text-xs md:text-sm font-bold uppercase tracking-wide">News Updates</span>
+            <Calendar className="w-4 h-4 mr-2 text-blue-200" />
+            <span className="text-sm font-bold uppercase tracking-wide">News Updates</span>
           </div>
           <div className="flex items-center space-x-1">
             <button 
               onClick={() => handleNewsNavigation('prev')}
-              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
+              className="w-6 h-6 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
               disabled={newsData.length <= 1}
             >
-              <ChevronLeft className="w-2 h-2 md:w-3 md:h-3" />
+              <ChevronLeft className="w-3 h-3" />
             </button>
             <button 
               onClick={() => handleNewsNavigation('next')}
-              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
+              className="w-6 h-6 rounded-full bg-blue-800/50 hover:bg-blue-800 transition-colors flex items-center justify-center"
               disabled={newsData.length <= 1}
             >
-              <ChevronRight className="w-2 h-2 md:w-3 md:h-3" />
+              <ChevronRight className="w-3 h-3" />
             </button>
           </div>
         </div>
         
         <div 
           onClick={handleNewsClick}
-          className="cursor-pointer hover:bg-blue-600/20 rounded-lg p-2 transition-colors flex-1"
+          className="cursor-pointer hover:bg-blue-600/20 rounded-lg p-2 transition-colors flex-1 flex flex-col"
         >
           {currentNews ? (
-            <div className="space-y-2">
+            <div className="space-y-3 flex-1 flex flex-col">
               <div className="flex items-center justify-between">
                 <span className="text-xs bg-blue-800/50 px-2 py-1 rounded-full">
                   {currentNews.news_type}
@@ -111,82 +111,82 @@ const HeroScrollingBoxes = () => {
                   <span className="text-xs opacity-80">{currentNews.date}</span>
                 )}
               </div>
-              <h4 className="text-xs md:text-sm font-bold line-clamp-2 leading-tight">
+              <h4 className="text-sm font-bold line-clamp-2 leading-tight">
                 {currentNews.title}
               </h4>
-              <p className="text-xs opacity-90 line-clamp-2 leading-relaxed">
+              <p className="text-xs opacity-90 line-clamp-3 leading-relaxed flex-1">
                 {currentNews.description}
               </p>
             </div>
           ) : (
-            <div className="text-center py-4">
-              <p className="text-xs md:text-sm opacity-80">No news available</p>
+            <div className="text-center py-4 flex-1 flex items-center justify-center">
+              <p className="text-sm opacity-80">No news available</p>
             </div>
           )}
 
-          <div className="absolute bottom-2 right-2 text-xs opacity-60">
+          <div className="absolute bottom-3 right-3 text-xs opacity-60">
             {newsData.length > 0 && `${newsIndex + 1}/${newsData.length}`}
           </div>
         </div>
       </div>
 
-      {/* Announcements Box - Enhanced for better visibility */}
-      <div className="bg-gradient-to-br from-orange-600 to-orange-800 rounded-xl p-3 md:p-4 text-white relative overflow-hidden group shadow-lg min-h-[140px] md:min-h-[160px]">
-        <div className="absolute top-2 right-2 opacity-60 group-hover:opacity-100 transition-opacity">
-          <ArrowUp className="w-3 h-3 md:w-4 md:h-4 animate-bounce" />
+      {/* Announcements Box - Consistent styling across all screen sizes */}
+      <div className="bg-gradient-to-br from-orange-600 to-orange-800 rounded-xl p-4 text-white relative overflow-hidden group shadow-lg flex-1 min-h-[180px] md:min-h-[200px] lg:min-h-[220px] flex flex-col">
+        <div className="absolute top-3 right-3 opacity-60 group-hover:opacity-100 transition-opacity">
+          <ArrowUp className="w-4 h-4 animate-bounce" />
         </div>
         
-        <div className="flex items-center justify-between mb-2 md:mb-3">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
-            <Megaphone className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-orange-200" />
-            <span className="text-xs md:text-sm font-bold uppercase tracking-wide">Announcements</span>
+            <Megaphone className="w-4 h-4 mr-2 text-orange-200" />
+            <span className="text-sm font-bold uppercase tracking-wide">Announcements</span>
           </div>
           <div className="flex items-center space-x-1">
             <button 
               onClick={() => handleAnnouncementNavigation('prev')}
-              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
+              className="w-6 h-6 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
               disabled={announcementData.length <= 1}
             >
-              <ChevronLeft className="w-2 h-2 md:w-3 md:h-3" />
+              <ChevronLeft className="w-3 h-3" />
             </button>
             <button 
               onClick={() => handleAnnouncementNavigation('next')}
-              className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
+              className="w-6 h-6 rounded-full bg-orange-800/50 hover:bg-orange-800 transition-colors flex items-center justify-center"
               disabled={announcementData.length <= 1}
             >
-              <ChevronRight className="w-2 h-2 md:w-3 md:h-3" />
+              <ChevronRight className="w-3 h-3" />
             </button>
           </div>
         </div>
         
         <div 
           onClick={handleAnnouncementClick}
-          className="cursor-pointer hover:bg-orange-600/20 rounded-lg p-2 transition-colors flex-1"
+          className="cursor-pointer hover:bg-orange-600/20 rounded-lg p-2 transition-colors flex-1 flex flex-col"
         >
           {currentAnnouncement ? (
-            <div className="space-y-2">
+            <div className="space-y-3 flex-1 flex flex-col">
               <div className="flex items-center justify-between">
                 <span className="text-xs bg-orange-800/50 px-2 py-1 rounded-full">
                   Official
                 </span>
                 <span className="text-xs opacity-80">{currentAnnouncement.date}</span>
               </div>
-              <h4 className="text-xs md:text-sm font-bold line-clamp-2 leading-tight">
+              <h4 className="text-sm font-bold line-clamp-2 leading-tight">
                 {currentAnnouncement.name}
               </h4>
               {currentAnnouncement.description && (
-                <p className="text-xs opacity-90 line-clamp-2 leading-relaxed">
+                <p className="text-xs opacity-90 line-clamp-3 leading-relaxed flex-1">
                   {currentAnnouncement.description}
                 </p>
               )}
             </div>
           ) : (
-            <div className="text-center py-4">
-              <p className="text-xs md:text-sm opacity-80">No announcements available</p>
+            <div className="text-center py-4 flex-1 flex items-center justify-center">
+              <p className="text-sm opacity-80">No announcements available</p>
             </div>
           )}
 
-          <div className="absolute bottom-2 right-2 text-xs opacity-60">
+          <div className="absolute bottom-3 right-3 text-xs opacity-60">
             {announcementData.length > 0 && `${announcementIndex + 1}/${announcementData.length}`}
           </div>
         </div>

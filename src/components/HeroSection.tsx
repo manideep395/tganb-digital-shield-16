@@ -28,7 +28,7 @@ const HeroSection = () => {
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-lg animate-pulse delay-500"></div>
       </div>
 
-      {/* Tiger Mascot and Enrollment Section - 25% width on desktop */}
+      {/* Tiger Mascot and Enrollment Section - Consistent 25% width */}
       <div className="w-full lg:w-1/4 flex flex-col items-center justify-start p-2 md:p-4 relative z-10 order-2 lg:order-1">
         <div 
           className="cursor-pointer hover:scale-105 transition-transform duration-300 mb-3 -mt-2 lg:-mt-8"
@@ -42,13 +42,13 @@ const HeroSection = () => {
         </div>
         <Button 
           onClick={handleAntiDrugEnrollment}
-          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold px-3 md:px-6 py-2 md:py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-xs md:text-sm"
+          className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold px-3 md:px-6 py-2 md:py-3 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300 text-xs md:text-sm w-full max-w-xs"
         >
           Enroll as Anti-Drug Soldier
         </Button>
       </div>
 
-      {/* Main Hero Content - 50% width on desktop */}
+      {/* Main Hero Content - Consistent 50% width */}
       <div className="w-full lg:w-1/2 flex items-center justify-center text-white relative z-10 p-4 order-1 lg:order-2">
         <div className="max-w-3xl mx-auto space-y-2 md:space-y-4 animate-fade-in text-center">
           {/* Three Logos Row */}
@@ -143,7 +143,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scrolling News and Announcements Boxes - 25% width on desktop */}
+      {/* Scrolling News and Announcements Boxes - Consistent 25% width across all devices */}
       <div className="w-full lg:w-1/4 order-3">
         <HeroScrollingBoxes />
       </div>
