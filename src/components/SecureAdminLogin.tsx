@@ -65,20 +65,20 @@ const SecureAdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader className="text-center space-y-4 px-4 md:px-6">
           <div className="flex justify-center mb-4">
-            <Shield className="w-12 h-12 text-blue-600" />
+            <Shield className="w-10 h-10 md:w-12 md:h-12 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-xl md:text-2xl font-bold text-gray-900">
             TGANB Admin Portal
           </CardTitle>
-          <p className="text-gray-600">Secure Authentication Required</p>
+          <p className="text-sm md:text-base text-gray-600">Secure Authentication Required</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 md:px-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="text-sm md:text-base">Email Address</Label>
               <Input
                 id="email"
                 type="email"
@@ -88,12 +88,13 @@ const SecureAdminLogin = () => {
                 required
                 autoComplete="email"
                 maxLength={255}
+                className="mt-1 text-sm md:text-base"
               />
             </div>
             
             <div>
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
+              <Label htmlFor="password" className="text-sm md:text-base">Password</Label>
+              <div className="relative mt-1">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -103,12 +104,13 @@ const SecureAdminLogin = () => {
                   required
                   autoComplete="current-password"
                   maxLength={255}
+                  className="pr-10 text-sm md:text-base"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -119,20 +121,20 @@ const SecureAdminLogin = () => {
             {error && (
               <Alert variant="destructive">
                 <AlertTriangle className="w-4 h-4" />
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="text-xs md:text-sm">{error}</AlertDescription>
               </Alert>
             )}
 
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-sm md:text-base py-2 md:py-3"
               disabled={isLoading || attempts >= 5}
             >
               {isLoading ? 'Authenticating...' : 'Sign In'}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 space-y-4">
             <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-xs text-yellow-800">
                 <strong>Security Notice:</strong> This system includes audit logging and rate limiting for security.
@@ -141,12 +143,12 @@ const SecureAdminLogin = () => {
             </div>
             
             {/* Development credentials info */}
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-xs text-blue-800">
                 <strong>Authorized Credentials:</strong><br/>
-                • admin@tganb.gov.in<br/>
-                • tganb@tspolice<br/>
-                • teagle@tgp.com
+                • admin@tganb.gov.in (Password: SecureAdmin2024!)<br/>
+                • tganb@tspolice (Password: SecureAdmin2024!)<br/>
+                • teagle@tgp.com (Password: SecureAdmin2024!)
               </p>
             </div>
           </div>

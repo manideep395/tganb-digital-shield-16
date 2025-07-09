@@ -65,40 +65,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Sanitize email
       const sanitizedEmail = email.toLowerCase().trim();
       
-      // Check if user exists in admin_users table
-      const { data: adminUser, error: adminError } = await supabase
-        .from('admin_users')
-        .select('id, email, password_hash, failed_login_attempts, last_login')
-        .eq('email', sanitizedEmail)
-        .single();
+      // Use the database function to handle login
+      const { data, error } = await supabase.rpc('handle_login_attempt', {
+        p_email: sanitizedEmail,
+        p_password: password,
+        p_ip_address: 'client_ip',
+        p_user_agent: navigator.userAgent
+      });
 
-      if (adminError || !adminUser) {
-        console.log('Admin user not found:', sanitizedEmail);
-        return { error: { message: 'Invalid credentials' } };
+      if (error) {
+        console.error('Login RPC error:', error);
+        return { error: { message: 'Authentication service error' } };
       }
 
-      // Check for too many failed attempts
-      if (adminUser.failed_login_attempts >= 5) {
-        return { error: { message: 'Account temporarily locked due to too many failed attempts' } };
-      }
-
-      // Simple password verification (matches database storage)
-      if (password !== adminUser.password_hash) {
-        // Update failed attempts
-        await supabase
-          .from('admin_users')
-          .update({ 
-            failed_login_attempts: (adminUser.failed_login_attempts || 0) + 1 
-          })
-          .eq('id', adminUser.id);
-
-        return { error: { message: 'Invalid credentials' } };
+      if (!data.success) {
+        return { error: { message: data.error } };
       }
 
       // Create secure session for successful login
       const mockUser: User = {
-        id: adminUser.id,
-        email: adminUser.email,
+        id: data.user.id,
+        email: data.user.email,
         aud: 'authenticated',
         role: 'authenticated',
         email_confirmed_at: new Date().toISOString(),
@@ -121,28 +108,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user: mockUser
       };
 
-      // Set the session and user
       setSession(mockSession);
       setUser(mockUser);
-
-      // Update successful login and reset failed attempts
-      await supabase
-        .from('admin_users')
-        .update({ 
-          last_login: new Date().toISOString(),
-          failed_login_attempts: 0
-        })
-        .eq('id', adminUser.id);
-
-      // Log audit event
-      await supabase
-        .from('audit_log')
-        .insert({
-          user_id: adminUser.id,
-          action: 'login_success',
-          ip_address: 'client_ip',
-          user_agent: navigator.userAgent
-        });
 
       console.log('Login successful for:', sanitizedEmail);
       return { error: null };
@@ -158,16 +125,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Log audit event
       if (user) {
-        await supabase
-          .from('audit_log')
-          .insert({
-            user_id: user.id,
-            action: 'logout',
-            user_agent: navigator.userAgent
-          });
+        await supabase.rpc('log_audit_event', {
+          p_user_id: user.id,
+          p_action: 'logout',
+          p_user_agent: navigator.userAgent
+        });
       }
     } catch (error) {
-      // Silently handle audit logging errors
+      console.error('Logout audit error:', error);
     }
     
     setSession(null);
