@@ -53,95 +53,66 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       console.log('Attempting login for:', email);
       
-      // Check if user exists in admin_users table
-      const { data: adminUser, error: queryError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', email.toLowerCase().trim())
-        .single();
-
-      if (queryError || !adminUser) {
-        console.error('User lookup error:', queryError);
-        return { error: { message: 'Invalid credentials' } };
-      }
-
-      console.log('Found admin user:', adminUser.email);
-
-      // Check password (for demo purposes - in production use proper hashing)
-      const isValidPassword = password === 'SecureAdmin2024!';
-      
-      if (!isValidPassword) {
-        console.log('Password verification failed');
-        return { error: { message: 'Invalid credentials' } };
-      }
-
-      console.log('Login successful, creating session...');
-
-      // Create a proper Supabase session by signing in
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: 'admin@system.local', // Use a system email
-        password: 'temporary_system_password'
+      // Use the Supabase RPC function for authentication
+      const { data, error } = await supabase.rpc('handle_login_attempt', {
+        p_email: email.toLowerCase().trim(),
+        p_password: password,
+        p_ip_address: 'web_client',
+        p_user_agent: navigator.userAgent
       });
 
-      if (authError) {
-        // If auth fails, create a mock session that works with our system
-        const mockUser: User = {
-          id: adminUser.id,
-          email: adminUser.email,
-          aud: 'authenticated',
-          role: 'authenticated',
-          email_confirmed_at: new Date().toISOString(),
-          phone: '',
-          confirmed_at: new Date().toISOString(),
-          last_sign_in_at: new Date().toISOString(),
-          app_metadata: { role: 'admin' },
-          user_metadata: { admin_email: adminUser.email },
-          identities: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        const mockSession: Session = {
-          access_token: `admin_token_${Date.now()}`,
-          refresh_token: `refresh_token_${Date.now()}`,
-          expires_in: 3600,
-          expires_at: Math.floor(Date.now() / 1000) + 3600,
-          token_type: 'bearer',
-          user: mockUser
-        };
-
-        setSession(mockSession);
-        setUser(mockUser);
-      } else {
-        // Use the real auth session but modify user data
-        const modifiedUser = {
-          ...authData.user,
-          email: adminUser.email,
-          app_metadata: { role: 'admin' },
-          user_metadata: { admin_email: adminUser.email }
-        };
-        
-        const modifiedSession = {
-          ...authData.session,
-          user: modifiedUser
-        };
-
-        setSession(modifiedSession);
-        setUser(modifiedUser);
+      if (error) {
+        console.error('RPC error:', error);
+        return { error: { message: 'Authentication failed' } };
       }
 
-      // Update last login
-      await supabase
-        .from('admin_users')
-        .update({ 
-          last_login: new Date().toISOString(),
-          failed_login_attempts: 0,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', adminUser.id);
+      console.log('Login response:', data);
 
-      console.log('Login successful for:', email);
-      return { error: null };
+      // Check if login was successful
+      if (data && typeof data === 'object' && 'success' in data) {
+        const loginResult = data as { success: boolean; error?: string; user?: any };
+        
+        if (loginResult.success && loginResult.user) {
+          console.log('Login successful, creating session...');
+          
+          // Create a mock session for the admin user
+          const mockUser: User = {
+            id: loginResult.user.id,
+            email: loginResult.user.email,
+            aud: 'authenticated',
+            role: 'authenticated',
+            email_confirmed_at: new Date().toISOString(),
+            phone: '',
+            confirmed_at: new Date().toISOString(),
+            last_sign_in_at: new Date().toISOString(),
+            app_metadata: { role: 'admin' },
+            user_metadata: { admin_email: loginResult.user.email },
+            identities: [],
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+
+          const mockSession: Session = {
+            access_token: `admin_token_${Date.now()}`,
+            refresh_token: `refresh_token_${Date.now()}`,
+            expires_in: 3600,
+            expires_at: Math.floor(Date.now() / 1000) + 3600,
+            token_type: 'bearer',
+            user: mockUser
+          };
+
+          setSession(mockSession);
+          setUser(mockUser);
+          
+          console.log('Login successful for:', email);
+          return { error: null };
+        } else {
+          console.log('Login failed:', loginResult.error);
+          return { error: { message: loginResult.error || 'Invalid credentials' } };
+        }
+      }
+      
+      return { error: { message: 'Invalid response from server' } };
     } catch (error) {
       console.error('Login error:', error);
       return { error: { message: 'Authentication failed' } };

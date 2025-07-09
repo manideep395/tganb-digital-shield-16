@@ -51,8 +51,10 @@ const SecureAdminLogin = () => {
         }, 15 * 60 * 1000);
       } else {
         console.log('Login successful, redirecting to dashboard...');
-        // Successful login - redirect to dashboard
-        navigate('/admin/dashboard');
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 100);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
