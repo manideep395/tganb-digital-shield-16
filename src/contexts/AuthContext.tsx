@@ -87,8 +87,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: { message: 'Authentication service error' } };
       }
 
-      // Type assertion for the response data
-      const loginResponse = data as LoginResponse;
+      // Type assertion for the response data - first convert to unknown, then to LoginResponse
+      const loginResponse = data as unknown as LoginResponse;
 
       if (!loginResponse.success) {
         return { error: { message: loginResponse.error || 'Authentication failed' } };
